@@ -1,0 +1,25 @@
+.imgbox {
+    height: 200px;
+    width: 220px;
+    margin: auto;
+}
+
+.thumbnailimg {
+    height: 200px;
+    width: 220px;
+}
+
+.animatepath {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 1000;
+    animation: dash 5s linear alternate infinite;
+}
+
+@keyframes dash {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 2000;
+    }
+}

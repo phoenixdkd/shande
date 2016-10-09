@@ -1,0 +1,94 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>交易状态</td>
+            <td>产品代码</td>
+            <td>产品名称</td>
+            <td>买入价格</td>
+            <td>买入数量</td>
+            <td>买入资金</td>
+            <td>佣金</td>
+            <td>卖出价格</td>
+            <td>盈亏</td>
+            <td>应收</td>
+            <td>交易时间</td>
+            <td>收款时间</td>
+            <td>收款类型</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if tradePage %}
+    {% for tradeObj in tradePage %}
+        <tr>
+{#            <td>{{ tradeObj.id }}</td>#}
+            <td>
+                {% if tradeObj.status == 0 %}
+                    未出货
+                {% elif tradeObj.status == 10 %}
+                    下次补亏
+                {% elif tradeObj.status == 11 %}
+                    已补亏
+                {% elif tradeObj.status == 20 %}
+                    等待财务收款
+                {% elif tradeObj.status == 30 %}
+                    已收款
+                {% endif %}
+            </td>
+            <td>{{ tradeObj.stockid}}</td>
+            <td>{{ tradeObj.stockname}}</td>
+            <td>{{ tradeObj.buyprice}}</td>
+            <td>{{ tradeObj.buycount}}</td>
+            <td>{{ tradeObj.buycash}}</td>
+            <td>{{ tradeObj.share}}</td>
+            <td>{{ tradeObj.sellprice}}</td>
+            <td>{{ tradeObj.income}}</td>
+            <td>{{ tradeObj.commission}}</td>
+            <td>{{ tradeObj.create}}</td>
+            <td>{% if tradeObj.paytime %}{{ tradeObj.paytime}}{% endif %}</td>
+            <td>{{ tradeObj.paytype}}</td>
+            <td>
+                {% if request.user.userprofile.title.role_name in "teacher" %}
+                <button type="button" class="btn btn-sm btn-primary" onclick="handleTrade(this)"
+                    data-htid="{{ tradeObj.id }}"
+                    data-htstockid="{{ tradeObj.stockid }}"
+                    data-htstockname="{{ tradeObj.stockname }}"
+                    data-htbuyprice="{{ tradeObj.buyprice }}"
+                    data-htbuycount="{{ tradeObj.buycount }}"
+                    data-htshare="{{ tradeObj.share }}"
+                    data-htsellprice="{{ tradeObj.sellprice }}"
+                    data-htincome="{{ tradeObj.income }}"
+                    data-htcommission="{{ tradeObj.commission }}"
+                >处理</button>
+                {% endif %}
+                {% if request.user.userprofile.title.role_name in "bursar" and tradeObj.status == 20 %}
+                <button type="button" class="btn btn-sm btn-primary" onclick="payTrade(this)"
+                    data-ptid="{{ tradeObj.id }}"
+                >收款</button>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="15">无交易信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if tradePage.has_previous %}
+            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ tradePage.number }}/{{ tradePage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if tradePage.has_next %}
+            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

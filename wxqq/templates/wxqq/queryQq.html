@@ -1,0 +1,56 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>QQ号</td>
+            <td>QQ昵称</td>
+            <td>绑定开发</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if qqPage %}
+    {% for qqObj in qqPage %}
+        <tr>
+{#            <td>{{ qqObj.id }}</td>#}
+            <td>{{ qqObj.qqid }}</td>
+            <td>{{ qqObj.qqname }}</td>
+            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ qqObj.bindsale.id }}">{{ qqObj.bindsale.saleId }}</span></td>
+            <script type="text/javascript">
+                $('.tooltips').tooltip();
+            </script>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editQq(this)"
+                    data-id="{{ qqObj.id }}"
+                    data-qqid="{{ qqObj.qqid }}"
+                    data-qqname="{{ qqObj.qqname }}"
+                    data-bindsale="{{ qqObj.bindsale.id }}"
+                >编辑</button>
+
+                <button type="button" class="btn btn-sm btn-danger" onclick="delQq(this)"
+                    data-id="{{ qqObj.id }}">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="4">无开发QQ信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if qqPage.has_previous %}
+            <span aria-hidden="true" onclick="loadQqDiv('page={{ qqPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ qqPage.number }}/{{ qqPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if qqPage.has_next %}
+            <span aria-hidden="true" onclick="loadQqDiv('page={{ qqPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

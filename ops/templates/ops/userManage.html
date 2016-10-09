@@ -1,0 +1,237 @@
+{% extends 'base_noheader.html' %}
+
+{% block title %}用户管理{% endblock %}
+{% block content %}
+
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">用户管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="addUserForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="userid" name="userid"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="username">ID</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="username" name="username"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="nick" >姓名</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="nick" name="nick"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="cid" >身份证</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="cid" name="cid"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="company" name="company"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="department" name="department"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="title" >职位</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="title" name="title">
+                                    {% for title in titles %}
+                                        <option value="{{ title.id }}"> {{ title.role_desc }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="addUserBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadUserDiv();
+        $('#addUserModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+    });
+    function resetFormValidator(){
+        $('#addUserForm input').val("");
+        $('#addUserForm').data('bootstrapValidator').destroy();
+        $('#searchUserForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadUserDiv(data){
+        $('#userDiv').load("{% url 'ops:queryUser' %}", data);
+    }
+    function formValidator(){
+        $('#addUserForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                username: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入用户ID'
+                        }
+                    }
+                },
+                nick: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入用户姓名'
+                        }
+                    }
+                },
+{#                cid: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '请输入身份证号',#}
+{#                        },#}
+{#                        regexp: {#}
+{#                            regexp: "^[0-9|x|X]{18}$",#}
+{#                            message: "请输入正确的18位身份证号"#}
+{#                        }#}
+{#                    }#}
+{#                }#}
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#addUserModal').modal('hide');
+                $.post(
+                    "{% url 'ops:addUser' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadUserDiv();
+                    },
+                    'json'
+                );
+            }
+        });
+        $('#searchUserForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadUserDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+    }
+    function editUser(obj){
+        $('#userid').val($(obj).data("userid"));
+        $('#username').val($(obj).data("username"));
+        $('#nick').val($(obj).data("nick"));
+        $('#cid').val($(obj).data("cid"));
+        $('#company').val($(obj).data("company"));
+        $('#department').val($(obj).data("department"));
+        $('#title').val($(obj).data("titleid"));
+        $('#addUserModal').modal("show");
+    }
+    function delUser(obj){
+        if(confirm("删除确认")){
+            var userid = $(obj).data("userid");
+            $.post(
+                "{% url 'ops:delUser' %}",
+                {userid:userid},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadUserDiv();
+                },
+                'json'
+            );
+        }
+    }
+    function resetPw(obj){
+        if(confirm("是否重置密码为123456")){
+            var userid = $(obj).data("userid");
+            $.post(
+                "{% url 'ops:resetPw' %}",
+                {userid:userid},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadUserDiv();
+                },
+                'json'
+            );
+        }
+    }
+    </script>
+    <br/>
+    <br/>
+    <form id="searchUserForm" method="POST" class="form-horizontal ">
+        <div class="form-group">
+            <label class="col-md-1 control-label">公司</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ company }}" name="company"/>
+            </div>
+            <label class="col-md-1 control-label">部门</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ department }}" name="department"/>
+            </div>
+            <label class="col-md-1 control-label">职位</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ title }}" name="title"/>
+            </div>
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-2">
+                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addUserModal">新增用户</button>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">用户名</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ username }}" name="username"/>
+            </div>
+            <label class="col-md-1 control-label">用户姓名</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ nick }}" name="nick"/>
+            </div>
+            <label class="col-md-1 control-label">身份证</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ cid }}" name="cid"/>
+            </div>
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-2">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+        </div>
+    </form>
+    <div id="userDiv"></div>
+{% endblock %}

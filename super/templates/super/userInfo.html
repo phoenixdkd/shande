@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}用户信息{% endblock %}
+{% block content %}
+
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#userInfoTab" data-toggle="tab">用户信息</a>
+    </li>
+    <li class="">
+        <a href="#modifyPassword" data-toggle="tab">修改密码</a>
+    </li>
+</ul>
+<br/>
+<div class="tab-content">
+    <div class="tab-pane active" id="userInfoTab">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <tr><td>用户名</td><td>{{ request.user }}</td></tr>
+                <tr><td>隶属公司</td><td>{{ request.user.userprofile.company }}</td></tr>
+                <tr><td>隶属部门</td><td>{{ request.user.userprofile.department }}</td></tr>
+                <tr><td>职位</td><td>{{ request.user.userprofile.title.role_desc }}</td></tr>
+                <tr><td>姓名</td><td>{{ request.user.userprofile.nick }}</td></tr>
+                <tr><td>身份证</td><td>{{ request.user.userprofile.cid }}</td></tr>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane" id="modifyPassword">
+        <form id="modifyPasswordForm" method="post" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="currentPassword">旧密码</label>
+                <div class="col-lg-5 col-md-5">
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                        data-bv-notempty="true"
+                        data-bv-notempty-message="不允许为空"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="password" >新密码</label>
+                <div class="col-lg-5 col-md-5">
+                    <input type="password" class="form-control" id="password" name="password"
+                        data-bv-notempty="true" data-bv-notempty-message="不允许为空"
+                        data-bv-identical="true" data-bv-identical-field="passwordagain"
+                        data-bv-identical-message="两次密码必须一致"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-offset-2 col-md-2 control-label" for="passwordagain" >确认新密码</label>
+                <div class="col-md-5">
+                    <input type="password" class="form-control" id="passwordagain" name="passwordagain"
+                        data-bv-notempty="true" data-bv-notempty-message="不允许为空"
+                        data-bv-identical="true" data-bv-identical-field="password"
+                        data-bv-identical-message="两次密码必须一致"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-6">
+                    <button id="modifyPasswordBtn"
+                        type="submit" class="btn btn-sm btn-primary">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+$(function() {
+    $('#modifyPasswordForm').bootstrapValidator({
+        excluded: [':disabled'],
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        submitHandler: function (validator, form, submitButton) {
+            $.post(
+                "{% url 'super:modifyPassword' %}",
+                form.serialize(),
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    if (result.msgLevel == 'info') {
+                        setTimeout("window.location.reload()", 1500);
+                    }
+                },
+                'json'
+            );
+        }
+    });
+});
+</script>
+{% endblock %}

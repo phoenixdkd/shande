@@ -1,0 +1,181 @@
+{% extends 'base_noheader.html' %}
+
+{% block title %}开发微信管理{% endblock %}
+{% block content %}
+
+    <div class="modal fade" id="addWxModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">开发微信管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="addWxForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="id" name="id"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="wxid">微信ID</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="wxid" name="wxid"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="wxname" >微信昵称</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="wxname" name="wxname"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindsale" >绑定开发</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="bindsale" name="bindsale">
+                                    {% if bindsales %}
+                                        {% for bindsale in bindsales %}
+                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="addWxBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadWxDiv();
+        $('#addWxModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+    });
+    function resetFormValidator(){
+        var wxFormSelector = $('#addWxForm');
+        wxFormSelector.find(':input').val("");
+        wxFormSelector.data('bootstrapValidator').destroy();
+        $('#searchWxForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadWxDiv(data){
+        $('#wxDiv').load("{% url 'wxqq:queryWx' %}", data);
+    }
+    function formValidator(){
+        $('#addWxForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                wxid: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入微信ID'
+                        }
+                    }
+                },
+                wxname: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入微信昵称'
+                        }
+                    }
+                },
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#addWxModal').modal('hide');
+                $.post(
+                    "{% url 'wxqq:addWx' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadWxDiv();
+                    },
+                    'json'
+                );
+            }
+        });
+        $('#searchWxForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadWxDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+    }
+    function editWx(obj){
+        $('#id').val($(obj).data("id"));
+        $('#wxid').val($(obj).data("wxid"));
+        $('#wxname').val($(obj).data("wxname"));
+        $('#bindsale').val($(obj).data("bindsale"));
+        $('#addWxModal').modal("show");
+    }
+    function delWx(obj){
+        if(confirm("删除确认")){
+            var id = $(obj).data("id");
+            $.post(
+                "{% url 'wxqq:delWx' %}",
+                {id:id},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadWxDiv();
+                },
+                'json'
+            );
+        }
+    }
+    </script>
+    <br/>
+    <br/>
+    <form id="searchWxForm" method="POST" class="form-horizontal ">
+        <div class="form-group">
+            <label class="col-md-1 control-label">微信ID</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ wxid }}" name="wxid"/>
+            </div>
+            <label class="col-md-1 control-label">微信昵称</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>
+            </div>
+            <label class="col-md-1 control-label">绑定开发</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ bindsale }}" name="bindsale"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+            <div class="col-md-2">
+                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWxModal">新增微信</button>
+            </div>
+
+        </div>
+    </form>
+    <div id="wxDiv"></div>
+{% endblock %}

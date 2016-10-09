@@ -1,0 +1,422 @@
+{% extends 'base_full_noheader.html' %}
+
+{% block title %}收款管理{% endblock %}
+{% block content %}
+{#    <div class="modal fade" id="handleCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"#}
+{#         aria-hidden="true">#}
+{#        <div class="modal-dialog">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header">#}
+{#                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
+{#                    <h4 class="modal-title">客户交易管理</h4>#}
+{#                </div>#}
+{##}
+{#                <div class="modal-body">#}
+{#                    <!-- The form is placed inside the body of modal -->#}
+{#                    <form id="handleCustomerForm" method="post" class="form-horizontal">#}
+{#                        <div class="form-group">#}
+{#                            <input type="hidden" value="" class="" id="id" name="id"/>#}
+{#                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="status">状态变更</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <select type="select" class="form-control" id="status" name="status">#}
+{#                                    <option value="20">已加微信或者QQ</option>#}
+{#                                    <option value="10">退回</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <script type="text/javascript">#}
+{#                            $('#status').on('change', function(){#}
+{#                                if($(this).val() == '20'){#}
+{#                                    $('#messageDiv').hide();#}
+{#                                }else {#}
+{#                                    $('#messageDiv').show();#}
+{#                                }#}
+{#                                $('#handleCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);#}
+{#                            });#}
+{#                        </script>#}
+{#                        <div id="messageDiv" style="display:none">#}
+{#                             <div class="form-group">#}
+{#                                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="message">退回原因</label>#}
+{#                                <div class="col-md-5">#}
+{#                                    <select type="select" class="form-control" id="message" name="message">#}
+{#                                        <option value="客户不回消息">客户不回消息</option>#}
+{#                                        <option value="给票不买">给票不买</option>#}
+{#                                        <option value="分成太高">分成太高</option>#}
+{#                                        <option value="要看票">要看票</option>#}
+{#                                        <option value="今天不买，下次再买">今天不买，下次再买</option>#}
+{#                                        <option value="不发截图">不发截图</option>#}
+{#                                        <option value="合作资金不足">合作资金不足</option>#}
+{#                                        <option value="买错票">买错票</option>#}
+{#                                        <option value="客户信息有误,需再核实">客户信息有误,需再核实</option>#}
+{#                                    </select>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <div class="form-group">#}
+{#                                <div class="col-md-5 col-md-offset-3">#}
+{#                                    <button id="handleCustomerBtn" type="submit" class="btn btn-sm btn-primary">提交</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="modal fade" id="handleValidCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"#}
+{#         aria-hidden="true">#}
+{#        <div class="modal-dialog">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header">#}
+{#                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
+{#                    <h4 class="modal-title">客户交易管理</h4>#}
+{#                </div>#}
+{##}
+{#                <div class="modal-body">#}
+{#                    <!-- The form is placed inside the body of modal -->#}
+{#                    <form id="handleValidCustomerForm" method="post" class="form-horizontal">#}
+{#                        <div class="form-group">#}
+{#                            <input type="hidden" value="" class="" id="validCustomerId" name="validCustomerId"/>#}
+{#                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="validCustomerChange">状态变更</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <select type="select" class="form-control" id="validCustomerChange" name="validCustomerChange">#}
+{#                                    <option value="100000">标记10W+客户</option>#}
+{#                                    <option value="99">删除客户</option>#}
+{#                                    <option value="98">标记不诚信客户</option>#}
+{#                                    <option value="30">退回</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <script type="text/javascript">#}
+{#                            $('#validCustomerChange').on('change', function(){#}
+{#                                if($(this).val() == '98'){#}
+{#                                    $('#dishonestMessageDiv').show();#}
+{#                                    $('#redoMessageDiv').hide();#}
+{#                                    $('#delMessageDiv').hide();#}
+{#                                }else if($(this).val() == '30'){#}
+{#                                    $('#dishonestMessageDiv').hide();#}
+{#                                    $('#redoMessageDiv').show();#}
+{#                                    $('#delMessageDiv').hide();#}
+{#                                }else if($(this).val() == '99'){#}
+{#                                    $('#dishonestMessageDiv').hide();#}
+{#                                    $('#redoMessageDiv').hide();#}
+{#                                    $('#delMessageDiv').show();#}
+{#                                }else{#}
+{#                                    $('#dishonestMessageDiv').hide();#}
+{#                                    $('#redoMessageDiv').hide();#}
+{#                                    $('#delMessageDiv').hide();#}
+{#                                }#}
+{#                                $('#handleValidCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);#}
+{#                            });#}
+{#                        </script>#}
+{#                        <div id="dishonestMessageDiv" style="display:none">#}
+{#                             <div class="form-group">#}
+{#                                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="dishonestMessage">原因</label>#}
+{#                                <div class="col-md-5">#}
+{#                                    <select type="select" class="form-control" id="dishonestMessage" name="dishonestMessage">#}
+{#                                        <option value="私自出货">私自出货</option>#}
+{#                                        <option value="删除老师">删除老师</option>#}
+{#                                        <option value="持票时间过长">持票时间过长</option>#}
+{#                                        <option value="不回款">不回款</option>#}
+{#                                    </select>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div id="redoMessageDiv" style="display:none">#}
+{#                             <div class="form-group">#}
+{#                                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="redoMessage">退回理由</label>#}
+{#                                <div class="col-md-5">#}
+{#                                    <select type="select" class="form-control" id="redoMessage" name="redoMessage">#}
+{#                                        <option value="客户不回消息">客户不回消息</option>#}
+{#                                        <option value="给票不买">给票不买</option>#}
+{#                                        <option value="分成太高">分成太高</option>#}
+{#                                        <option value="要看票">要看票</option>#}
+{#                                        <option value="今天不买，下次再买">今天不买，下次再买</option>#}
+{#                                        <option value="不发截图">不发截图</option>#}
+{#                                        <option value="合作资金不足">合作资金不足</option>#}
+{#                                        <option value="买错票">买错票</option>#}
+{#                                        <option value="客户信息有误,需再核实">客户信息有误,需再核实</option>#}
+{#                                    </select>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div id="delMessageDiv" style="display:none">#}
+{#                             <div class="form-group">#}
+{#                                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="delMessage">退回理由</label>#}
+{#                                <div class="col-md-5">#}
+{#                                    <select type="select" class="form-control" id="delMessage" name="delMessage">#}
+{#                                        <option value="亏损客户不再合作">亏损客户不再合作</option>#}
+{#                                        <option value="客户不回复消息">客户不回复消息</option>#}
+{#                                        <option value="不诚信客户">不诚信客户</option>#}
+{#                                    </select>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <div class="form-group">#}
+{#                                <div class="col-md-5 col-md-offset-3">#}
+{#                                    <button id="handleValidCustomerBtn" type="submit" class="btn btn-sm btn-primary">提交</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadCustomerPayDiv();
+{#        $('#handleCustomerModal').on('hidden.bs.modal', function() {#}
+{#            resetFormValidator();#}
+{#        });#}
+    });
+    function resetFormValidator(){
+{#        var customerFormSelector = $('#handleCustomerForm');#}
+{#        $('#delMessageDiv').hide();#}
+{#        customerFormSelector.find(':input').val("");#}
+{#        customerFormSelector.data('bootstrapValidator').destroy();#}
+{##}
+{#        var validCustomerFormSelector = $('#handleValidCustomerForm');#}
+{#        $('#delMessageDiv').hide();#}
+{#        $('#messageDiv').hide();#}
+{#        $('#dishonestMessageDiv').hide();#}
+{#        $('#redoMessageDiv').hide();#}
+{#        validCustomerFormSelector.find(':input').val("");#}
+{#        validCustomerFormSelector.data('bootstrapValidator').destroy();#}
+{##}
+        $('#searchCustomerPayForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadCustomerPayDiv(data){
+        $('#customerPayDiv').load("{% url 'customer:queryCustomerPay' %}", data);
+    }
+    function formValidator(){
+{#        $('#handleCustomerForm').bootstrapValidator({#}
+{#            message: 'This value is not valid',#}
+{#            feedbackIcons: {#}
+{#                valid: 'glyphicon glyphicon-ok',#}
+{#                invalid: 'glyphicon glyphicon-remove',#}
+{#                validating: 'glyphicon glyphicon-refresh'#}
+{#            },#}
+{#            fields: {#}
+{#                status: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                },#}
+{#                message: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                }#}
+{#            },#}
+{#            submitHandler: function (validator, form, submitButton) {#}
+{#                $('#handleCustomerModal').modal('hide');#}
+{#                $.post(#}
+{#                    "{% url 'customer:handleCustomer' %}",#}
+{#                    form.serialize(),#}
+{#                    function(result) {#}
+{#                        showMsgModal(result.msg, result.msgLevel);#}
+{#                        loadCustomerHandleDiv();#}
+{#                    },#}
+{#                    'json'#}
+{#                );#}
+{#            }#}
+{#        });#}
+{#        $('#handleValidCustomerForm').bootstrapValidator({#}
+{#            message: 'This value is not valid',#}
+{#            feedbackIcons: {#}
+{#                valid: 'glyphicon glyphicon-ok',#}
+{#                invalid: 'glyphicon glyphicon-remove',#}
+{#                validating: 'glyphicon glyphicon-refresh'#}
+{#            },#}
+{#            fields: {#}
+{#                validCustomerChange: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                },#}
+{#                dishonestMessage: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                },#}
+{#                redoMessage: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                },#}
+{#                delMessage: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                }#}
+{#            },#}
+{#            submitHandler: function (validator, form, submitButton) {#}
+{#                $('#handleValidCustomerModal').modal('hide');#}
+{#                $.post(#}
+{#                    "{% url 'customer:handleValidCustomer' %}",#}
+{#                    form.serialize(),#}
+{#                    function(result) {#}
+{#                        showMsgModal(result.msg, result.msgLevel);#}
+{#                        loadCustomerHandleDiv();#}
+{#                    },#}
+{#                    'json'#}
+{#                );#}
+{#            }#}
+{#        });#}
+        $('#searchCustomerPayForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadCustomerPayDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+    }
+{#    function handleCustomer(obj){#}
+{#        $('#id').val($(obj).data("id"));#}
+{#        $('#handleCustomerModal').modal("show");#}
+{#    }#}
+    function payManage(obj){
+        var customerId = $(obj).data("id");
+        var width = $(window).width();
+        var height = $(window).height()-100;
+        window.open('/trade/payManage?customerId=' + customerId, '_blank', 'top=100px, left=0, height='+height+', width='+width);
+    }
+{#    function handleValidCustomer(obj){#}
+{#        $('#validCustomerId').val($(obj).data("id"));#}
+{#        $('#handleValidCustomerModal').modal("show");#}
+{#    }#}
+    </script>
+    <br/>
+    <br/>
+
+    <form id="searchCustomerPayForm" method="POST" class="form-horizontal ">
+        <div class="form-group">
+            <label class="col-md-1 control-label">老师公司</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ company }}" name="company"/>
+            </div>
+            <label class="col-md-1 control-label">老师部门</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ department }}" name="department"/>
+            </div>
+            <label class="col-md-1 control-label">老师ID</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ teacherid }}" name="teacherid"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">姓名</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ name }}" name="name"/>
+            </div>
+            <label class="col-md-1 control-label">电话</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ phone }}" name="phone"/>
+            </div>
+
+            <label class="col-md-1 control-label">修改时间</label>
+            <div class="col-md-1 ">
+                 <input type="date" style="width: 101px" class="form-control datetime" value="{{ startDate }}" name="startDate"
+                 title="起始时间" />
+            </div>
+            <div class="col-md-1 ">
+                 <input type="date" style="width:101px" class="form-control datetime" value="{{ endDate }}" name="endDate"
+                 title="结束时间"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">来源微信</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ saleswx }}" name="saleswx"/>
+            </div>
+            <label class="col-md-1 control-label">微信号</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxid }}" name="wxid"/>
+            </div>
+            <label class="col-md-1 control-label">微信昵称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">来源QQ</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ salesqq }}" name="salesqq"/>
+            </div>
+            <label class="col-md-1 control-label">QQ号</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ qqid }}" name="qqid"/>
+            </div>
+            <label class="col-md-1 control-label">QQ昵称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ qqname }}" name="qqname"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label" >客户状态</label>
+            <div class="col-md-1 ">
+                 <select type="select" class="form-control" id="status" name="status" >
+                     <option></option>
+                     <option value="0">新录入客户</option>
+                     <option value="10">待跟进</option>
+                     <option value="20">老师已加微信或QQ</option>
+                     <option value="30">退回</option>
+                     <option value="40">有效客户</option>
+                     <option value="99">标记删除</option>
+                 </select>
+            </div>
+            <label class="col-md-1 control-label">消息</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ message }}" name="message"/>
+            </div>
+           <label class="col-md-1 control-label">初始资金</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ minstartup }}" name="minstartup" placeholder="最小值"/>
+            </div>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ maxstartup }}" name="maxstartup" placeholder="最大值"/>
+
+            </div>
+            <label class="col-md-1 control-label" style="width:50px">gem</label>
+            <div class="col-md-1 ">
+                 <select type="select" class="form-control" id="gem" name="gem">
+                     <option></option>
+                     <option value="1">是</option>
+                     <option value="0">否</option>
+                 </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+        </div>
+    </form>
+    <div id="customerPayDiv"></div>
+{% endblock %}

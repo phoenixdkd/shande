@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}默认标题{% endblock %} - 智库科技</title>
+    <meta name="description" content="{% block description %}智库科技{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}shande{% endblock %}">
+    {% include 'header.html' %}
+</head>
+
+<body>
+{% include 'nav.html' %}
+<div class="bs-docs-header" style="padding:0;">
+    <div class="body-container">
+        <img class="header_img" src="/static/super/images/header.jpg"/>
+    </div>
+</div>
+<div class="container bs-docs-container " >
+    <div class="row">
+        <div class="col-md-12" >
+            {% block content %}
+            <div>未找到指定模板,请联系管理员</div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% include 'bottom.html' %}
+</body>
+</html>

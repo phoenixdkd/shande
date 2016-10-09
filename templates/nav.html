@@ -1,0 +1,190 @@
+<header class="navbar navbar-inverse navbar-static-top" role="banner" style="margin-bottom: 0">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="nav navbar-nav">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">业务管理系统</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% if user.userprofile.title.role_name in  'admin' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">系统管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'super:titleManage' %}" target="_self">职位管理</a></li>
+                            <li class=""><a href="{% url 'super:logoManage' %}" target="_self">Logo图片管理</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.userprofile.title.role_name in 'admin ops' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">后台管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
+                            <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发管理</a></li>
+                            <li class=""><a href="{% url 'teacher:teacherManage' %}" target="_self">老师管理</a></li>
+                            <li class=""><a href="{% url 'bursar:bursarManage' %}" target="_self">财务管理</a></li>
+                            <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">开发微信管理</a></li>
+                            <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">开发QQ管理</a></li>
+{#                            <li class=""><a href="{% url 'shande:sales_admin_report' %}" target="_self">开发公司业绩汇总</a></li>#}
+{#                            <li class=""><a href="{% url 'shande:admin_trademanager' %}" target="_self">客户交易信息</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.userprofile.title.role_name in 'admin ops sale saleboss salemanager' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">开发菜单 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
+                            {% if user.userprofile.title.role_name != 'sale' %}
+                                <li class=""><a href="{% url 'sale:saleManagerPasswordManage' %}" target="_self">开发部门密钥管理</a></li>
+                            {% endif %}
+{#                            <li class=""><a href="/shande/sales_wx?userid={{ user.username }}"#}
+{#                                                               target="_self">微信号信息绑定</a></li>#}
+{#                            <li class=""><a href="{% url 'shande:performance' %}"#}
+{#                                                               target="_self">业绩汇总</a></li>#}
+{#                            {% if user.userprofile.title == '开发部经理' or user.userprofile.title == '开发部总经理' or user.userprofile.title == '超级管理员' %}#}
+{#                            <li class=""><a href="{% url 'shande:sales_manager_report' %}"#}
+{#                                                               target="_self">部门业绩汇总</a></li>#}
+{#                            {% endif %}#}
+{#                            {% if user.userprofile.title == '开发部总经理' or user.userprofile.title == '超级管理员' %}#}
+{#                            <li class=""><a href="{% url 'shande:sales_company_report' %}"#}
+{#                                            target="_self">公司业绩汇总</a></li>#}
+{#                            <li class=""><a href="{% url 'shande:income_company_report' %}"#}
+{#                                            target="_self">公司盈利汇总</a></li>#}
+{#                            <li class=""><a href="{% url 'shande:sales_company_manage' %}"#}
+{#                                            target="_self">公司开发管理</a></li>#}
+{#                            {% endif %}#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">客户管理专员菜单 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'customer:customerHandle' %}" target="_self">交易管理</a></li>
+{#                            <li class=""><a href="{% url 'shande:trademanager' %}"#}
+{#                                                               target="_self">交易管理</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">财务菜单 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'customer:customerPay' %}" target="_self">收款管理</a></li>
+{#                            <li class=""><a href="{% url 'shande:receiablereport' %}" target="_self">收款汇总</a></li>#}
+{#                            <li class=""><a href="{% url 'shande:finance_report' %}" target="_self">收款汇总</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">用户菜单 <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% if request.user.is_authenticated %}
+                            <li class=""><a href="{% url 'super:userInfo' %}" target="_self">{{ request.user.userprofile.nick }}</a></li>
+                            <li class=""><a href="{% url 'super:logout' %}" target="_self">注销</a></li>
+                        {% else %}
+                            <li class=""><a href="{% url 'super:login' %}" target="_self">登陆</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+             </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</header>
+{% load sale_tags %}
+{% load teacher_tags %}
+{% if request.user.is_authenticated  %}
+<div id="leftSidebar" class="left-sidebar" >
+    <table class="table table-bordered" style="margin-bottom: 0">
+        <tr>
+            <td>用户名</td>
+            <td>{{ request.user.username }}</td>
+        </tr>
+        <tr>
+            <td>职位</td>
+            <td>{{ request.user.userprofile.title.role_desc }}</td>
+        </tr>
+        {% if request.user.userprofile.title.role_name == 'sale' %}
+            <tr>
+                <td>开发ID</td>
+                <td>{% getSaleIdByUserId request.user.id %}</td>
+            </tr>
+            <tr>
+                <td>开发公司</td>
+                <td>{% getSaleCompanyByUserId request.user.id %}</td>
+            </tr>
+            <tr>
+                <td>开发部门</td>
+                <td>{% getSaleDepartmentByUserId request.user.id %}</td>
+            </tr>
+        {% endif %}
+        {% if request.user.userprofile.title.role_name == 'teacher' %}
+            <tr>
+                <td>老师ID</td>
+                <td>{% getTeacherIdByUserId request.user.id %}</td>
+            </tr>
+            <tr>
+                <td>老师公司</td>
+                <td>{% getTeacherCompanyByUserId request.user.id %}</td>
+            </tr>
+            <tr>
+                <td>老师部门</td>
+                <td>{% getTeacherDepartmentByUserId request.user.id %}</td>
+            </tr>
+        {% endif %}
+    </table>
+</div>
+{% endif %}
+<script type="text/javascript">
+    $(function(){
+        moveSidebarDiv();
+        $(window).resize(function(){
+            moveSidebarDiv();
+        }) ;
+    });
+</script>
+
+<div class="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">返回信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="msg" class="alert alert-info"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function showMsgModal(msg,level){
+        $('#msg').text(msg);
+        if(level == 'info'){
+            $('#msg').attr("class",'alert alert-info');
+        }else{
+            $('#msg').attr("class",'alert alert-danger');
+        }
+        $('#msgModal').modal('show');
+    }
+</script>
+
+

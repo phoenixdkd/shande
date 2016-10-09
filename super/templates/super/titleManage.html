@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}职位列表{% endblock %}
+{% block content %}
+
+<form id="addTitleForm"
+        class="form-inline" method="post" >
+    <div class="form-inline">
+        <div class="form-group col-md-4">
+            <label for="role_name">职位名</label>
+            <input type="text" class="form-control" name="role_name"
+                data-bv-notempty="true"
+                data-bv-notempty-message="不允许为空"/>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="role_desc">职位说明</label>
+            <input type="text" class="form-control" name="role_desc"
+                data-bv-notempty="true"
+                data-bv-notempty-message="不允许为空"/>
+        </div>
+        <div class="form-group col-md-4">
+            <button type="submit" class="btn btn-sm btn-primary">添加</button>
+        </div>
+    </div>
+</form>
+<br/><br/>
+<table class="table-bordered table">
+    {% if titles %}
+        <thead class="bg-info">
+            <tr>
+                <td>id</td>
+                <td>职位名称</td>
+                <td>职位说明</td>
+                <td>操作</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for title in titles %}
+            <tr>
+                <td>{{ title.id }}</td>
+                <td>{{ title.role_name }}</td>
+                <td>{{ title.role_desc }}</td>
+                <td><button data-titleid="{{ title.id }}" onclick="deleteTitle(this)" class="btn btn-sm btn-danger">删除</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% else %}
+        尚无职位名称
+    {% endif %}
+</table>
+<script type="text/javascript">
+$(function() {
+    $('#addTitleForm').bootstrapValidator({
+        excluded: [':disabled'],
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        submitHandler: function (validator, form, submitButton) {
+            $.post(
+                "{% url 'super:addTitle' %}",
+                form.serialize(),
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    if (result.msgLevel == 'info') {
+                        setTimeout("window.location.reload()", 1500);
+                    }
+                },
+                'json'
+            );
+        }
+    });
+});
+</script>
+<script type="text/javascript">
+    function deleteTitle(obj){
+        var titleId = $(obj).attr("data-titleid");
+        $.post(
+            "{% url 'super:deleteTitle' %}",
+            {titleId:titleId},
+            function(result) {
+                showMsgModal(result.msg, result.msgLevel);
+                setTimeout("window.location.reload()", 1500);
+            },
+            'json'
+        )
+    }
+</script>
+{% endblock %}

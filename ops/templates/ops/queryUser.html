@@ -1,0 +1,64 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>用户ID</td>#}
+            <td>用户名</td>
+            <td>姓名</td>
+            <td>身份证号</td>
+            <td>隶属公司</td>
+            <td>隶属部门</td>
+            <td>职位</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if userpage %}
+    {% for userObj in userpage %}
+        <tr>
+{#            <td>{{ userObj.id }}</td>#}
+            <td>{{ userObj.username }}</td>
+            <td>{{ userObj.userprofile.nick }}</td>
+            <td>{{ userObj.userprofile.cid }}</td>
+            <td>{{ userObj.userprofile.company }}</td>
+            <td>{{ userObj.userprofile.department }}</td>
+            <td>{{ userObj.userprofile.title.role_desc }}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-warning" onclick="resetPw(this)"
+                    data-userid="{{ userObj.id }}">重置密码</button>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editUser(this)"
+                    data-userid="{{ userObj.id }}"
+                    data-username="{{ userObj.username }}"
+                    data-nick="{{ userObj.userprofile.nick }}"
+                    data-cid="{{ userObj.userprofile.cid }}"
+                    data-company="{{ userObj.userprofile.company }}"
+                    data-department="{{ userObj.userprofile.department }}"
+                    data-titleid="{{ userObj.userprofile.title.id }}"
+                >编辑</button>
+
+                <button type="button" class="btn btn-sm btn-danger" onclick="delUser(this)"
+                    data-userid="{{ userObj.id }}">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="8">无用户信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if userpage.has_previous %}
+            <span aria-hidden="true" onclick="loadUserDiv('page={{ userpage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ userpage.number }}/{{ userpage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if userpage.has_next %}
+            <span aria-hidden="true" onclick="loadUserDiv('page={{ userpage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

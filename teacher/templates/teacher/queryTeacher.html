@@ -1,0 +1,62 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>老师ID</td>
+            <td>隶属公司</td>
+            <td>隶属部门</td>
+            <td>绑定财务</td>
+            <td>绑定用户</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if teacherPage %}
+    {% for teacherObj in teacherPage %}
+        <tr>
+{#            <td>{{ teacherObj.id }}</td>#}
+            <td>{{ teacherObj.teacherId }}</td>
+            <td>{{ teacherObj.company }}</td>
+            <td>{{ teacherObj.department }}</td>
+            <td>{{ teacherObj.bindbursar.bursarId }}</td>
+            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ teacherObj.binduser.username }}">{{ teacherObj.binduser.userprofile.nick }}</span></td>
+            <script type="text/javascript">
+                $('.tooltips').tooltip();
+            </script>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editTeacher(this)"
+                    data-id="{{ teacherObj.id }}"
+                    data-teacherid="{{ teacherObj.teacherId }}"
+                    data-company="{{ teacherObj.company }}"
+                    data-department="{{ teacherObj.department }}"
+                    data-binduser="{{ teacherObj.binduser.id }}"
+                    data-bindbursar="{{ teacherObj.bindbursar.id }}"
+                >编辑</button>
+
+                <button type="button" class="btn btn-sm btn-danger" onclick="delTeacher(this)"
+                    data-id="{{ teacherObj.id }}">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="6">无老师信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if teacherPage.has_previous %}
+            <span aria-hidden="true" onclick="loadTeacherDiv('page={{ teacherPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ teacherPage.number }}/{{ teacherPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if teacherPage.has_next %}
+            <span aria-hidden="true" onclick="loadTeacherDiv('page={{ teacherPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

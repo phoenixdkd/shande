@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}客户管理系统{% endblock %}
+{% block content %}
+<div>
+    <h1>
+        <div class="alert alert-info" style="text-align:center">
+            欢迎使用业务管理系统
+        </div>
+    </h1>
+
+    {% if not request.user.is_authenticated %}
+
+        <pre>请使用右上角的登陆按钮登陆管理系统</pre>
+    {% endif %}
+</div>
+{% endblock %}

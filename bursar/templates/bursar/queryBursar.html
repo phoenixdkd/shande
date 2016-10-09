@@ -1,0 +1,59 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>财务ID</td>
+            <td>隶属公司</td>
+            <td>隶属部门</td>
+            <td>绑定用户</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if bursarPage %}
+    {% for bursarObj in bursarPage %}
+        <tr>
+{#            <td>{{ bursarObj.id }}</td>#}
+            <td>{{ bursarObj.bursarId }}</td>
+            <td>{{ bursarObj.company }}</td>
+            <td>{{ bursarObj.department }}</td>
+            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ bursarObj.binduser.username }}">{{ bursarObj.binduser.userprofile.nick }}</span></td>
+            <script type="text/javascript">
+                $('.tooltips').tooltip();
+            </script>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editBursar(this)"
+                    data-id="{{ bursarObj.id }}"
+                    data-bursarid="{{ bursarObj.bursarId }}"
+                    data-company="{{ bursarObj.company }}"
+                    data-department="{{ bursarObj.department }}"
+                    data-binduser="{{ bursarObj.binduser.id }}"
+                >编辑</button>
+
+                <button type="button" class="btn btn-sm btn-danger" onclick="delBursar(this)"
+                    data-id="{{ bursarObj.id }}">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="6">无财务人员信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if bursarPage.has_previous %}
+            <span aria-hidden="true" onclick="loadBursarDiv('page={{ bursarPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ bursarPage.number }}/{{ bursarPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if bursarPage.has_next %}
+            <span aria-hidden="true" onclick="loadBursarDiv('page={{ bursarPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

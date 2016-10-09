@@ -1,0 +1,56 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>微信号</td>
+            <td>微信昵称</td>
+            <td>绑定开发</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if wxPage %}
+    {% for wxObj in wxPage %}
+        <tr>
+{#            <td>{{ wxObj.id }}</td>#}
+            <td>{{ wxObj.wxid }}</td>
+            <td>{{ wxObj.wxname }}</td>
+            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ wxObj.bindsale.id }}">{{ wxObj.bindsale.saleId }}</span></td>
+            <script type="text/javascript">
+                $('.tooltips').tooltip();
+            </script>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editWx(this)"
+                    data-id="{{ wxObj.id }}"
+                    data-wxid="{{ wxObj.wxid }}"
+                    data-wxname="{{ wxObj.wxname }}"
+                    data-bindsale="{{ wxObj.bindsale.id }}"
+                >编辑</button>
+
+                <button type="button" class="btn btn-sm btn-danger" onclick="delWx(this)"
+                    data-id="{{ wxObj.id }}">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="4">无开发微信信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if wxPage.has_previous %}
+            <span aria-hidden="true" onclick="loadWxDiv('page={{ wxPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ wxPage.number }}/{{ wxPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if wxPage.has_next %}
+            <span aria-hidden="true" onclick="loadWxDiv('page={{ wxPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

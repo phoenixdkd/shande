@@ -1,0 +1,418 @@
+{% extends 'base_nobar.html' %}
+{% block title %}交易管理{% endblock %}
+{% block content %}
+<div class="modal fade" id="addTradeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">交易管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="addTradeForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="{{ customer.id }}" class="" id="customerid" name="customerid"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="stockid">产品代码</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="stockid" name="stockid"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="stockname" >产品名称</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="stockname" name="stockname"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="buyprice" >买入价格</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="buyprice" name="buyprice"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="buycount" >买入数量</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="buycount" name="buycount"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="share" >佣金</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="share" name="share">
+                                    <option value="1|9">1|9</option>
+                                    <option value="2|8">2|8</option>
+                                    <option value="3|7">3|7</option>
+                                    <option value="4|6">4|6</option>
+                                    <option value="5|5" selected>5|5</option>
+                                    <option value="6|4">6|4</option>
+                                    <option value="7|3">7|3</option>
+                                    <option value="8|2">8|2</option>
+                                    <option value="9|1">9|1</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="addTradeBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="modal fade" id="handleTradeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">交易管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="handleTradeForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="htid" name="htid"/>
+                            <input type="hidden" value="{{ customer.id }}" class="" id="htcustomerid" name="htcustomerid"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="htstockid">产品代码</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="htstockid" name="htstockid"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htstockname" >产品名称</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="htstockname" name="htstockname"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htbuyprice" >买入价格</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="htbuyprice" name="htbuyprice"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htbuycount" >买入数量</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="htbuycount" name="htbuycount"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htshare" >佣金</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="htshare" name="htshare">
+                                    <option value="1|9">1|9</option>
+                                    <option value="2|8">2|8</option>
+                                    <option value="3|7">3|7</option>
+                                    <option value="4|6">4|6</option>
+                                    <option value="5|5" selected>5|5</option>
+                                    <option value="6|4">6|4</option>
+                                    <option value="7|3">7|3</option>
+                                    <option value="8|2">8|2</option>
+                                    <option value="9|1">9|1</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htsellprice" >卖出价格</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="htsellprice" name="htsellprice"/>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $('#htsellprice').change(function(){
+                                var sellprice = $(this).val();
+                                if(sellprice == 0){
+                                    return;
+                                }
+                                var income = (sellprice -  $('#htbuyprice').val()) * $('#htbuycount').val() ;
+                                var share = $('#htshare').val().split('|')[0] / 10;
+                                $('#htincome').val(income);
+                                var commission = income * share;
+                                $('#htcommissionref').html("参考值:"+commission);
+                                $('#htcommission').val(commission);
+                                if(income > 0){
+                                    $('#htstatus').val('20');
+                                }else if(income ==0){
+                                    $('#htstatus').val('11');
+                                }else{
+                                    $('#htstatus').val('10');
+                                }
+                            });
+                        </script>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htincome" >盈利</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="htincome" name="htincome"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htcommission" >应收</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="htcommission" name="htcommission"/>
+                            </div>
+                            <span class="label label-warning control-label" id="htcommissionref"></span>
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htstatus" >状态</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="htstatus" name="htstatus">
+                                    <option value="0">未出货</option>
+                                    <option value="10">下次补亏</option>
+                                    <option value="11">已补亏</option>
+                                    <option value="20">提交财务收款</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="handleTradeBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadTradeDiv();
+        loadCustomerDiv();
+        $('#handleTradeModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+        $('#addTradeModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+    });
+    function loadTradeDiv(data){
+        var customerId = "{{ customer.id }}";
+        data = "customerid=" + customerId + '&'+data;
+        $('#tradeDiv').load("{% url 'trade:queryTrade' %}", data);
+    }
+    function loadCustomerDiv(data){
+        var customerId = "{{ customer.id }}";
+        data = "customerid=" + customerId + '&'+data;
+        $('#customerDiv').load("{% url 'customer:getCustomerById' %}", data);
+    }
+    function updateParentWindow(){
+        window.opener.loadCustomerHandleDiv();
+    }
+    function handleTrade(obj){
+        $('#htid').val($(obj).data("htid"));
+        $('#htstockid').val($(obj).data("htstockid"));
+        $('#htstockname').val($(obj).data("htstockname"));
+        $('#htbuyprice').val($(obj).data("htbuyprice"));
+        $('#htbuycount').val($(obj).data("htbuycount"));
+        $('#htshare').val($(obj).data("htshare"));
+        $('#htsellprice').val($(obj).data("htsellprice"));
+        $('#htincome').val($(obj).data("htincome"));
+        $('#htcommission').val($(obj).data("htcommission"));
+        $('#handleTradeModal').modal("show");
+    }
+    function formValidator(){
+        $('#addTradeForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                stockid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                stockname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                buyprice: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        lessThan: {
+                            value: 500,
+                            inclusive: true,
+                            message: '必须&le;500'
+                        }
+                    }
+                },
+                buycount: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greaterThan: {
+                            value: 100,
+                            inclusive: true,
+                            message: '必须&ge;100'
+                        }
+                    }
+                },
+                share: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项',
+                        },
+                    }
+                },
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#addTradeModal').modal('hide');
+                $.post(
+                    "{% url 'trade:addTrade' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadTradeDiv();
+                        loadCustomerDiv();
+                        updateParentWindow();
+                    },
+                    'json'
+                );
+            }
+        });
+        $('#handleTradeForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                htstockid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                htstockname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                htbuyprice: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        lessThan: {
+                            value: 500,
+                            inclusive: true,
+                            message: '必须&le;500'
+                        }
+                    }
+                },
+                htbuycount: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greaterThan: {
+                            value: 100,
+                            inclusive: true,
+                            message: '必须&ge;100'
+                        }
+                    }
+                },
+                htsellprice: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项',
+                        },
+                    }
+                },
+                htincome: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项',
+                        },
+                    }
+                },
+                htcomission: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项',
+                        },
+                    }
+                }
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#handleTradeModal').modal('hide');
+                $.post(
+                    "{% url 'trade:handleTrade' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadTradeDiv();
+                        loadCustomerDiv();
+                        updateParentWindow();
+                    },
+                    'json'
+                );
+            }
+        });
+{#        $('#searchSaleForm').bootstrapValidator({#}
+{#            excluded: [':disabled'],#}
+{#            message: 'This value is not valid',#}
+{#            feedbackIcons: {#}
+{#                valid: 'glyphicon glyphicon-ok',#}
+{#                invalid: 'glyphicon glyphicon-remove',#}
+{#                validating: 'glyphicon glyphicon-refresh'#}
+{#            },#}
+{#            fields: {#}
+{#            },#}
+{#            submitHandler: function (validator, form, submitButton) {#}
+{#                loadSaleDiv(form.serialize());#}
+{#                resetFormValidator()#}
+{#            }#}
+{#        });#}
+    }
+    function resetFormValidator(){
+        var tradeFormSelector = $('#addTradeForm');
+        tradeFormSelector.find('input').not('#customerid').val("");
+        tradeFormSelector.data('bootstrapValidator').destroy();
+
+        var handleTradeFormSelector = $('#handleTradeForm');
+        handleTradeFormSelector.find('input').not('#htcustomerid').val('');
+        handleTradeFormSelector.data('bootstrapValidator').destroy();
+{#        $('#searchSaleForm').data('bootstrapValidator').destroy();#}
+        formValidator();
+    }
+</script>
+<div id="customerDiv"></div>
+<div class="col-md-2">
+        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTradeModal">新增交易</button>
+</div>
+    <br/>
+    <br/>
+<div id="tradeDiv" data-customerid="{{ customer.id }}"></div>
+{% endblock %}

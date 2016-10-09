@@ -1,0 +1,215 @@
+{% extends 'base_noheader.html' %}
+
+{% block title %}老师管理{% endblock %}
+{% block content %}
+
+    <div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">老师管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="addTeacherForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="id" name="id"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="teacherid">老师ID</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="teacherid" name="teacherid"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="company" name="company"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="department" name="department"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindbursar" >绑定财务</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="bindbursar" name="bindbursar">
+                                    {% if bindBursars %}
+                                        {% for bindbursar in bindBursars %}
+                                            <option value="{{ bindbursar.id }}"> {{ bindbursar.bursarId }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="binduser" name="binduser">
+                                    <option>不修改绑定</option>
+                                    <option value="1">清除绑定</option>
+                                    {% if bindusers %}
+                                        {% for binduser in bindusers %}
+                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="addTeacherBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadTeacherDiv();
+        $('#addTeacherModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+    });
+    function resetFormValidator(){
+        var teacherFormSelector = $('#addTeacherForm');
+        teacherFormSelector.find(':input').val("");
+        teacherFormSelector.data('bootstrapValidator').destroy();
+        $('#searchTeacherForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadTeacherDiv(data){
+        $('#teacherDiv').load("{% url 'teacher:queryTeacher' %}", data);
+    }
+    function formValidator(){
+        $('#addTeacherForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                teacherid: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入财务ID'
+                        }
+                    }
+                },
+                company: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入公司'
+                        }
+                    }
+                },
+                department: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入部门',
+                        },
+                    }
+                },
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#addTeacherModal').modal('hide');
+                $.post(
+                    "{% url 'teacher:addTeacher' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadTeacherDiv();
+                    },
+                    'json'
+                );
+            }
+        });
+        $('#searchTeacherForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadTeacherDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+    }
+    function editTeacher(obj){
+        $('#id').val($(obj).data("id"));
+        $('#teacherid').val($(obj).data("teacherid"));
+        $('#company').val($(obj).data("company"));
+        $('#department').val($(obj).data("department"));
+        $('#binduser').val("不修改绑定");
+        $('#bindbursar').val($(obj).data("bindbursar"));
+        $('#addTeacherModal').modal("show");
+    }
+    function delTeacher(obj){
+        if(confirm("删除确认")){
+            var id = $(obj).data("id");
+            $.post(
+                "{% url 'teacher:delTeacher' %}",
+                {id:id},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadTeacherDiv();
+                },
+                'json'
+            );
+        }
+    }
+    </script>
+    <br/>
+    <br/>
+    <form id="searchTeacherForm" method="POST" class="form-horizontal ">
+        <div class="form-group">
+            <label class="col-md-1 control-label">公司</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ company }}" name="company"/>
+            </div>
+            <label class="col-md-1 control-label">部门</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ department }}" name="department"/>
+            </div>
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-2">
+                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTeacherModal">新增老师</button>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">老师ID</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ teacherid }}" name="teacherid"/>
+            </div>
+            <label class="col-md-1 control-label">绑定用户</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ binduser }}" name="binduser"/>
+            </div>
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-2">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+        </div>
+    </form>
+    <div id="teacherDiv"></div>
+{% endblock %}

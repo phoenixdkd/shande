@@ -1,0 +1,427 @@
+{% extends 'base_full_noheader.html' %}
+
+{% block title %}客户管理{% endblock %}
+{% block content %}
+    <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">客户管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="addCustomerForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="id" name="id"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="name">客户姓名</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="name" name="name"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="phone" >电话</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="phone" name="phone"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="startup" >初始资金</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="startup" name="startup"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="gem" >GEM</label>
+                            <div class="checkbox col-md-5">
+                                <label>
+                                    <input type="checkbox" name="gem" value="gem" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="saletool" >开发工具</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="saletool" name="saletool">
+                                    <option value="wx">微信</option>
+                                    <option value="qq">qq</option>
+                                </select>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $('#saletool').on('change', function(){
+
+                                if($(this).val() == 'qq'){
+                                    $('#qqDiv').show();
+                                    $('#wxDiv').hide();
+
+                                }else {
+                                    $('#qqDiv').hide();
+                                    $('#wxDiv').show();
+                                }
+                                $('#addCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
+                            });
+                        </script>
+                        <div id="qqDiv" style="display:none">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="qqid" >qq</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="qqid" name="qqid"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="qqname" >qq昵称</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="qqname" name="qqname"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="salesqq" >来源QQ</label>
+                                <div class="col-md-5">
+                                    <select type="select" class="form-control" id="salesqq" name="salesqq">
+                                        {% if qqList %}
+                                            {% for qq in qqList %}
+                                                <option value="{{ qq.id }}">{{ qq.qqid }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option>无</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="wxDiv">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="wxid" >微信号</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="wxid" name="wxid"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="wxname" >微信昵称</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="wxname" name="wxname"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="saleswx" >来源微信</label>
+                                <div class="col-md-5">
+                                    <select type="select" class="form-control" id="saleswx" name="saleswx">
+                                        {% if wxList %}
+                                            {% for wx in wxList %}
+                                                <option value="{{ wx.id }}">{{ wx.wxid }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option>无</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="managerPasswordDiv" style="display:none">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="managerPassword" >部门密钥</label>
+                                <div class="col-md-5">
+                                    <input type="password" class="form-control" id="managerPassword" name="managerPassword"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="addCustomerBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadCustomerDiv();
+        $('#addCustomerModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+    });
+    function resetFormValidator(){
+        $('#managerPasswordDiv').hide();
+        var customerFormSelector = $('#addCustomerForm');
+        customerFormSelector.find(':input').val("");
+        customerFormSelector.data('bootstrapValidator').destroy();
+        $('#searchCustomerForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadCustomerDiv(data){
+        $('#customerDiv').load("{% url 'customer:queryCustomer' %}", data);
+    }
+    function formValidator(){
+        $('#addCustomerForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                startup: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greaterThan: {
+                            value: 20000,
+                            inclusive: true,
+                            message: '&ge;20000'
+                        }
+                    }
+                },
+                wxid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                wxname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                qqid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                qqname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                }
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#addCustomerModal').modal('hide');
+                $.post(
+                    "{% url 'customer:addCustomer' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadCustomerDiv();
+                    },
+                    'json'
+                );
+            }
+        });
+        $('#searchCustomerForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadCustomerDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+    }
+    function editCustomer(obj){
+        var customerStatus = $(obj).data("status");
+        var loginUserTitle = "{{ request.user.userprofile.title.role_name }}";
+        if(loginUserTitle == 'sale' && customerStatus == 0 ){
+            $('#managerPasswordDiv').show();
+        }
+        $('#id').val($(obj).data("id"));
+        $('#name').val($(obj).data("name"));
+        $('#phone').val($(obj).data("phone"));
+        $('#startup').val($(obj).data("startup"));
+        $('#gem').val($(obj).data("gem"));
+        if($(obj).data('wxid') != ''){
+            $('#saletool').val('wx');
+            $('#wxid').val($(obj).data("wxid"));
+            $('#wxname').val($(obj).data("wxname"));
+            $('#saleswx').val($(obj).data("saleswx"));
+            $('#wxDiv').show();
+            $('#qqDiv').hide();
+        }else{
+            $('#saletool').val('qq');
+            $('#qqid').val($(obj).data("qqid"));
+            $('#qqname').val($(obj).data("qqname"));
+            $('#salesqq').val($(obj).data("salesqq"));
+            $('#wxDiv').hide();
+            $('#qqDiv').show();
+        }
+        $('#addCustomerModal').modal("show");
+    }
+    function delCustomer(obj){
+        if(confirm("删除确认")){
+            var id = $(obj).data("id");
+            $.post(
+                "{% url 'customer:delCustomer' %}",
+                {id:id},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadCustomerDiv();
+                },
+                'json'
+            );
+        }
+    }
+    function delRealCustomer(obj){
+        if(confirm("删除确认")){
+            var id = $(obj).data("id");
+            $.post(
+                "{% url 'customer:delCustomer' %}",
+                {id:id, real:true},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadCustomerDiv();
+                },
+                'json'
+            );
+        }
+    }
+    </script>
+    <br/>
+    <br/>
+
+    <form id="searchCustomerForm" method="POST" class="form-horizontal">
+        {% if request.user.userprofile.title.role_name in "admin ops saleboss salemanager" %}
+        <div class="form-group">
+            {% if request.user.userprofile.title.role_name in "admin ops" %}
+            <label class="col-md-1 control-label">开发公司</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ company }}" name="company"/>
+            </div>
+            {% endif %}
+            {% if request.user.userprofile.title.role_name in "admin ops saleboss" %}
+            <label class="col-md-1 control-label">开发部门</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ department }}" name="department"/>
+            </div>
+            {% endif %}
+            <label class="col-md-1 control-label">开发ID</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ saleid }}" name="saleid"/>
+            </div>
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <label class="col-md-1 control-label">姓名</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ name }}" name="name"/>
+            </div>
+            <label class="col-md-1 control-label">电话</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ phone }}" name="phone"/>
+            </div>
+
+            <label class="col-md-1 control-label">修改时间</label>
+            <div class="col-md-1 ">
+                 <input type="date" style="width: 101px" class="form-control datetime" value="{{ startDate }}" name="startDate"
+                 title="起始时间"/>
+            </div>
+            <div class="col-md-1 ">
+                 <input type="date" style="width:101px" class="form-control datetime" value="{{ endDate }}" name="endDate"
+                 title="结束时间"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">来源微信</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ saleswx }}" name="saleswx"/>
+            </div>
+            <label class="col-md-1 control-label">微信号</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxid }}" name="wxid"/>
+            </div>
+            <label class="col-md-1 control-label">微信昵称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">来源QQ</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ salesqq }}" name="salesqq"/>
+            </div>
+            <label class="col-md-1 control-label">QQ号</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ qqid }}" name="qqid"/>
+            </div>
+            <label class="col-md-1 control-label">QQ昵称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ qqname }}" name="qqname"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label" >客户状态</label>
+            <div class="col-md-1 ">
+                 <select type="select" class="form-control" id="status" name="status">
+                     <option></option>
+                     <option value="0">新录入客户</option>
+                     <option value="10">待跟进</option>
+                     <option value="20">老师已加微信或QQ</option>
+                     <option value="30">退回</option>
+                     <option value="40">有效客户</option>
+                     <option value="99">标记删除</option>
+                 </select>
+            </div>
+            <label class="col-md-1 control-label">消息</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ message }}" name="message"/>
+            </div>
+            <label class="col-md-1 control-label">初始资金</label>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ minstartup }}" name="minstartup" placeholder="最小值"/>
+            </div>
+            <div class="col-md-1">
+                 <input type="text" class="form-control" value="{{ maxstartup }}" name="maxstartup" placeholder="最大值"/>
+
+            </div>
+
+            <label class="col-md-1 control-label" style="width:50px">gem</label>
+            <div class="col-md-1 ">
+                 <select type="select" class="form-control" id="gem" name="gem">
+                     <option></option>
+                     <option value="1">是</option>
+                     <option value="0">否</option>
+                 </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+            <div class="col-md-1">
+                    {% if request.user.userprofile.title.role_name in 'sale ops admin' %}
+                        <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addCustomerModal">新增客户</button>
+                    {% endif %}
+            </div>
+        </div>
+    </form>
+    <div id="customerDiv"></div>
+{% endblock %}

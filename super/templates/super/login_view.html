@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}login{% endblock %}
+{% block content %}
+{% if error_msg %}
+
+{% endif %}
+
+<div class="container" id="signinBox" >
+{% if error_msg %}
+<div class="alert alert-danger">{{ error_msg }}</div>
+{% endif %}
+<form class="form-horizontal" id="loginForm" action="/accounts/login/?next={{ redirect_to }}"
+      method="post" autocomplete="on">
+    <div class="form-group">
+        <label for="username" class="col-sm-1 control-label">用户ID</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="username" id="username" placeholder="用户名" autofocus="autofocus">
+        </div>
+        <label for="password" class="col-sm-1 control-label">密码</label>
+        <div class="col-sm-2">
+            <input type="password" class="form-control" name="password" id="password" placeholder="密码">
+        </div>
+        <label for="ident" class="col-sm-1 control-label">验证码</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="ident" id="ident" placeholder="看不清？单击图片刷新" required>
+        </div>
+        <div class="col-sm-1">
+            <img onclick="this.setAttribute('src', '/captcha?nocache='+Math.random());"
+                src="{% url 'super:captcha' %}" alt="Captcha"/>
+        </div>
+        <div class="col-sm-2">
+            <button type="submit" class="btn btn-primary btn-sm" id="loginButton">登录</button>
+
+        </div>
+    </div>
+</form>
+</div>
+
+{% endblock %}

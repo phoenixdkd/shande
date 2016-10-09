@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}logo管理{% endblock %}
+{% block content %}
+<form enctype="multipart/form-data">
+    <div class="form-group">
+        <div class="form-inline col-md-4">
+             <input name="file" type="file" class="btn btn-sm btn-default" required/>
+        </div>
+        <div class="form-inline col-md-4">
+            <button type="button" class="btn btn-sm btn-primary" id="uploadLogo">上传</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function(){
+        $('#uploadLogo').click(function(){
+            var formData = new FormData($('form')[0]);
+            $.ajax({
+                url: "{% url 'super:logoUpload' %}",
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    showMsgModal(result.msg, result.msgLevel);
+                    if (result.msgLevel == 'info') {
+                        setTimeout("window.location.reload()", 1500);
+                    }
+                },
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        });
+    });
+</script>
+{% endblock %}

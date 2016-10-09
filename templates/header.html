@@ -1,0 +1,47 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Feyn's father">
+<meta name="robots" content="index,follow">
+<meta name="application-name" content="shande">
+
+<!-- Site CSS -->
+<link href="/static/assets/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/assets/css/font-awesome.min.css" rel="stylesheet">
+<link href="/static/assets/css/docs.min.css" rel="stylesheet">
+<link href="/static/assets/css/bootstrapValidator.min.css" rel="stylesheet">
+
+
+<!-- Favicons -->
+<link rel="apple-touch-icon-precomposed" href="/static/assets/ico/apple-touch-icon-precomposed.png">
+<link rel="shortcut icon" href="/static/assets/ico/coin.ico">
+<script src="/static/assets/jquery/jquery-2.1.4.min.js"></script>
+<script src="/static/assets/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+{#<script src="/static/assets/bootstrap-3.3.5/js/bootstrap-confirmation.js"></script>#}
+<script src="/static/assets/jquery/unveil/jquery.unveil.min.js"></script>
+<script src="/static/assets/jquery/scrollUp/jquery.scrollUp.min.js"></script>
+<script src="/static/assets/toc/toc.min.js"></script>
+<script src="/static/assets/jquery/matchHeight/jquery.matchHeight-min.js"></script>
+<script src="/static/assets/js/site.min.js"></script>
+<script src="/static/assets/js/bootstrapValidator.min.js"></script>
+
+
+<script src="/static/assets/js/shande.js"></script>
+<link href="/static/assets/css/shande.css" rel="stylesheet">
+<script type="text/javascript">
+    if (navigator.userAgent.match(/.*Mobile.*/)) { // 来自手机
+        window.location="/wap";
+    }
+    $.ajax({
+        type: 'GET',
+        url: '{% url 'super:siteswitch' %}',
+        async: false,
+        success: function (data) {
+            if(data=='1'){
+                window.location="/maintaince";
+            }
+        },
+    });
+</script>
+{% load staticfiles %}
+
+
