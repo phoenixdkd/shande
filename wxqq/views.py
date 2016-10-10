@@ -22,7 +22,7 @@ from wxqq.models import *
 
 @login_required()
 def wxManage(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     bindsales = Sale.objects.all().order_by("saleId")
     data = {
@@ -34,6 +34,22 @@ def wxManage(request):
 def queryWx(request):
     data = {}
     wxs = Wx.objects.all().order_by('wxid')
+
+    #不同角色看到的范围不同
+    if request.user.userprofile.title.role_name in ['salemanager']:
+        company = request.user.userprofile.company
+        department = request.user.userprofile.department
+        wxs = wxs.filter(bindsale__company=company, bindsale__department=department)
+    elif request.user.userprofile.title.role_name in ['saleboss']:
+        company = request.user.userprofile.company
+        wxs = wxs.filter(bindsale__company=company)
+    elif request.user.userprofile.title.role_name in ['sale']:
+        sale = Sale.objects.get(binduser=request.user)
+        wxs = wxs.filter(bindsale=sale)
+    else:
+        wxs = wxs
+
+    #根据查询筛选
     wxs = wxs.filter(wxid__icontains=request.GET.get('wxid', ''))
     wxs = wxs.filter(wxname__icontains=request.GET.get('wxname', ''))
     if 'bindsale' in request.GET and request.GET['bindsale'] != '':
@@ -94,7 +110,7 @@ def delWx(request):
 
 @login_required()
 def qqManage(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     bindsales = Sale.objects.all().order_by("saleId")
     data = {
@@ -106,6 +122,21 @@ def qqManage(request):
 def queryQq(request):
     data = {}
     qqs = Qq.objects.all().order_by('qqid')
+    # 不同角色看到的范围不同
+    if request.user.userprofile.title.role_name in ['salemanager']:
+        company = request.user.userprofile.company
+        department = request.user.userprofile.department
+        qqs = qqs.filter(bindsale__company=company, bindsale__department=department)
+    elif request.user.userprofile.title.role_name in ['saleboss']:
+        company = request.user.userprofile.company
+        qqs = qqs.filter(bindsale__company=company)
+    elif request.user.userprofile.title.role_name in ['sale']:
+        sale = Sale.objects.get(binduser=request.user)
+        qqs = qqs.filter(bindsale=sale)
+    else:
+        qqs = qqs
+
+    # 根据查询筛选
     qqs = qqs.filter(qqid__icontains=request.GET.get('qqid', ''))
     qqs = qqs.filter(qqname__icontains=request.GET.get('qqname', ''))
     if 'bindsale' in request.GET and request.GET['bindsale'] != '':

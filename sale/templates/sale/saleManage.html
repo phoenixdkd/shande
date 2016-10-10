@@ -24,31 +24,42 @@
                                 data-bv-notempty-message="不允许为空"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" id="company" name="company"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" id="department" name="department"/>
-                            </div>
-                        </div>
+{#                        <div class="form-group">#}
+{#                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <input type="text" class="form-control" id="company" name="company"/>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="form-group">#}
+{#                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <input type="text" class="form-control" id="department" name="department"/>#}
+{#                            </div>#}
+{#                        </div>#}
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="binduser" name="binduser">
-                                    <option>不修改绑定</option>
-                                    <option value="1">清除绑定</option>
+                                    <option>无</option>
                                     {% if bindusers %}
                                         {% for binduser in bindusers %}
                                             <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
-
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindteacher" >对接老师</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="bindteacher" name="bindteacher">
+                                    <option>无</option>
+                                    {% if bindteachers %}
+                                        {% for bindteacher in bindteachers %}
+                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -120,11 +131,18 @@
         $('#addSaleModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
+        $('#addSaleGroupModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
     });
     function resetFormValidator(){
         var saleFormSelector = $('#addSaleForm');
-        saleFormSelector.find(':input').val("");
+        saleFormSelector.find('input').val("");
         saleFormSelector.data('bootstrapValidator').destroy();
+        var saleGroupFormSelector = $('#addSaleGroupForm');
+        saleGroupFormSelector.find('input').val("");
+        saleGroupFormSelector.data('bootstrapValidator').destroy();
+
         $('#searchSaleForm').data('bootstrapValidator').destroy();
         formValidator();
     }
@@ -241,7 +259,8 @@
         $('#saleid').val($(obj).data("saleid"));
         $('#company').val($(obj).data("company"));
         $('#department').val($(obj).data("department"));
-        $('#binduser').val("不修改绑定");
+        $('#binduser').val($(obj).data("binduser"));
+        $('#bindteacher').val($(obj).data("bindteacher"));
         $('#addSaleModal').modal("show");
     }
     function delSale(obj){
@@ -263,6 +282,10 @@
     <br/>
     <form id="searchSaleForm" method="POST" class="form-horizontal ">
         <div class="form-group">
+            <label class="col-md-1 control-label">开发ID</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ saleid }}" name="saleid"/>
+            </div>
             <label class="col-md-1 control-label">公司</label>
             <div class="col-md-2 form-inline">
                  <input type="text" class="form-control" value="{{ company }}" name="company"/>
@@ -279,11 +302,15 @@
 
         </div>
         <div class="form-group">
-            <label class="col-md-1 control-label">开发ID</label>
+            <label class="col-md-1 control-label">对接老师</label>
             <div class="col-md-2 form-inline">
-                 <input type="text" class="form-control" value="{{ saleid }}" name="saleid"/>
+                 <input type="text" class="form-control" value="{{ bindteacher }}" name="bindteacher"/>
             </div>
-            <label class="col-md-1 control-label">绑定用户</label>
+            <label class="col-md-1 control-label">对接财务</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ bindbursar }}" name="bindbursar"/>
+            </div>
+            <label class="col-md-1 control-label">用户姓名</label>
             <div class="col-md-2 form-inline">
                  <input type="text" class="form-control" value="{{ binduser }}" name="binduser"/>
             </div>

@@ -1,5 +1,6 @@
 # coding=utf-8
 from teacher.models import *
+from lib.PinYin import PinYin
 
 def getArgsExcludePage(request):
     requestArgs = ""
@@ -16,3 +17,8 @@ def getTeacherBySaleId(saleid):
     teacherId = saleid[1:3]
     teacher = Teacher.objects.get(teacherId=teacherId)
     return teacher
+
+def getPinYin(str):
+    p = PinYin()
+    p.get_py("vvvv进lsdk")
+

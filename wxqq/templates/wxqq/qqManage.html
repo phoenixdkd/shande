@@ -151,6 +151,7 @@
     </script>
     <br/>
     <br/>
+    {% if request.user.userprofile.title.role_name != 'sale' %}
     <form id="searchQqForm" method="POST" class="form-horizontal ">
         <div class="form-group">
             <label class="col-md-1 control-label">qq</label>
@@ -177,5 +178,6 @@
 
         </div>
     </form>
+    {% endif %}
     <div id="qqDiv"></div>
 {% endblock %}

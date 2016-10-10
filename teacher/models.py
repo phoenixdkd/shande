@@ -10,5 +10,6 @@ class Teacher(models.Model):
     teacherId = models.CharField('老师ID', max_length=20, unique=True)
     company = models.CharField('公司', max_length=30, )
     department = models.CharField('部门', max_length=30, )
-    binduser = models.ForeignKey(User, default=1)
-    bindbursar = models.ForeignKey(Bursar, default=1)
+    group = models.CharField('组', max_length=30, null=True, blank=True)
+    binduser = models.ForeignKey(User, null=True, blank=True)
+    bindbursar = models.ForeignKey(Bursar, null=True, blank=True)

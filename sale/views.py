@@ -26,10 +26,12 @@ def saleManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='sale').order_by("userprofile__nick")
-    for sale in Sale.objects.all():
-        bindUsers = bindUsers.filter(~Q(id=sale.binduser.id))
+    bindTeachers = Teacher.objects.all().order_by("teacherId")
+    # for sale in Sale.objects.all():
+    #     bindUsers = bindUsers.filter(~Q(id=sale.binduser.id))
     data = {
         "bindusers": bindUsers,
+        "bindteachers": bindTeachers,
     }
     return render(request, 'sale/saleManage.html', data)
 
@@ -42,6 +44,10 @@ def querySale(request):
     sales = sales.filter(department__icontains=request.GET.get('department', ''))
     if 'binduser' in request.GET and request.GET['binduser'] != '':
         sales = sales.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
+    if 'bindteacher' in request.GET and request.GET['bindteacher'] != '':
+        sales = sales.filter(bindteacher__teacherId__icontains=request.GET.get('bindteacher'))
+    if 'bindbursar' in request.GET and request.GET['bindbursar'] != '':
+        sales = sales.filter(bindteacher__bindbursar__bursarId__icontains=request.GET.get('bindbursar'))
     p = Paginator(sales, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -61,26 +67,34 @@ def querySale(request):
 def addSale(request):
     data = {}
     try:
-        binduserid = request.POST.get('binduser', '无可用用户')
-        if binduserid.isdigit():
-            existSale = Sale.objects.filter(binduser__id=binduserid)
-            if binduserid != '1' and existSale and str(existSale[0].id) != request.POST.get('id', '1'):
-                raise Exception("binduser exists")
         if request.POST['id'] == "":
-            if binduserid.isdigit():
-                existSale = Sale.objects.filter(binduser__id=binduserid)
-                newSale = Sale.objects.create(saleId=request.POST['saleid'],
-                                              binduser=User.objects.get(id=int(request.POST['binduser'])),)
-            else:
-                newSale = Sale.objects.create(saleId=request.POST['saleid'],)
+            newSale = Sale.objects.create(saleId=request.POST['saleid'])
         else:
             newSale = Sale.objects.get(id=request.POST['id'])
             newSale.saleId = request.POST['saleid']
-            if binduserid.isdigit():
-                newSale.binduser = User.objects.get(id=int(request.POST['binduser']))
-        newSale.bindteacher = getTeacherBySaleId(request.POST['saleid'])
+
+        binduserid = request.POST.get('binduser', '无')
+        if binduserid.isdigit():
+            try:
+                oldSale = Sale.objects.get(binduser_id=binduserid)
+                oldSale.binduser = None
+                oldSale.save()
+            except Exception as e:
+                # print(e.message)
+                # print(e.__str__())
+                pass
+            newSale.binduser = User.objects.get(id=binduserid)
+        else:
+            newSale.binduser = None
+        #newSale.bindteacher = getTeacherBySaleId(request.POST['saleid'])
         newSale.company = request.POST['company']
         newSale.department = request.POST['department']
+        bindteacher = request.POST.get('bindteacher', '无')
+        if bindteacher.isdigit():
+            teacher = Teacher.objects.get(id=request.POST.get('bindteacher'))
+            newSale.bindteacher = teacher
+        else:
+            newSale.bindteacher = None
         newSale.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -104,23 +118,15 @@ def addSaleGroup(request):
         group = request.POST.get('saleGroup')
         saleCount = request.POST.get('saleCount')
         for i in range(1, int(saleCount)+1):
-            saleId = company + group + department + str(i)
-            teacherId = company + group
-            bursarId = re.sub(r'^[^\d]+', 'CW', teacherId)
-            bursar, created = Bursar.objects.get_or_create(bursarId=bursarId)
-            bursar.company = company
-            bursar.department = department
-            bursar.save()
-            teacher, created = Teacher.objects.get_or_create(teacherId=teacherId)
-            teacher.company = company
-            teacher.department = department
-            teacher.bindbursar = bursar
-            teacher.save()
+            if i<10:
+                index = '0' +str(i)
+            else:
+                index = str(i)
+            saleId = company + group + department + index
             sale, created = Sale.objects.get_or_create(saleId=saleId)
             sale.company = company
             sale.department = department
             sale.group = group
-            sale.bindteacher = teacher
             sale.save()
 
         data['msg'] = "操作成功"

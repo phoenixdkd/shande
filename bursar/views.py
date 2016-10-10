@@ -24,8 +24,8 @@ def bursarManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='bursar').order_by("userprofile__nick")
-    for bursar in Bursar.objects.all():
-        bindUsers = bindUsers.filter(~Q(id=bursar.binduser.id))
+    # for bursar in Bursar.objects.all():
+    #     bindUsers = bindUsers.filter(~Q(id=bursar.binduser.id))
     data = {
         "bindusers": bindUsers,
     }
@@ -35,8 +35,8 @@ def bursarManage(request):
 def queryBursar(request):
     bursars = Bursar.objects.all().order_by('bursarId')
     bursars = bursars.filter(bursarId__icontains=request.GET.get('bursarid', ''))
-    bursars = bursars.filter(company__icontains=request.GET.get('company', ''))
-    bursars = bursars.filter(department__icontains=request.GET.get('department', ''))
+    # bursars = bursars.filter(company__icontains=request.GET.get('company', ''))
+    # bursars = bursars.filter(department__icontains=request.GET.get('department', ''))
     if 'binduser' in request.GET and request.GET['binduser'] != '':
         bursars = bursars.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
     p = Paginator(bursars, 20)
@@ -58,26 +58,44 @@ def queryBursar(request):
 def addBursar(request):
     data = {}
     try:
-        binduserid = request.POST.get('binduser', '无可用用户')
-        if binduserid.isdigit():
-            existBursar = Bursar.objects.filter(binduser__id=binduserid)
-            if binduserid != '1' and existBursar and str(existBursar[0].id) != request.POST.get('id', '1'):
-                raise Exception("binduser exists")
         if request.POST['id'] == "":
-            if binduserid.isdigit():
-                existBursar = Bursar.objects.filter(binduser__id=binduserid)
-                newBursar = Bursar.objects.create(bursarId=request.POST['bursarid'],
-                                              binduser=User.objects.get(id=int(request.POST['binduser'])))
-            else:
-                newBursar = Bursar.objects.create(bursarId=request.POST['bursarid'],)
+            newBursar = Bursar.objects.create(bursarId=request.POST['bursarid'])
         else:
             newBursar = Bursar.objects.get(id=request.POST['id'])
-            newBursar.bursarId = request.POST['bursarid']
-            if binduserid.isdigit():
-                newBursar.binduser = User.objects.get(id=int(request.POST['binduser']))
-        newBursar.company = request.POST['company']
-        newBursar.department = request.POST['department']
+        binduserid = request.POST.get('binduser', '无')
+        if binduserid.isdigit():
+            newBursar.binduser = User.objects.get(id=binduserid)
+        else:
+            newBursar.binduser = None
+        # newBursar.company = request.POST['company']
+        # newBursar.department = request.POST['department']
         newBursar.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        print(e.__str__())
+        if str(e.__str__()).__contains__('bursarId'):
+            data['msg'] = "操作失败,财务ID已存在"
+        elif str(e.__str__()).__contains__('binduser'):
+            data['msg'] = "操作失败,用户已绑定财务，请刷新页面重试"
+        else:
+            data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def addBursarGroup(request):
+    data = {}
+    try:
+        bursarCount = request.POST.get('bursarCount')
+        for i in range(1, int(bursarCount) + 1):
+            if i < 10:
+                index = '0' + str(i)
+            else:
+                index = str(i)
+            bursarId = "CW" + index
+            bursar, created = Bursar.objects.get_or_create(bursarId=bursarId)
+            bursar.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:

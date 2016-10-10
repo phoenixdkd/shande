@@ -3,9 +3,12 @@
         <tr>
 {#            <td>ID</td>#}
             <td>开发ID</td>
-            <td>隶属公司</td>
-            <td>隶属部门</td>
-            <td>绑定用户</td>
+            <td>公司</td>
+            <td>部门</td>
+            <td>组</td>
+            <td>用户姓名</td>
+            <td>对接老师</td>
+            <td>对接财务</td>
             <td>操作</td>
         </tr>
     </thead>
@@ -17,7 +20,28 @@
             <td>{{ saleObj.saleId }}</td>
             <td>{{ saleObj.company }}</td>
             <td>{{ saleObj.department }}</td>
-            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ saleObj.binduser.username }}">{{ saleObj.binduser.userprofile.nick }}</span></td>
+            <td>{{ saleObj.group }}</td>
+            <td >
+                {% if saleObj.binduser %}
+                    <span class="tooltips" data-toggle="tooltip" title="用户ID:{{ saleObj.binduser.username }}">{{ saleObj.binduser.userprofile.nick }}</span>
+                {% else %}
+                    无
+                {% endif %}
+            </td>
+            <td >
+                {% if saleObj.bindteacher %}
+                    <span class="tooltips" data-toggle="tooltip" title="老师户ID:{{ saleObj.bindteacher.binduser.userprofile.nick }}">{{ saleObj.bindteacher.teacherId }}</span>
+                {% else %}
+                    无
+                {% endif %}
+            </td>
+            <td >
+                {% if saleObj.bindteacher and saleObj.bindteacher.bindbursar %}
+                    <span class="tooltips" data-toggle="tooltip" title="老师户ID:{{ saleObj.bindteacher.bindbursar.binduser.userprofile.nick }}">{{ saleObj.bindteacher.bindbursar.bursarId }}</span>
+                {% else %}
+                    无
+                {% endif %}
+            </td>
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
@@ -28,6 +52,7 @@
                     data-company="{{ saleObj.company }}"
                     data-department="{{ saleObj.department }}"
                     data-binduser="{{ saleObj.binduser.id }}"
+                    data-bindteacher="{{ saleObj.bindteacher.id }}"
                 >编辑</button>
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delSale(this)"
@@ -36,7 +61,7 @@
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="6">无开发人员信息</td></tr>
+         <tr><td colspan="8">无开发人员信息</td></tr>
     {% endif %}
     </tbody>
 </table>

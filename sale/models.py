@@ -11,8 +11,8 @@ class Sale(models.Model):
     company = models.CharField('公司', max_length=30, )
     department = models.CharField('部门', max_length=30, )
     group = models.CharField('组', max_length=30, default="")
-    binduser = models.ForeignKey(User, default=1)
-    bindteacher = models.ForeignKey(Teacher, default=1)
+    binduser = models.ForeignKey(User, null=True, blank=True)
+    bindteacher = models.ForeignKey(Teacher, null=True, blank=True)
 
 
 class SaleManagerPassword(models.Model):

@@ -3,8 +3,8 @@
         <tr>
 {#            <td>ID</td>#}
             <td>财务ID</td>
-            <td>隶属公司</td>
-            <td>隶属部门</td>
+{#            <td>隶属公司</td>#}
+{#            <td>隶属部门</td>#}
             <td>绑定用户</td>
             <td>操作</td>
         </tr>
@@ -15,8 +15,6 @@
         <tr>
 {#            <td>{{ bursarObj.id }}</td>#}
             <td>{{ bursarObj.bursarId }}</td>
-            <td>{{ bursarObj.company }}</td>
-            <td>{{ bursarObj.department }}</td>
             <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ bursarObj.binduser.username }}">{{ bursarObj.binduser.userprofile.nick }}</span></td>
             <script type="text/javascript">
                 $('.tooltips').tooltip();
@@ -25,8 +23,6 @@
                 <button type="button" class="btn btn-sm btn-primary" onclick="editBursar(this)"
                     data-id="{{ bursarObj.id }}"
                     data-bursarid="{{ bursarObj.bursarId }}"
-                    data-company="{{ bursarObj.company }}"
-                    data-department="{{ bursarObj.department }}"
                     data-binduser="{{ bursarObj.binduser.id }}"
                 >编辑</button>
 

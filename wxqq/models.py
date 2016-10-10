@@ -10,9 +10,9 @@ from django.contrib.auth.models import User
 class Wx(models.Model):
     wxid = models.CharField('微信号', max_length=30, unique=True)
     wxname = models.CharField('微信昵称', max_length=30, )
-    bindsale = models.ForeignKey(Sale, default=1)  #绑定开发
+    bindsale = models.ForeignKey(Sale, null=True, blank=True)  #绑定开发
 
 class Qq(models.Model):
     qqid = models.CharField('qq号', max_length=30, unique=True)
     qqname = models.CharField('qq昵称', max_length=30, )
-    bindsale = models.ForeignKey(Sale, default=1)  # 绑定开发
+    bindsale = models.ForeignKey(Sale, null=True, blank=True)  # 绑定开发

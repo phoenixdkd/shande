@@ -5,5 +5,6 @@ urlpatterns = [
     url(r'^teacherManage$', views.teacherManage, name='teacherManage'),
     url(r'^queryTeacher$', views.queryTeacher, name='queryTeacher'),
     url(r'^addTeacher$', views.addTeacher, name='addTeacher'),
+    url(r'^addTeacherGroup$', views.addTeacherGroup, name='addTeacherGroup'),
     url(r'^delTeacher$', views.delTeacher, name='delTeacher'),
 ]

@@ -5,8 +5,10 @@
             <td>老师ID</td>
             <td>隶属公司</td>
             <td>隶属部门</td>
-            <td>绑定财务</td>
             <td>绑定用户</td>
+            <td>绑定开发</td>
+            <td>绑定财务</td>
+
             <td>操作</td>
         </tr>
     </thead>
@@ -18,11 +20,15 @@
             <td>{{ teacherObj.teacherId }}</td>
             <td>{{ teacherObj.company }}</td>
             <td>{{ teacherObj.department }}</td>
-            <td>{{ teacherObj.bindbursar.bursarId }}</td>
-            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ teacherObj.binduser.username }}">{{ teacherObj.binduser.userprofile.nick }}</span></td>
+            <td >
+                <span class="tooltips" data-toggle="tooltip" title="用户ID:{{ teacherObj.binduser.username }}">{{ teacherObj.binduser.userprofile.nick }}</span>
+            </td>
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
+            <td>{{ teacherObj.bindsale.saleId }}</td>
+            <td>{{ teacherObj.bindbursar.bursarId }}</td>
+
             <td>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editTeacher(this)"
                     data-id="{{ teacherObj.id }}"
