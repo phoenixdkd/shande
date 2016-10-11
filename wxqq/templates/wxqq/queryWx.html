@@ -14,7 +14,9 @@
     {% for wxObj in wxPage %}
         <tr>
 {#            <td>{{ wxObj.id }}</td>#}
-            <td>{{ wxObj.wxid }}</td>
+            <td>{% if wxObj.delete %}
+                <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>
+                {% endif %}{{ wxObj.wxid }}</td>
             <td>{{ wxObj.wxname }}</td>
 
             <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ wxObj.bindsale.id }}">{{ wxObj.bindsale.saleId }}</span></td>
@@ -48,7 +50,7 @@
                 >编辑</button>
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delWx(this)"
-                    data-id="{{ wxObj.id }}">删除</button>
+                    data-id="{{ wxObj.id }}">标记失效</button>
                 {% endif %}
             </td>
         </tr>

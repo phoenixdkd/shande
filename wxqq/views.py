@@ -46,6 +46,7 @@ def queryWx(request):
     elif request.user.userprofile.title.role_name in ['sale']:
         sale = Sale.objects.get(binduser=request.user)
         wxs = wxs.filter(bindsale=sale)
+        wxs = wxs.exclude(delete__isnull=False)
     else:
         wxs = wxs
 
@@ -76,6 +77,7 @@ def addWx(request):
         bindsaleid = int(request.POST.get('bindsale', '1'))
         if request.POST['id'] == "":
             newWx = Wx.objects.create(wxid=request.POST['wxid'], bindsale=Sale.objects.get(id=int(bindsaleid)))
+            newWx.create = datetime.date.today()
         else:
             newWx = Wx.objects.get(id=int(request.POST['id']))
             newWx.wxid = request.POST['wxid']
@@ -99,7 +101,9 @@ def delWx(request):
     data = {}
     try:
         tmpWx = Wx.objects.get(id=request.POST['id'])
-        tmpWx.delete()
+        tmpWx.delete = datetime.date.today()
+        tmpWx.bindsale = None
+        tmpWx.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
@@ -178,6 +182,7 @@ def queryQq(request):
     elif request.user.userprofile.title.role_name in ['sale']:
         sale = Sale.objects.get(binduser=request.user)
         qqs = qqs.filter(bindsale=sale)
+        qqs = qqs.exclude(delete__isnull=False)
     else:
         qqs = qqs
 
@@ -208,6 +213,7 @@ def addQq(request):
         bindsaleid = int(request.POST.get('bindsale', '1'))
         if request.POST['id'] == "":
             newQq = Qq.objects.create(qqid=request.POST['qqid'], bindsale=Sale.objects.get(id=int(bindsaleid)))
+            newQq.create = datetime.date.today()
         else:
             newQq = Qq.objects.get(id=int(request.POST['id']))
             newQq.qqid = request.POST['qqid']
@@ -231,7 +237,9 @@ def delQq(request):
     data = {}
     try:
         tmpQq = Qq.objects.get(id=request.POST['id'])
-        tmpQq.delete()
+        tmpQq.delete = datetime.date.today()
+        tmpQq.bindsale = None
+        tmpQq.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
