@@ -10,3 +10,6 @@ class Bursar(models.Model):
     # company = models.CharField('公司', max_length=30, null=True, blank=True)
     # department = models.CharField('部门', max_length=30, null=True, blank=True)
     binduser = models.ForeignKey(User, null=True, blank=True)
+
+    def getTeacherList(self):
+        return self.teacher_set.all()

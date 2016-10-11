@@ -36,11 +36,11 @@ def teacherManage(request):
 
 @login_required()
 def queryTeacher(request):
-    sales = Sale.objects.all()
     teachers = Teacher.objects.all().order_by('teacherId')
     teachers = teachers.filter(teacherId__icontains=request.GET.get('teacherid', ''))
     teachers = teachers.filter(company__icontains=request.GET.get('company', ''))
     teachers = teachers.filter(department__icontains=request.GET.get('department', ''))
+
     if 'binduser' in request.GET and request.GET['binduser'] != '':
         teachers = teachers.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
     p = Paginator(teachers, 20)
@@ -52,9 +52,9 @@ def queryTeacher(request):
         teacherPage = p.page(page)
     except (EmptyPage, InvalidPage):
         teacherPage = p.page(p.num_pages)
+
     data = {
         "teacherPage": teacherPage,
-        "sales": sales,
         "requestArgs": getArgsExcludePage(request),
     }
     return render(request, 'teacher/queryTeacher.html', data)

@@ -28,10 +28,8 @@
             </script>
             <td>
             <table>
-                {% for sale in sales %}
-                    {% if sale.bindteacher.id == teacherObj.id %}
-                        <tr><td>{{ sale.saleId }} {{ sale.binduser.userprofile.nick }} </td></tr>
-                    {% endif %}
+                {% for sale in teacherObj.getSaleList %}
+                    <tr><td>{{ sale.saleId }} {{ sale.binduser.userprofile.nick }} </td></tr>
                 {% endfor %}
             </table>
             </td>

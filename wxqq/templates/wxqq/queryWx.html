@@ -5,6 +5,7 @@
             <td>微信号</td>
             <td>微信昵称</td>
             <td>绑定开发</td>
+            <td>当前好友数</td>
             <td>操作</td>
         </tr>
     </thead>
@@ -15,11 +16,16 @@
 {#            <td>{{ wxObj.id }}</td>#}
             <td>{{ wxObj.wxid }}</td>
             <td>{{ wxObj.wxname }}</td>
+
             <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ wxObj.bindsale.id }}">{{ wxObj.bindsale.saleId }}</span></td>
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
+            <td>{{ wxObj.friend }}</td>
             <td>
+
+                <button type="button" class="btn btn-sm btn-primary" onclick="editWxFriend(this)"
+                    data-id="{{ wxObj.id }}">好友数管理</button>
                 {% if request.user.userprofile.title.role_name != 'sale' %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editWx(this)"
                     data-id="{{ wxObj.id }}"
@@ -27,6 +33,7 @@
                     data-wxname="{{ wxObj.wxname }}"
                     data-bindsale="{{ wxObj.bindsale.id }}"
                 >编辑</button>
+
                 <button type="button" class="btn btn-sm btn-danger" onclick="delWx(this)"
                     data-id="{{ wxObj.id }}">删除</button>
                 {% endif %}

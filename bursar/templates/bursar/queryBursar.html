@@ -22,15 +22,9 @@
             </script>
             <td >
                 <table>
-                {% if teachers %}
-                    {% for teacher in teachers %}
-                        {% if teacher.bindbursar.id == bursarObj.id %}
-
+                    {% for teacher in bursarObj.getTeacherList %}
                         <tr><td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</td></tr>
-
-                        {% endif %}
                     {% endfor %}
-                {% endif %}
                 </table>
             </td>
             <td>

@@ -14,3 +14,7 @@ class Teacher(models.Model):
     group = models.CharField('组', max_length=30, null=True, blank=True)
     binduser = models.ForeignKey(User, null=True, blank=True)
     bindbursar = models.ForeignKey(Bursar, null=True, blank=True)
+
+    def getSaleList(self):
+        sales = self.sale_set.all()
+        return sales
