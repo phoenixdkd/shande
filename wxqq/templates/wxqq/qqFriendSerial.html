@@ -1,0 +1,55 @@
+<div id="main" style="width: 800px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: 'QQ好友数'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['QQ好友数']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [{% for day in dayData %} '{{ day }}',{% endfor %}]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name:'总数',
+                type:'line',
+                stack: '总量',
+                data: [{% for total in totalData %} '{{ total }}',{% endfor %}]
+            },
+            {
+                name:'增长数',
+                type:'bar',
+                barWidth: '10%',
+                stack: '增量',
+                data: [{% for delta in deltaData %} '{{ delta }}',{% endfor %}]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
