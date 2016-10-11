@@ -6,6 +6,7 @@
 {#            <td>隶属公司</td>#}
 {#            <td>隶属部门</td>#}
             <td>绑定用户</td>
+            <td>绑定老师</td>
             <td>操作</td>
         </tr>
     </thead>
@@ -19,6 +20,19 @@
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
+            <td >
+                <table>
+                {% if teachers %}
+                    {% for teacher in teachers %}
+                        {% if teacher.bindbursar.id == bursarObj.id %}
+
+                        <tr><td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</td></tr>
+
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                </table>
+            </td>
             <td>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editBursar(this)"
                     data-id="{{ bursarObj.id }}"

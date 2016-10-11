@@ -87,8 +87,8 @@ def addSale(request):
         else:
             newSale.binduser = None
         #newSale.bindteacher = getTeacherBySaleId(request.POST['saleid'])
-        newSale.company = request.POST['company']
-        newSale.department = request.POST['department']
+        # newSale.company = request.POST['company']
+        # newSale.department = request.POST['department']
         bindteacher = request.POST.get('bindteacher', '无')
         if bindteacher.isdigit():
             teacher = Teacher.objects.get(id=request.POST.get('bindteacher'))
@@ -100,6 +100,7 @@ def addSale(request):
         data['msgLevel'] = "info"
     except Exception as e:
         print(e.__str__())
+        print(e.message)
         if str(e.__str__()).__contains__('saleId'):
             data['msg'] = "操作失败,开发ID已存在"
         elif str(e.__str__()).__contains__('binduser'):

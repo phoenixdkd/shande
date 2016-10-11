@@ -33,6 +33,7 @@ def bursarManage(request):
 
 @login_required()
 def queryBursar(request):
+    teachers = Teacher.objects.all()
     bursars = Bursar.objects.all().order_by('bursarId')
     bursars = bursars.filter(bursarId__icontains=request.GET.get('bursarid', ''))
     # bursars = bursars.filter(company__icontains=request.GET.get('company', ''))
@@ -50,6 +51,7 @@ def queryBursar(request):
         bursarPage = p.page(p.num_pages)
     data = {
         "bursarPage": bursarPage,
+        "teachers": teachers,
         "requestArgs": getArgsExcludePage(request),
     }
     return render(request, 'bursar/queryBursar.html', data)

@@ -30,14 +30,14 @@
             </td>
             <td >
                 {% if saleObj.bindteacher %}
-                    <span class="tooltips" data-toggle="tooltip" title="老师户ID:{{ saleObj.bindteacher.binduser.userprofile.nick }}">{{ saleObj.bindteacher.teacherId }}</span>
+                    <span class="tooltips" data-toggle="tooltip" title="老师用户ID:{{ saleObj.bindteacher.binduser.userprofile.nick }}">{{ saleObj.bindteacher.teacherId }} {{ saleObj.bindteacher.binduser.userprofile.nick }}</span>
                 {% else %}
                     无
                 {% endif %}
             </td>
             <td >
                 {% if saleObj.bindteacher and saleObj.bindteacher.bindbursar %}
-                    <span class="tooltips" data-toggle="tooltip" title="老师户ID:{{ saleObj.bindteacher.bindbursar.binduser.userprofile.nick }}">{{ saleObj.bindteacher.bindbursar.bursarId }}</span>
+                    <span class="tooltips" data-toggle="tooltip" title="财务用ID:{{ saleObj.bindteacher.bindbursar.binduser.userprofile.nick }}">{{ saleObj.bindteacher.bindbursar.bursarId }} {{ saleObj.bindteacher.bindbursar.binduser.userprofile.nick }}</span>
                 {% else %}
                     无
                 {% endif %}

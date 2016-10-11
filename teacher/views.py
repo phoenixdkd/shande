@@ -18,7 +18,7 @@ from shande.util import *
 from ops.models import *
 from super.models import *
 from teacher.models import *
-from teacher.models import *
+from sale.models import *
 
 @login_required()
 def teacherManage(request):
@@ -36,6 +36,7 @@ def teacherManage(request):
 
 @login_required()
 def queryTeacher(request):
+    sales = Sale.objects.all()
     teachers = Teacher.objects.all().order_by('teacherId')
     teachers = teachers.filter(teacherId__icontains=request.GET.get('teacherid', ''))
     teachers = teachers.filter(company__icontains=request.GET.get('company', ''))
@@ -53,6 +54,7 @@ def queryTeacher(request):
         teacherPage = p.page(p.num_pages)
     data = {
         "teacherPage": teacherPage,
+        "sales": sales,
         "requestArgs": getArgsExcludePage(request),
     }
     return render(request, 'teacher/queryTeacher.html', data)
@@ -78,7 +80,9 @@ def addTeacher(request):
                 # print(e.__str__())
                 pass
             newTeacher.binduser = User.objects.get(id=binduserid)
-        bindbursarid = request.POST['bindbursar']
+        else:
+            newTeacher.binduser = None
+        bindbursarid = request.POST.get('bindbursar', '无')
         if bindbursarid.isdigit():
             newTeacher.bindbursar = Bursar.objects.get(id=bindbursarid)
         else:
