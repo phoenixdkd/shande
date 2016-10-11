@@ -23,9 +23,22 @@
             </script>
             <td>{{ wxObj.friend }}</td>
             <td>
-
-                <button type="button" class="btn btn-sm btn-primary" onclick="editWxFriend(this)"
+                <button type="button" class="btn btn-sm btn-primary" id="wxFriendSerialButton" onclick="wxFriendSerial(this)"
+                    data-id="{{ wxObj.id }}">好友趋势</button>
+                <button type="button" class="btn btn-sm btn-primary" id="editWxFriendButton" onclick="editWxFriend(this)"
                     data-id="{{ wxObj.id }}">好友数管理</button>
+                <script type="text/javascript">
+                    var today = new Date();
+                    var year = today.getFullYear();
+                    var month = today.getMonth()+1;
+                    var day = today.getDate();
+                    var todayDate = year +"年"+ month +"月"+ day +"日";
+                    if("{{ wxObj.modify }}" == todayDate ){
+                        var buttonSelector = $('#editWxFriendButton');
+                        buttonSelector.attr('disabled', true);
+                        buttonSelector.attr('title', "今日已经录入过");
+                    }
+                </script>
                 {% if request.user.userprofile.title.role_name != 'sale' %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editWx(this)"
                     data-id="{{ wxObj.id }}"

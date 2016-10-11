@@ -109,6 +109,51 @@ def delWx(request):
     return HttpResponse(json.dumps(data))
 
 @login_required()
+def editWxFriend(request):
+    data = {}
+    try:
+        id = request.POST.get('ewid')
+        wx = Wx.objects.get(id=id)
+        lastDayFriend = wx.friend
+        todayFriend = request.POST.get('friend')
+        delta = int(todayFriend) - int(lastDayFriend)
+        wx.friend = todayFriend
+        wx.modify = datetime.date.today()
+        wfh = WxFriendHis.objects.create(wx=wx, day =datetime.date.today(), total=todayFriend, delta=delta)
+        wfh.save()
+        wx.save()
+        data['msg'] = '操作成功'
+        data['msgLevel'] = 'info'
+    except Exception as e:
+        print(e.__str__())
+        print(e.message)
+        if(str(e.__str__()).__contains__('wxfriendhis_day')):
+            data['msg'] = '操作失败,当天已经录入过好友数'
+        else:
+            data['msg'] = '操作失败'
+        data['msgLevel'] = 'error'
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def wxFriendSerial(request):
+    wx = Wx.objects.get(id=request.GET.get('id'))
+    friendHis = wx.wxfriendhis_set.all().order_by('-day')[0:30]
+    totalData = []
+    deltaData = []
+    dayData = []
+    for friend in friendHis:
+        deltaData.insert(0, friend.delta)
+        totalData.insert(0, friend.total)
+        dayData.insert(0, friend.day)
+    data = {
+        "totalData": totalData,
+        "deltaData": deltaData,
+        "dayData": dayData,
+    }
+
+    return render(request, "wxqq/wxFriendSerial.html", data)
+
+@login_required()
 def qqManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
@@ -194,3 +239,48 @@ def delQq(request):
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def editQqFriend(request):
+    data = {}
+    try:
+        id = request.POST.get('eqid')
+        qq = Qq.objects.get(id=id)
+        lastDayFriend = qq.friend
+        todayFriend = request.POST.get('friend')
+        delta = int(todayFriend) - int(lastDayFriend)
+        qq.friend = todayFriend
+        qq.modify = datetime.date.today()
+        qfh = QqFriendHis.objects.create(qq=qq, day =datetime.date.today(), total=todayFriend, delta=delta)
+        qfh.save()
+        qq.save()
+        data['msg'] = '操作成功'
+        data['msgLevel'] = 'info'
+    except Exception as e:
+        print(e.__str__())
+        print(e.message)
+        if(str(e.__str__()).__contains__('qqfriendhis_day')):
+            data['msg'] = '操作失败,当天已经录入过好友数'
+        else:
+            data['msg'] = '操作失败'
+        data['msgLevel'] = 'error'
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def qqFriendSerial(request):
+    qq = Qq.objects.get(id=request.GET.get('id'))
+    friendHis = qq.qqfriendhis_set.all().order_by('-day')[0:30]
+    totalData = []
+    deltaData = []
+    dayData = []
+    for friend in friendHis:
+        deltaData.insert(0, friend.delta)
+        totalData.insert(0, friend.total)
+        dayData.insert(0, friend.day)
+    data = {
+        "totalData": totalData,
+        "deltaData": deltaData,
+        "dayData": dayData,
+    }
+
+    return render(request, "wxqq/qqFriendSerial.html", data)

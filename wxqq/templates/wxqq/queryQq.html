@@ -5,6 +5,7 @@
             <td>QQ号</td>
             <td>QQ昵称</td>
             <td>绑定开发</td>
+            <td>当前好友数</td>
             <td>操作</td>
         </tr>
     </thead>
@@ -19,7 +20,25 @@
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
+             <td>{{ qqObj.friend }}</td>
             <td>
+                <button type="button" class="btn btn-sm btn-primary" id="qqFriendSerialButton" onclick="qqFriendSerial(this)"
+                    data-id="{{ qqObj.id }}">好友趋势</button>
+                <button type="button" class="btn btn-sm btn-primary" id="editQqFriendButton" onclick="editQqFriend(this)"
+                    data-id="{{ qqObj.id }}">好友数管理</button>
+                <script type="text/javascript">
+                    var today = new Date();
+                    var year = today.getFullYear();
+                    var month = today.getMonth()+1;
+                    var day = today.getDate();
+                    var todayDate = year +"年"+ month +"月"+ day +"日";
+                    if("{{ qqObj.modify }}" == todayDate ){
+                        var buttonSelector = $('#editQqFriendButton');
+                        buttonSelector.attr('disabled', true);
+                        buttonSelector.attr('title', "今日已经录入过");
+                    }
+                </script>
+                {% if request.user.userprofile.title.role_name != 'sale' %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editQq(this)"
                     data-id="{{ qqObj.id }}"
                     data-qqid="{{ qqObj.qqid }}"
@@ -29,6 +48,7 @@
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delQq(this)"
                     data-id="{{ qqObj.id }}">删除</button>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

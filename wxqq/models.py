@@ -16,10 +16,19 @@ class Wx(models.Model):
 
 class WxFriendHis(models.Model):
     wx = models.ForeignKey(Wx)
-    day = models.DateField('修改时间', null=True)
+    day = models.DateField('修改时间', null=True, unique=True)
     delta = models.IntegerField('变化量', default=0)
+    total = models.IntegerField('总量', default=0)
 
 class Qq(models.Model):
     qqid = models.CharField('qq号', max_length=30, unique=True)
     qqname = models.CharField('qq昵称', max_length=30, )
+    friend = models.IntegerField('好友数', default=0)
+    modify = models.DateField('修改时间', null=True)
     bindsale = models.ForeignKey(Sale, null=True, blank=True)  # 绑定开发
+
+class QqFriendHis(models.Model):
+    qq = models.ForeignKey(Qq)
+    day = models.DateField('修改时间', null=True, unique=True)
+    delta = models.IntegerField('变化量', default=0)
+    total = models.IntegerField('总量', default=0)
