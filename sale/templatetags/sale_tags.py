@@ -36,3 +36,13 @@ def getSaleDepartmentByUserId(uid):
     except:
         return "未找到绑定的开发ID"
 
+@register.simple_tag
+def getChargebackByUserId(uid):
+    try:
+        user = User.objects.get(id=uid)
+        commit = user.userprofile.commit
+        grade = user.userprofile.grade
+        return str(grade/commit *100) + '%'
+    except:
+        return 0
+

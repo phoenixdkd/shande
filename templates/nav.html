@@ -137,6 +137,10 @@
                 <td>开发部门</td>
                 <td>{% getSaleDepartmentByUserId request.user.id %}</td>
             </tr>
+            <tr>
+                <td>退单率</td>
+                <td>{% getChargebackByUserId request.user.id %}</td>
+            </tr>
         {% endif %}
         {% if request.user.userprofile.title.role_name == 'teacher' %}
             <tr>

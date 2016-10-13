@@ -16,6 +16,8 @@ class Title(models.Model):
 class UserProfile (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     company = models.CharField('公司', max_length=10, blank=True, null=True)
+    commit = models.IntegerField('提交数', default=0)
+    grade = models.IntegerField('有效客户数', default=0)
     department = models.CharField('部门', max_length=10, blank=True, null=True)
     cid = models.CharField('身份证号', max_length=18, blank=True, null=True)
     nick = models.CharField('真实姓名', max_length=10, blank=True, null=True)

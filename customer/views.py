@@ -154,6 +154,10 @@ def addCustomer(request):
             newCustomer.salesqq = Qq.objects.get(id=int(request.POST.get('salesqq')))
 
         newCustomer.save()
+        # 提交数加1
+        request.user.userprofile.commit += 1
+        request.user.userprofile.save()
+
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:

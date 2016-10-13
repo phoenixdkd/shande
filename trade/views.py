@@ -83,6 +83,9 @@ def addTrade(request):
         #如果是首笔交易，则判断是否VIP,并标记客户状态为有效客户
         if firstTrade:
             customer.status = 40
+            #绑定开发的真实用户有效客户数加1
+            customer.sales.binduser.userprofile.grade += 1
+            customer.sales.binduser.userprofile.save()
             if buycash >= 100000:
                 customer.vip = True
             else:
