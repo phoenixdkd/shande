@@ -33,8 +33,8 @@
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
-            <td>{{ customerObj.saleswx.wxid }}</td>
-            <td>{{ customerObj.salesqq.qqid }}</td>
+            <td>{% if customerObj.saleswx.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.saleswx.wxid }}</td>
+            <td>{% if customerObj.salesqq.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.salesqq.qqid }}</td>
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
             <td>{{ customerObj.wxid }}</td>

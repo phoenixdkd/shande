@@ -33,7 +33,7 @@ def wxManage(request):
 @login_required()
 def queryWx(request):
     data = {}
-    wxs = Wx.objects.all().order_by('wxid')
+    wxs = Wx.objects.all().order_by('delete', 'wxid')
 
     #不同角色看到的范围不同
     if request.user.userprofile.title.role_name in ['salemanager']:
@@ -55,6 +55,12 @@ def queryWx(request):
     wxs = wxs.filter(wxname__icontains=request.GET.get('wxname', ''))
     if 'bindsale' in request.GET and request.GET['bindsale'] != '':
         wxs = wxs.filter(bindsale__saleId__icontains=request.GET.get('bindsale'))
+    if request.GET.get('delete', '') != '':
+        isDelete = request.GET.get('delete')
+        if isDelete == '1':
+            wxs = wxs.filter(delete__isnull=False)
+        else:
+            wxs = wxs.filter(delete__isnull=True)
     p = Paginator(wxs, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -74,15 +80,21 @@ def queryWx(request):
 def addWx(request):
     data = {}
     try:
-        bindsaleid = int(request.POST.get('bindsale', '1'))
+        bindsaleid = request.POST.get('bindsale', '无')
         if request.POST['id'] == "":
-            newWx = Wx.objects.create(wxid=request.POST['wxid'], bindsale=Sale.objects.get(id=int(bindsaleid)))
+            newWx = Wx.objects.create(wxid=request.POST['wxid'])
             newWx.create = datetime.date.today()
         else:
             newWx = Wx.objects.get(id=int(request.POST['id']))
             newWx.wxid = request.POST['wxid']
-            newWx.bindsale = Sale.objects.get(id=int(bindsaleid))
+        if bindsaleid.isdigit():
+            newWx.bindsale = Sale.objects.get(id=bindsaleid)
+        else:
+            newWx.bindsale = None
         newWx.wxname = request.POST['wxname']
+        newWx.bindphone = request.POST.get('bindphone', '')
+        newWx.bindemail = request.POST.get('bindemail', '')
+        newWx.bindqq = request.POST.get('bindqq', '')
         newWx.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -100,9 +112,26 @@ def addWx(request):
 def delWx(request):
     data = {}
     try:
-        tmpWx = Wx.objects.get(id=request.POST['id'])
+        tmpWx = Wx.objects.get(id=request.POST['dwid'])
         tmpWx.delete = datetime.date.today()
+        tmpWx.reason = request.POST.get('reason')
         tmpWx.bindsale = None
+        tmpWx.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        print(e.__str__())
+        data['msg'] = "操作失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def resetWx(request):
+    data = {}
+    try:
+        tmpWx = Wx.objects.get(id=request.POST['id'])
+        tmpWx.delete = None
+        tmpWx.reason = ""
         tmpWx.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -170,7 +199,7 @@ def qqManage(request):
 @login_required()
 def queryQq(request):
     data = {}
-    qqs = Qq.objects.all().order_by('qqid')
+    qqs = Qq.objects.all().order_by('delete','qqid')
     # 不同角色看到的范围不同
     if request.user.userprofile.title.role_name in ['salemanager']:
         company = request.user.userprofile.company
@@ -191,6 +220,12 @@ def queryQq(request):
     qqs = qqs.filter(qqname__icontains=request.GET.get('qqname', ''))
     if 'bindsale' in request.GET and request.GET['bindsale'] != '':
         qqs = qqs.filter(bindsale__saleId__icontains=request.GET.get('bindsale'))
+    if request.GET.get('delete', '') != '':
+        isDelete = request.GET.get('delete')
+        if isDelete == '1':
+            qqs = qqs.filter(delete__isnull=False)
+        else:
+            qqs = qqs.filter(delete__isnull=True)
     p = Paginator(qqs, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -210,16 +245,27 @@ def queryQq(request):
 def addQq(request):
     data = {}
     try:
-        bindsaleid = int(request.POST.get('bindsale', '1'))
+        bindsaleid = request.POST.get('bindsale', '无')
+        print('debug 0')
         if request.POST['id'] == "":
-            newQq = Qq.objects.create(qqid=request.POST['qqid'], bindsale=Sale.objects.get(id=int(bindsaleid)))
+            print('debug 1')
+            newQq = Qq.objects.create(qqid=request.POST['qqid'])
+            print('debug 2')
             newQq.create = datetime.date.today()
         else:
-            newQq = Qq.objects.get(id=int(request.POST['id']))
+            print('debug 3')
+            newQq = Qq.objects.get(id=request.POST['id'])
             newQq.qqid = request.POST['qqid']
-            newQq.bindsale = Sale.objects.get(id=int(bindsaleid))
+        print('debug 4')
+        if bindsaleid.isdigit():
+            print('debug 5')
+            newQq.bindsale = Sale.objects.get(id=bindsaleid)
+        else:
+            print('debug 6')
+            newQq.bindsale = None
         newQq.qqname = request.POST['qqname']
         newQq.save()
+        print('debug 7')
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
@@ -236,9 +282,26 @@ def addQq(request):
 def delQq(request):
     data = {}
     try:
-        tmpQq = Qq.objects.get(id=request.POST['id'])
+        tmpQq = Qq.objects.get(id=request.POST['dqid'])
         tmpQq.delete = datetime.date.today()
+        tmpQq.reason = request.POST.get("reason", "")
         tmpQq.bindsale = None
+        tmpQq.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        print(e.__str__())
+        data['msg'] = "操作失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def resetQq(request):
+    data = {}
+    try:
+        tmpQq = Qq.objects.get(id=request.POST['id'])
+        tmpQq.delete = None
+        tmpQq.reason = ""
         tmpQq.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"

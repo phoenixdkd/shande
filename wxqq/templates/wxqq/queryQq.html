@@ -6,6 +6,9 @@
             <td>QQ昵称</td>
             <td>绑定开发</td>
             <td>当前好友数</td>
+            <td>创建时间</td>
+            <td>失效时间</td>
+            <td>失效原因</td>
             <td>操作</td>
         </tr>
     </thead>
@@ -23,9 +26,14 @@
                 $('.tooltips').tooltip();
             </script>
              <td>{{ qqObj.friend }}</td>
+             <td>{{ qqObj.create }}</td>
+             <td>{% if qqObj.delete %}{{ qqObj.delete }}{% endif %}</td>
+             <td>{{ qqObj.reason }}</td>
             <td>
                 <button type="button" class="btn btn-sm btn-primary" id="qqFriendSerialButton" onclick="qqFriendSerial(this)"
                     data-id="{{ qqObj.id }}">好友趋势</button>
+                {% if not qqObj.delete %}
+
                 <button type="button" class="btn btn-sm btn-primary" id="editQqFriendButton" onclick="editQqFriend(this)"
                     data-id="{{ qqObj.id }}">好友数管理</button>
                 <script type="text/javascript">
@@ -40,7 +48,8 @@
                         buttonSelector.attr('title', "今日已经录入过");
                     }
                 </script>
-                {% if request.user.userprofile.title.role_name != 'sale' %}
+                {% endif %}
+                {% if request.user.userprofile.title.role_name != 'sale'  and not qqObj.delete %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editQq(this)"
                     data-id="{{ qqObj.id }}"
                     data-qqid="{{ qqObj.qqid }}"
@@ -51,11 +60,15 @@
                 <button type="button" class="btn btn-sm btn-danger" onclick="delQq(this)"
                     data-id="{{ qqObj.id }}">标记失效</button>
                 {% endif %}
+                {% if request.user.userprofile.title.role_name != 'sale' and qqObj.delete %}
+                    <button type="button" class="btn btn-sm btn-danger" onclick="resetQq(this)"
+                        data-id="{{ qqObj.id }}">恢复使用</button>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="5">无开发QQ信息</td></tr>
+         <tr><td colspan="8">无开发QQ信息</td></tr>
     {% endif %}
     </tbody>
 </table>

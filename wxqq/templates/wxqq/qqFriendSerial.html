@@ -1,4 +1,4 @@
-<div id="main" style="width: 800px;height:400px;"></div>
+<div id="main" style="width: 850px;height:400px;"></div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
@@ -16,12 +16,13 @@
         },
         grid: {
             left: '3%',
-            right: '4%',
+            right: '10%',
             bottom: '3%',
             containLabel: true
         },
         toolbox: {
             feature: {
+                restore: {},
                 saveAsImage: {}
             }
         },
