@@ -25,6 +25,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="password" >密码</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="password" name="password"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="wxname" >微信昵称</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="wxname" name="wxname"/>
@@ -211,7 +217,7 @@
                             message: '请输入微信昵称'
                         }
                     }
-                },
+                }
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addWxModal').modal('hide');
@@ -241,7 +247,7 @@
                             message: '必填项'
                         }
                     }
-                },
+                }
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#delWxModal').modal('hide');
@@ -304,6 +310,7 @@
     }
     function editWx(obj){
         $('#id').val($(obj).data("id"));
+        $('#password').val($(obj).data("password"));
         $('#wxid').val($(obj).data("wxid"));
         $('#wxname').val($(obj).data("wxname"));
         $('#bindphone').val($(obj).data("bindphone"));

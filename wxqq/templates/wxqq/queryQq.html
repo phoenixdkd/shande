@@ -3,6 +3,7 @@
         <tr>
 {#            <td>ID</td>#}
             <td>QQ号</td>
+            <td>QQ密码</td>
             <td>QQ昵称</td>
             <td>绑定开发</td>
             <td>当前好友数</td>
@@ -20,6 +21,7 @@
             <td>{% if qqObj.delete %}
                 <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>
                 {% endif %}{{ qqObj.qqid }}</td>
+            <td>{{ qqObj.password }}</td>
             <td>{{ qqObj.qqname }}</td>
             <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ qqObj.bindsale.id }}">{{ qqObj.bindsale.saleId }} {{ qqObj.bindsale.binduser.userprofile.nick }}</span></td>
             <script type="text/javascript">
@@ -52,6 +54,7 @@
                 {% if request.user.userprofile.title.role_name != 'sale'  and not qqObj.delete %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editQq(this)"
                     data-id="{{ qqObj.id }}"
+                    data-password="{{ qqObj.password }}"
                     data-qqid="{{ qqObj.qqid }}"
                     data-qqname="{{ qqObj.qqname }}"
                     data-bindsale="{{ qqObj.bindsale.id }}"

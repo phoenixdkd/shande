@@ -23,6 +23,7 @@
             <td>{{ userObj.userprofile.department }}</td>
             <td>{{ userObj.userprofile.title.role_desc }}</td>
             <td>
+
                 <button type="button" class="btn btn-sm btn-warning" onclick="resetPw(this)"
                     data-userid="{{ userObj.id }}">重置密码</button>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editUser(this)"
@@ -37,6 +38,10 @@
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delUser(this)"
                     data-userid="{{ userObj.id }}">删除</button>
+                {% if userObj.userprofile.title.role_name == 'sale' %}
+                    <button type="button" class="btn btn-sm btn-success" onclick="chargebackSerial(this)"
+                    data-userid="{{ userObj.id }}">退单率走势</button>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

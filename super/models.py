@@ -28,6 +28,23 @@ class UserProfile (models.Model):
     def __str__(self):
         return self.user.username
 
+class UserCommitHis(models.Model):
+    user = models.ForeignKey(User)
+    day = models.DateField('修改时间', null=True)
+    delta = models.IntegerField('变化量', default=0)
+    total = models.IntegerField('总量', default=0)
+
+    class Meta:
+        unique_together = ("user", 'day')
+
+class UserGradeHis(models.Model):
+    user = models.ForeignKey(User)
+    day = models.DateField('修改时间', null=True)
+    delta = models.IntegerField('变化量', default=0)
+    total = models.IntegerField('总量', default=0)
+
+    class Meta:
+        unique_together = ("user", 'day')
 
 class Config(models.Model):
     key = models.CharField(max_length=30)

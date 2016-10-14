@@ -25,6 +25,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="password" >密码</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="password" name="password"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="qqname" >qq昵称</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="qqname" name="qqname"/>
@@ -285,6 +291,7 @@
     }
     function editQq(obj){
         $('#id').val($(obj).data("id"));
+        $('#password').val($(obj).data("password"));
         $('#qqid').val($(obj).data("qqid"));
         $('#qqname').val($(obj).data("qqname"));
         $('#bindsale').val($(obj).data("bindsale"));

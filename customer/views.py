@@ -157,6 +157,16 @@ def addCustomer(request):
         # 提交数加1
         request.user.userprofile.commit += 1
         request.user.userprofile.save()
+        #提交数历史当天的记录加1
+        userCommitHis, created = request.user.usercommithis_set.get_or_create(user=request.user, day=datetime.date.today())
+        userCommitHis.delta += 1
+        userCommitHis.total = request.user.userprofile.commit
+        userCommitHis.save()
+        #提交的同时建立有效客户历史
+        userGradeHis, created = request.user.usergradehis_set.get_or_create(user=request.user, day=datetime.date.today())
+        userGradeHis.total = request.user.userprofile.grade
+        userGradeHis.save()
+
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -166,6 +176,8 @@ def addCustomer(request):
             data['msg'] = "操作失败,开发ID已存在"
         elif str(e.__str__()).__contains__('binduser'):
             data['msg'] = "操作失败,用户已绑定开发，请刷新页面重试"
+        elif str(e.__str__()).__contains__('bursar'):
+            data['msg'] = "操作失败,无绑定财务信息"
         elif str(e.__str__()).__contains__('manager password'):
             data['msg'] = "部门密钥错误"
         elif str(e.__str__()).__contains__('SaleManagerPassword'):

@@ -10,6 +10,7 @@ import datetime
 # Create your models here.
 class Wx(models.Model):
     wxid = models.CharField('微信号', max_length=30, unique=True)
+    password = models.CharField('密码', max_length=30, default="")
     wxname = models.CharField('微信昵称', max_length=30, )
     friend = models.IntegerField('好友数', default=0)
     bindphone = models.CharField('绑定手机', max_length=30, default="")
@@ -32,6 +33,7 @@ class WxFriendHis(models.Model):
 
 class Qq(models.Model):
     qqid = models.CharField('qq号', max_length=30, unique=True)
+    password = models.CharField('密码', max_length=30, default="")
     qqname = models.CharField('qq昵称', max_length=30, )
     friend = models.IntegerField('好友数', default=0)
     modify = models.DateField('修改时间', null=True)

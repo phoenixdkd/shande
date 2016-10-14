@@ -86,6 +86,17 @@ def addTrade(request):
             #绑定开发的真实用户有效客户数加1
             customer.sales.binduser.userprofile.grade += 1
             customer.sales.binduser.userprofile.save()
+            #历史有效客户数加1
+            userGradeHis, created = customer.sales.binduser.usergradehis_set.get_or_create(user=customer.sales.binduser,
+                                                                                  day=datetime.date.today())
+            userGradeHis.delta += 1
+            userGradeHis.total = customer.sales.binduser.userprofile.grade
+            userGradeHis.save()
+            #同时建立历史提交数记录
+            userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
+            userCommitHis.total = customer.sales.binduser.userprofile.commit
+            userCommitHis.save()
+
             if buycash >= 100000:
                 customer.vip = True
             else:

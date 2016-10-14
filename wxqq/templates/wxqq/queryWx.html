@@ -3,6 +3,7 @@
         <tr>
 {#            <td>ID</td>#}
             <td>微信号</td>
+            <td>微信密码</td>
             <td>微信昵称</td>
             <td>绑定手机</td>
             <td>绑定邮箱</td>
@@ -23,6 +24,7 @@
             <td>{% if wxObj.delete %}
                 <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>
                 {% endif %}{{ wxObj.wxid }}</td>
+            <td>{{ wxObj.password }}</td>
             <td>{{ wxObj.wxname }}</td>
             <td>{{ wxObj.bindphone }}</td>
             <td>{{ wxObj.bindemail }}</td>
@@ -61,6 +63,7 @@
                 {% if request.user.userprofile.title.role_name != 'sale' and not wxObj.delete %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editWx(this)"
                     data-id="{{ wxObj.id }}"
+                    data-password="{{ wxObj.password }}"
                     data-wxid="{{ wxObj.wxid }}"
                     data-wxname="{{ wxObj.wxname }}"
                     data-bindsale="{{ wxObj.bindsale.id }}"

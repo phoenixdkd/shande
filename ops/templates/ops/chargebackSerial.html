@@ -1,0 +1,71 @@
+<div id="main" style="width: 850px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '退单率'
+        },
+        tooltip: {
+            trigger: 'item',
+
+        },
+        legend: {
+            data:['退单率', '提交数', '有效客户数'],
+            align: 'left',
+            left: 100
+        },
+        grid: {
+            left: '3%',
+            right: '10%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {},
+                dataView: {},
+                magicType: {
+                    type: ['stack', 'tiled']
+                },
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [{% for day in dayData %} '{{ day }}',{% endfor %}]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name:'退单率',
+                type:'line',
+                stack: '退单率',
+                data: [{% for chargeback in chargebackData %} '{{ chargeback }}',{% endfor %}],
+                formatter: "{c}%"
+            },
+            {
+                name:'提交数',
+                type:'bar',
+                barWidth: '2%',
+                stack: '提交数',
+                data: [{% for commit in userCommitDeltaData %} '{{ commit }}',{% endfor %}]
+            },
+            {
+                name:'有效客户数',
+                type:'bar',
+                barWidth: '2%',
+                stack: '有效客户数',
+                data: [{% for grade in userGradeDeltaData %} '{{ grade }}',{% endfor %}]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>

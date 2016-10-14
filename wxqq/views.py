@@ -91,6 +91,7 @@ def addWx(request):
             newWx.bindsale = Sale.objects.get(id=bindsaleid)
         else:
             newWx.bindsale = None
+        newWx.password = request.POST['password']
         newWx.wxname = request.POST['wxname']
         newWx.bindphone = request.POST.get('bindphone', '')
         newWx.bindemail = request.POST.get('bindemail', '')
@@ -263,6 +264,7 @@ def addQq(request):
         else:
             print('debug 6')
             newQq.bindsale = None
+        newQq.password = request.POST['password']
         newQq.qqname = request.POST['qqname']
         newQq.save()
         print('debug 7')

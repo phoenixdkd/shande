@@ -111,3 +111,26 @@ def resetPw(request):
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def chargebackSerial(request):
+    u = User.objects.get(id=request.GET.get('userid'))
+    userCommitHis = u.usercommithis_set.all().order_by('-day')[0:30]
+    userGradeHis = u.usergradehis_set.all().order_by('-day')[0:30]
+    userCommitDeltaData = []
+    userGradeDeltaData = []
+    chargebackData = []
+    dayData = []
+    for index in range(0, userCommitHis.__len__(), 1):
+        chargebackData.insert(0, float(userGradeHis[index].total) / float(userCommitHis[index].total) * 100)
+        userCommitDeltaData.insert(0, userCommitHis[index].delta)
+        userGradeDeltaData.insert(0, userGradeHis[index].delta)
+        dayData.insert(0, userGradeHis[index].day)
+    data = {
+        "chargebackData": chargebackData,
+        "userCommitDeltaData": userCommitDeltaData,
+        "userGradeDeltaData": userGradeDeltaData,
+        "dayData": dayData,
+    }
+
+    return render(request, "ops/chargebackSerial.html", data)
