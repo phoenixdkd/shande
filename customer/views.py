@@ -118,7 +118,7 @@ def addCustomer(request):
     try:
         if request.POST['id'] == "":
             sale = Sale.objects.get(binduser=request.user)
-            newCustomer = Customer.objects.create(sales=sale, create=timezone.now())
+            newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
             newCustomer.teacher = sale.bindteacher
             newCustomer.bursar = sale.bindteacher.bindbursar
             newCustomer.create = timezone.now()
