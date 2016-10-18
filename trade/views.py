@@ -65,12 +65,11 @@ def addTrade(request):
         existTrade = Trade.objects.filter(customer=customer)
         if existTrade.__len__() == 0:
             firstTrade = True
-        newTrade = Trade.objects.create(customer=customer, stockid=request.POST.get("stockid"))
+        newTrade = Trade.objects.create(customer=customer, stockid=request.POST.get("stockid"), create=timezone.now())
         # else:
         #     newTrade = Trade.objects.get(id=request.POST.get("id"))
         #     newTrade.stockid = request.POST.get('stockid')
         newTrade.status = 0
-        newTrade.create = timezone.now()
         newTrade.stockname = request.POST.get('stockname')
         buyprice = float(request.POST.get('buyprice'))
         buycount = int(request.POST.get('buycount'))
