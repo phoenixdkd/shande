@@ -52,3 +52,8 @@ class Config(models.Model):
 
     def __str__(self):
         return self.key
+
+class Transmission(models.Model):
+    user = models.OneToOneField(User)
+    transmission = models.CharField(max_length=300)
+    checked = models.BooleanField(default=False)

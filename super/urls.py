@@ -35,4 +35,6 @@ urlpatterns = [
     url(r'^titleManage$', views.titleManage, name='titleManage'),
     url(r'^addTitle$', views.addTitle, name='addTitle'),
     url(r'^deleteTitle$', views.deleteTitle, name='deleteTitle'),
+
+    url(r'^getTransmission$', views.getTransmission, name='getTransmission'),
 ]

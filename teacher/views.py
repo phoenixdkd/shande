@@ -25,12 +25,12 @@ def teacherManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='teacher').order_by("userprofile__nick")
-    # for teacher in Teacher.objects.all():
-    #     bindUsers = bindUsers.filter(~Q(id=teacher.binduser.id))
     bindBursars = Bursar.objects.all()
+    bindspotteachers = SpotTeacher.objects.all().order_by('teacherId')
     data = {
         "bindusers": bindUsers,
         "bindBursars": bindBursars,
+        "bindspotteachers": bindspotteachers,
     }
     return render(request, 'teacher/teacherManage.html', data)
 
@@ -87,8 +87,11 @@ def addTeacher(request):
             newTeacher.bindbursar = Bursar.objects.get(id=bindbursarid)
         else:
             newTeacher.bindbursar = None
-        # newTeacher.company = request.POST['company']
-        # newTeacher.department = request.POST['department']
+        bindspotteacherid = request.POST.get('bindspotteacher', '无')
+        if bindspotteacherid.isdigit():
+            newTeacher.bindspotteacher = SpotTeacher.objects.get(id=bindspotteacherid)
+        else:
+            newTeacher.bindspotteacher = None
         newTeacher.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"

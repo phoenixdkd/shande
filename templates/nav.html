@@ -33,11 +33,10 @@
                             <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
                             <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                             <li class=""><a href="{% url 'teacher:teacherManage' %}" target="_self">客户管理部ID</a></li>
+                            <li class=""><a href="{% url 'spot:teacherManage' %}" target="_self">现货客户管理部ID</a></li>
                             <li class=""><a href="{% url 'bursar:bursarManage' %}" target="_self">财务部ID</a></li>
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">开发部微信管理</a></li>
                             <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">开发部QQ管理</a></li>
-{#                            <li class=""><a href="{% url 'shande:sales_admin_report' %}" target="_self">开发公司业绩汇总</a></li>#}
-{#                            <li class=""><a href="{% url 'shande:admin_trademanager' %}" target="_self">客户交易信息</a></li>#}
                         </ul>
                     </li>
                 {% endif %}
@@ -52,22 +51,6 @@
                             {% endif %}
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">开发微信管理</a></li>
                             <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">开发QQ管理</a></li>
-{#                            <li class=""><a href="/shande/sales_wx?userid={{ user.username }}"#}
-{#                                                               target="_self">微信号信息绑定</a></li>#}
-{#                            <li class=""><a href="{% url 'shande:performance' %}"#}
-{#                                                               target="_self">业绩汇总</a></li>#}
-{#                            {% if user.userprofile.title == '开发部经理' or user.userprofile.title == '开发部总经理' or user.userprofile.title == '超级管理员' %}#}
-{#                            <li class=""><a href="{% url 'shande:sales_manager_report' %}"#}
-{#                                                               target="_self">部门业绩汇总</a></li>#}
-{#                            {% endif %}#}
-{#                            {% if user.userprofile.title == '开发部总经理' or user.userprofile.title == '超级管理员' %}#}
-{#                            <li class=""><a href="{% url 'shande:sales_company_report' %}"#}
-{#                                            target="_self">公司业绩汇总</a></li>#}
-{#                            <li class=""><a href="{% url 'shande:income_company_report' %}"#}
-{#                                            target="_self">公司盈利汇总</a></li>#}
-{#                            <li class=""><a href="{% url 'shande:sales_company_manage' %}"#}
-{#                                            target="_self">公司开发管理</a></li>#}
-{#                            {% endif %}#}
                         </ul>
                     </li>
                 {% endif %}
@@ -77,8 +60,15 @@
                            aria-haspopup="true" aria-expanded="false">客户管理专员菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'customer:customerHandle' %}" target="_self">交易管理</a></li>
-{#                            <li class=""><a href="{% url 'shande:trademanager' %}"#}
-{#                                                               target="_self">交易管理</a></li>#}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if user.userprofile.title.role_name in 'admin ops spotteacher' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false">现货客户管理菜单<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'spot:spotCustomer' %}" target="_self">现货管理</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -88,8 +78,6 @@
                            aria-haspopup="true" aria-expanded="false">财务菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'customer:customerPay' %}" target="_self">收款管理</a></li>
-{#                            <li class=""><a href="{% url 'shande:receiablereport' %}" target="_self">收款汇总</a></li>#}
-{#                            <li class=""><a href="{% url 'shande:finance_report' %}" target="_self">收款汇总</a></li>#}
                         </ul>
                     </li>
                 {% endif %}
@@ -190,6 +178,61 @@
             $('#msg').attr("class",'alert alert-danger');
         }
         $('#msgModal').modal('show');
+    }
+</script>
+
+<audio src="/static/assets/sound/incoming_transmission.ogg" id="transmissionAudio">
+您的浏览器不支持音频播放
+</audio>
+<script type="text/javascript">
+    var Toast = function(config) {
+        this.context = config.context == null ? $('body') : config.context;//上下文
+        this.message = config.message;//显示内容
+        this.time = config.time == null ? 3000 : config.time;//持续时间
+        this.left = config.left;//距容器左边的距离
+        this.top = config.top;//距容器上方的距离
+        this.init();
+    }
+    var msgEntity;
+    Toast.prototype = {
+        //初始化显示的位置内容等
+        init : function(){
+        $("#toastMessage").remove();
+        //设置消息体
+        var msgDIV = new Array();
+        msgDIV.push('<div id="toastMessage">');
+        msgDIV.push('<span>'+this.message+'</span>');
+        msgDIV.push('</div>');
+        msgEntity = $(msgDIV.join('')).appendTo(this.context);
+        //设置消息样式
+        var left = this.left == null ? this.context.width()-msgEntity.find('span').width()-100 : this.left;
+        var top = this.top == null ? '100px' : this.top;
+        msgEntity.css({position:'absolute',top:top,'z-index':'9999',left:left,
+          'background-color':'green',color:'white','font-size':'18px',padding:'10px',margin:'10px'});
+        msgEntity.hide();
+         },
+        //显示动画
+        show :function(){
+            msgEntity.fadeIn(this.time/2);
+            msgEntity.fadeOut(this.time/2);
+        }
+    };
+
+    {% if request.user.is_authenticated %}
+    setTimeout("showTransmission()", 3000);
+    {% endif %}
+    function showTransmission(){
+        $.post(
+                "{% url 'super:getTransmission' %}",
+                function(result) {
+                    if(result.hasMessage){
+                        $('#transmissionAudio')[0].play();
+                        new Toast({context:$('body'),message:result.msg}).show();
+                    }
+                },
+                'json'
+        )
+        setTimeout("showTransmission()", 3000)
     }
 </script>
 

@@ -16,6 +16,7 @@
             <td>GEM</td>
             <td>10W+</td>
             <td>大客户</td>
+            <td>现货客户评级</td>
             <td>待收款交易</td>
             <td>状态</td>
             <td>消息</td>
@@ -67,6 +68,18 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
             </td>
+            <td class="spotTd">
+                <lable class="spotLable">{{ customerObj.spotStatus }}</lable>
+                <select class="spotSelect" style="display: none" value="{{ customerObj.spotStatus }}"
+                data-id="{{ customerObj.id }}">
+                    <option value="未开发" {% if customerObj.spotStatus == "未开发" %}selected{% endif %}>未开发</option>
+                    <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>
+                    <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
+                    <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
+                    <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                </select>
+            </td>
+
             <td>
                 <span class="badge-info" title="待收款交易数">{% getNoPayTradeCountByCustomerId customerObj.id %}</span>
             </td>
@@ -99,18 +112,55 @@
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleValidCustomer(this)"
                         data-id="{{ customerObj.id }}">处理</button>
                 {% endif %}
-                {% if request.user.userprofile.title.role_name in "teacher teachermanager teacherboss"  and customerObj.status == 20 or customerObj.status == 40 %}
+                {% if request.user.userprofile.title.role_name in "teacher teachermanager teacherboss" %}
+                    {% if customerObj.status == 20 or customerObj.status == 40 %}
                     <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"
                         data-id="{{ customerObj.id }}">交易管理</button>
+                    {% endif %}
                 {% endif %}
             </td>
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="19">无客户信息</td></tr>
+         <tr><td colspan="20">无客户信息</td></tr>
     {% endif %}
     </tbody>
 </table>
+<script type="text/javascript">
+    var spotTdSelecter  = $('.spotTd');
+    var spotLableSelecter  = $('.spotLable');
+    var spotSelectSelecter  = $('.spotSelect');
+    spotTdSelecter.dblclick(function(){
+        var label = $(this).find(spotLableSelecter);
+        if(label.text() == 'D'){
+            return;
+        }
+        label.hide();
+        var select = $(this).find(spotSelectSelecter);
+        select.val(label.text());
+        select.show();
+        select.focus();
+    });
+    spotSelectSelecter.blur(function(){
+        $(this).parent().find(spotLableSelecter).show();
+        $(this).hide();
+    }).change(function(){
+        var spot = $(this).val();
+        var id = $(this).data('id');
+        if(spot == 'D'){
+            $('#spotCustomerId').val(id);
+            $('#handleSpotCustomerModal').modal('show');
+        }else{
+            $(this).parent().find(spotLableSelecter).text(spot);
+            $.post(
+                "{% url 'customer:editSpot' %}",
+                "id="+id+'&spot='+spot,
+                function(){},
+                'json'
+            );
+        }
+    });
+</script>
 <nav class="navbar-right">
   <ul class="pagination">
     <li>

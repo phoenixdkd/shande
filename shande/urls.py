@@ -23,7 +23,7 @@ from teacher import urls as teacherurls
 from bursar import urls as bursarurls
 from wxqq import urls as wxqqurls
 from trade import urls as tradeurls
-
+from spot import urls as spoturls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
@@ -50,4 +50,7 @@ urlpatterns = [
 
     # app trade
     url(r'^trade/', include(tradeurls, namespace="trade")),
+
+    # app spot
+    url(r'^spot/', include(spoturls, namespace="spot")),
 ]

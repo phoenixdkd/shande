@@ -6,9 +6,8 @@
             <td>隶属公司</td>
             <td>隶属部门</td>
             <td>绑定用户</td>
-            <td>绑定开发</td>
-            <td>绑定财务</td>
-            <td>绑定现货老师</td>
+            <td>绑定老师</td>
+
             <td>操作</td>
         </tr>
     </thead>
@@ -28,15 +27,11 @@
             </script>
             <td>
             <table>
-                {% for sale in teacherObj.getSaleList %}
-                    <tr><td>{{ sale.saleId }} {{ sale.binduser.userprofile.nick }} </td></tr>
+                {% for teacher in teacherObj.getTeacherList %}
+                    <tr><td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }} </td></tr>
                 {% endfor %}
             </table>
             </td>
-
-            <td>{{ teacherObj.bindbursar.bursarId }} {{ teacherObj.bindbursar.binduser.userprofile.nick }}</td>
-            <td>{{ teacherObj.bindspotteacher.teacherId}} {{ teacherObj.bindspotteacher.binduser.userprofile.nick }}</td>
-
             <td>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editTeacher(this)"
                     data-id="{{ teacherObj.id }}"
@@ -44,8 +39,6 @@
                     data-company="{{ teacherObj.company }}"
                     data-department="{{ teacherObj.department }}"
                     data-binduser="{{ teacherObj.binduser.id }}"
-                    data-bindbursar="{{ teacherObj.bindbursar.id }}"
-                    data-bindspotteacher="{{ teacherObj.bindspotteacher.id }}"
                 >编辑</button>
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delTeacher(this)"
@@ -54,7 +47,7 @@
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="6">无老师信息</td></tr>
+         <tr><td colspan="6">无现货老师信息</td></tr>
     {% endif %}
     </tbody>
 </table>

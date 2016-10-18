@@ -13,6 +13,7 @@ import string
 import datetime
 import traceback
 import json
+import time
 
 from shande.settings import BASE_DIR
 from shande.util import *
@@ -20,6 +21,7 @@ from ops.models import *
 from super.models import *
 from sale.models import *
 from customer.models import *
+from spot.models import *
 
 @login_required()
 def customerManage(request):
@@ -109,6 +111,7 @@ def queryCustomer(request):
     }
     return render(request, 'customer/queryCustomer.html', data)
 
+#编辑和修改客户信息
 @login_required()
 def addCustomer(request):
     data = {}
@@ -118,6 +121,7 @@ def addCustomer(request):
             newCustomer = Customer.objects.create(sales=sale)
             newCustomer.teacher = sale.bindteacher
             newCustomer.bursar = sale.bindteacher.bindbursar
+            newCustomer.create = timezone.now()
         else:
             newCustomer = Customer.objects.get(id=int(request.POST['id']))
             if request.user.userprofile.title.role_name == 'sale' and newCustomer.status == 0:
@@ -152,7 +156,7 @@ def addCustomer(request):
             newCustomer.qqid = request.POST.get('qqid', '')
             newCustomer.qqname = request.POST.get('qqname', '')
             newCustomer.salesqq = Qq.objects.get(id=int(request.POST.get('salesqq')))
-
+        newCustomer.modify = timezone.now()
         newCustomer.save()
         # 提交数加1
         request.user.userprofile.commit += 1
@@ -167,6 +171,13 @@ def addCustomer(request):
         userGradeHis.total = request.user.userprofile.grade
         userGradeHis.save()
 
+        #提交时刷新对应老师的消息
+        teacherUser = newCustomer.teacher.binduser
+        if teacherUser:
+            transmission, created = Transmission.objects.get_or_create(user=teacherUser)
+            transmission.transmission = "客户信息有更新，请刷新页面查看。"
+            transmission.checked = False
+            transmission.save()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -347,6 +358,14 @@ def getCustomerById(request):
     return render(request, 'customer/getCustomerById.html', data)
 
 @login_required()
+def getSpotCustomerById(request):
+    customer = Customer.objects.get(id=request.GET.get('customerid'))
+    data = {
+        "customer": customer,
+    }
+    return render(request, 'customer/getSpotCustomerById.html', data)
+
+@login_required()
 def customerPay(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
         return HttpResponseRedirect("/")
@@ -415,3 +434,41 @@ def queryCustomerPay(request):
         "requestArgs": getArgsExcludePage(request),
     }
     return render(request, 'customer/queryCustomerPay.html', data)
+
+@login_required()
+def editSpot(request):
+    try:
+        customer = Customer.objects.get(id=request.POST.get('id'))
+        spot = request.POST.get('spot')
+        customer.spotStatus = spot
+        customer.save()
+    except Exception as e:
+        print(e.__str__())
+    return HttpResponse("")
+
+@login_required()
+def handleSpotCustomer(request):
+    data = {}
+    try:
+        customer = Customer.objects.get(id=request.POST.get('spotCustomerId'))
+        customer.spotTeacher = Teacher.objects.get(binduser=request.user).bindspotteacher
+        customer.spotCash = request.POST.get('spotCash')
+        customer.spotTime = datetime.date.today()
+        currentTimeStamp = time.mktime(timezone.now().timetuple())
+        firstTradeTimeStamp = time.mktime(customer.first_trade.timetuple())
+        spotDay = (currentTimeStamp - firstTradeTimeStamp) / 86400 + 1
+        customer.spotDay = spotDay
+        customer.spotStatus = 'D'
+        customer.save()
+        spot = Spot.objects.create(customer=customer)
+        spot.create = timezone.now()
+        spot.type = 0
+        spot.cash = request.POST.get('spotCash')
+        spot.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        print(e.__str__())
+        data['msg'] = "操作失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))

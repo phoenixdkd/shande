@@ -18,7 +18,7 @@ import traceback
 import json
 
 from shande.settings import BASE_DIR
-from super.models import Config, Title
+from super.models import *
 
 
 # Create your views here.
@@ -64,6 +64,8 @@ def login_view(request):
                         redirect_to = '/customer/customerManage'
                     elif userauth.userprofile.title.role_name in ['teacher', 'teacherboss', 'teachermanager']:
                         redirect_to = '/customer/customerHandle'
+                    elif userauth.userprofile.title.role_name in ['spotteacher']:
+                        redirect_to = '/spot/spotCustomer'
                     elif userauth.userprofile.title.role_name in ['bursar', 'bursarmanager']:
                         redirect_to = '/customer/customerPay'
                     elif userauth.userprofile.title.role_name in ['admin', 'ops']:
@@ -212,4 +214,25 @@ def logoUpload(request):
         print(e.__str__)
         data['msg'] = "删除职位失败"
         data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def getTransmission(request):
+    msg = ""
+    try:
+        transmission = Transmission.objects.get(user=request.user, checked=False)
+        msg = transmission.transmission
+        transmission.checked = True
+        transmission.save()
+
+    except Exception as e:
+        hasMessage = False
+    if msg:
+        hasMessage = True
+    else:
+        hasMessage = False
+    data = {
+        "hasMessage": hasMessage,
+        "msg": msg,
+    }
     return HttpResponse(json.dumps(data))

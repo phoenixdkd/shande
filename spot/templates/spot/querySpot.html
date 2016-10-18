@@ -1,0 +1,70 @@
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>交易时间</td>
+            <td>交易动作</td>
+            <td>金额</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if spotPage %}
+    {% for spotObj in spotPage %}
+        <tr>
+{#            <td>{{ spotObj.id }}</td>#}
+            <td>{{ spotObj.create }}</td>
+            <td>
+                {% if spotObj.type == 0 %}
+                    首次入金
+                {% elif spotObj.type == 10 %}
+                    加仓
+                {% elif spotObj.type == 20 %}
+                    减仓
+                {% elif spotObj.type == 30 %}
+                    盈
+                {% elif spotObj.type == 40 %}
+                    亏
+                {% endif %}
+            </td>
+            <td>{{ spotObj.cash}}</td>
+            <td>
+                {% if request.user.userprofile.title.role_name == 'spotteacher' %}
+                <button type="button" class="btn btn-sm btn-primary" onclick="handleSpot(this)"
+                    data-hsid="{{ spotObj.id }}"
+                    data-hstype="{{ spotObj.type }}"
+                    data-hscash="{{ spotObj.cash }}"
+                    data-hscustomerid="{{ spotObj.customer.id }}"
+                >修改</button>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="5">无交易信息</td></tr>
+    {% endif %}
+        <tr style="color:red">
+            <td></td>
+            <td>合计</td>
+            <td>{{ cashTotal }}</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if tradePage.has_previous %}
+            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ tradePage.number }}/{{ tradePage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if tradePage.has_next %}
+            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

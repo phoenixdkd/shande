@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from sale.models import Sale
-from teacher.models import Teacher
+from sale.models import *
+from teacher.models import *
 from bursar.models import Bursar
 from wxqq.models import Wx, Qq
 
@@ -21,6 +21,11 @@ class Customer(models.Model):
     startup = models.IntegerField('初始资金', default=0)
     gem = models.BooleanField('创业板', default=False)
     crude = models.BooleanField('原油10W+', default=False)
+    spotStatus = models.CharField('现货客户状态', max_length=5, default="未开发")
+    spotTime = models.DateTimeField('现货输送时间', null=True)
+    spotDay = models.IntegerField('开发周期', null=True)
+    spotTeacher = models.ForeignKey(SpotTeacher, null=True)
+    spotCash = models.DecimalField('现货资金', max_digits=20, decimal_places=2, default=50000)
     vip = models.BooleanField('大客户', default=False)
     honest = models.BooleanField('诚信客户', default=True)
     # message list
@@ -44,5 +49,5 @@ class Customer(models.Model):
     receivable = models.IntegerField('盈利总额', default=0)
     first_trade_cash = models.DecimalField('首笔资金', max_digits=20, decimal_places=2, default=0)
     first_trade = models.DateTimeField('首单时间', null=True)
-    create = models.DateTimeField('创建时间', default=timezone.now())
-    modify = models.DateTimeField('更新时间', default=timezone.now())
+    create = models.DateTimeField('创建时间')
+    modify = models.DateTimeField('更新时间')

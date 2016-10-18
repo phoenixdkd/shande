@@ -1,6 +1,6 @@
 {% extends 'base_noheader.html' %}
 
-{% block title %}老师管理{% endblock %}
+{% block title %}现货老师管理{% endblock %}
 {% block content %}
 
     <div class="modal fade" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -22,44 +22,6 @@
                                 <input type="text" class="form-control" id="teacherid" name="teacherid"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="不允许为空"/>
-                            </div>
-                        </div>
-{#                        <div class="form-group">#}
-{#                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>#}
-{#                            <div class="col-md-5">#}
-{#                                <input type="text" class="form-control" id="company" name="company"/>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="form-group">#}
-{#                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>#}
-{#                            <div class="col-md-5">#}
-{#                                <input type="text" class="form-control" id="department" name="department"/>#}
-{#                            </div>#}
-{#                        </div>#}
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="bindbursar" >绑定财务</label>
-                            <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindbursar" name="bindbursar">
-                                    <option>无</option>
-                                    {% if bindBursars %}
-                                        {% for bindbursar in bindBursars %}
-                                            <option value="{{ bindbursar.id }}"> {{ bindbursar.bursarId }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="bindspotteacher" >现货老师</label>
-                            <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindspotteacher" name="bindspotteacher">
-                                    <option>无</option>
-                                    {% if bindspotteachers %}
-                                        {% for bindspotteacher in bindspotteachers %}
-                                            <option value="{{ bindspotteacher.id }}"> {{ bindspotteacher.teacherId }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,7 +56,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">老师组管理</h4>
+                    <h4 class="modal-title">现货老师组管理</h4>
                 </div>
 
                 <div class="modal-body">
@@ -158,7 +120,7 @@
         formValidator();
     }
     function loadTeacherDiv(data){
-        $('#teacherDiv').load("{% url 'teacher:queryTeacher' %}", data);
+        $('#teacherDiv').load("{% url 'spot:queryTeacher' %}", data);
     }
     function formValidator(){
         $('#addTeacherForm').bootstrapValidator({
@@ -173,29 +135,15 @@
                 teacherid: {
                     validators: {
                         notEmpty: {
-                            message: '请输入财务ID'
+                            message: '必填项'
                         }
                     }
-                },
-                company: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入公司'
-                        }
-                    }
-                },
-                department: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入部门',
-                        },
-                    }
-                },
+                }
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addTeacherModal').modal('hide');
                 $.post(
-                    "{% url 'teacher:addTeacher' %}",
+                    "{% url 'spot:addTeacher' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
@@ -246,7 +194,7 @@
             submitHandler: function (validator, form, submitButton) {
                 $('#addTeacherGroupModal').modal('hide');
                 $.post(
-                    "{% url 'teacher:addTeacherGroup' %}",
+                    "{% url 'spot:addTeacherGroup' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
@@ -278,14 +226,13 @@
         $('#company').val($(obj).data("company"));
         $('#department').val($(obj).data("department"));
         $('#binduser').val($(obj).data("binduser"));
-        $('#bindbursar').val($(obj).data("bindbursar"));
         $('#addTeacherModal').modal("show");
     }
     function delTeacher(obj){
         if(confirm("删除确认")){
             var id = $(obj).data("id");
             $.post(
-                "{% url 'teacher:delTeacher' %}",
+                "{% url 'spot:delTeacher' %}",
                 {id:id},
                 function(result) {
                     showMsgModal(result.msg, result.msgLevel);

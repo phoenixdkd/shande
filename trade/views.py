@@ -63,7 +63,6 @@ def addTrade(request):
         customer = Customer.objects.get(id=request.POST.get('customerid'))
         # 判断是否首笔交易
         existTrade = Trade.objects.filter(customer=customer)
-        print(existTrade.__len__())
         if existTrade.__len__() == 0:
             firstTrade = True
         newTrade = Trade.objects.create(customer=customer, stockid=request.POST.get("stockid"))
@@ -71,7 +70,7 @@ def addTrade(request):
         #     newTrade = Trade.objects.get(id=request.POST.get("id"))
         #     newTrade.stockid = request.POST.get('stockid')
         newTrade.status = 0
-
+        newTrade.create = timezone.now()
         newTrade.stockname = request.POST.get('stockname')
         buyprice = float(request.POST.get('buyprice'))
         buycount = int(request.POST.get('buycount'))
@@ -83,6 +82,8 @@ def addTrade(request):
         #如果是首笔交易，则判断是否VIP,并标记客户状态为有效客户
         if firstTrade:
             customer.status = 40
+            customer.first_trade_cash = buycash
+            customer.first_trade = timezone.now()
             #绑定开发的真实用户有效客户数加1
             customer.sales.binduser.userprofile.grade += 1
             customer.sales.binduser.userprofile.save()

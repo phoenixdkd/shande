@@ -1,0 +1,100 @@
+{% load customer_tags %}
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+             <td>创建时间</td>
+            <td>姓名</td>
+            <td>电话</td>
+            <td>微信号</td>
+            <td>微信昵称</td>
+            <td>QQ号</td>
+            <td>QQ昵称</td>
+            <td>开发周期(天)</td>
+            <td>首次入金</td>
+            <td>净入金</td>
+            <td>对接老师ID</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if customerPage %}
+    {% for customerObj in customerPage %}
+        <tr>
+{#            <td>{{ customerObj.id }}</td>#}
+             <td>{{ customerObj.create }}</td>
+            <td>{{ customerObj.name }}</td>
+            <td>{{ customerObj.phone }}</td>
+            <td>{{ customerObj.wxid }}</td>
+            <td>{{ customerObj.wxname }}</td>
+            <td>{{ customerObj.qqid }}</td>
+            <td>{{ customerObj.qqname }}</td>
+            <td>{{ customerObj.spotDay }}</td>
+            <td>{{ customerObj.spotCash }}</td>
+            <td>{{ customerObj.spotCash }}</td>
+            <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
+            <td>
+                {% if request.user.userprofile.title.role_name in "spotteacher" %}
+                    <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"
+                        data-id="{{ customerObj.id }}">现货管理</button>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="20">无客户信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<script type="text/javascript">
+    var spotTdSelecter  = $('.spotTd');
+    var spotLableSelecter  = $('.spotLable');
+    var spotSelectSelecter  = $('.spotSelect');
+    spotTdSelecter.dblclick(function(){
+        var label = $(this).find(spotLableSelecter);
+        if(label.text() == 'D'){
+            return;
+        }
+        label.hide();
+        var select = $(this).find(spotSelectSelecter);
+        select.val(label.text());
+        select.show();
+        select.focus();
+    });
+    spotSelectSelecter.blur(function(){
+        $(this).parent().find(spotLableSelecter).show();
+        $(this).hide();
+    }).change(function(){
+        var spot = $(this).val();
+        var id = $(this).data('id');
+        if(spot == 'D'){
+            $('#spotCustomerId').val(id);
+            $('#handleSpotCustomerModal').modal('show');
+        }else{
+            $(this).parent().find(spotLableSelecter).text(spot);
+            $.post(
+                "{% url 'customer:editSpot' %}",
+                "id="+id+'&spot='+spot,
+                function(){},
+                'json'
+            );
+        }
+    });
+</script>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if customerPage.has_previous %}
+            <span aria-hidden="true" onclick="loadCustomerDiv('page={{ customerPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ customerPage.number }}/{{ customerPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if customerPage.has_next %}
+            <span aria-hidden="true" onclick="loadCustomerDiv('page={{ customerPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>

@@ -9,6 +9,7 @@ from django.utils import timezone
 class Trade(models.Model):
     customer = models.ForeignKey(Customer)
     # 0 未出货(新录入); 10 亏损; 11 已补亏;  20 盈利 提交财务收款; 30 已收款;
+
     status = models.IntegerField('交易状态', default=0)
     stockid = models.CharField('产品ID', max_length=30)
     stockname = models.CharField('产品名称', max_length=30)
@@ -21,7 +22,7 @@ class Trade(models.Model):
     commission = models.DecimalField('手续费', max_digits=10, decimal_places=2, default=0)
     # 支付宝
     paytype = models.CharField('收款类型', max_length=30, default="")
-    create = models.DateTimeField('收款时间', default=timezone.now())
+    create = models.DateTimeField('交易时间')
     paytime = models.DateTimeField('收款时间', default=None, null=True)
 
 

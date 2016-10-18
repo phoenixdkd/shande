@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^handleCustomer$', views.handleCustomer, name='handleCustomer'),
     url(r'^handleValidCustomer$', views.handleValidCustomer, name='handleValidCustomer'),
     url(r'^handleValidCustomer$', views.handleValidCustomer, name='handleValidCustomer'),
+    url(r'^editSpot$', views.editSpot, name='editSpot'),
+    url(r'^handleSpotCustomer$', views.handleSpotCustomer, name='handleSpotCustomer'),
 
     #for bursar
     url(r'^customerPay$', views.customerPay, name='customerPay'),
@@ -21,6 +23,8 @@ urlpatterns = [
 
     #for trade
     url(r'^getCustomerById$', views.getCustomerById, name='getCustomerById'),
+    url(r'^getSpotCustomerById$', views.getSpotCustomerById, name='getSpotCustomerById'),
+
 
 
 ]

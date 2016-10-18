@@ -1,0 +1,33 @@
+ {% load customer_tags %}
+ <table class="table table-bordered">
+    <thead>
+        <tr class="bg-info">
+            <th>创建时间</th>
+            <th>姓名</th>
+            <th>电话</th>
+            <th>微信号</th>
+            <th>微信昵称</th>
+            <th>QQ号</th>
+            <th>QQ昵称</th>
+            <th>开发周期(天)</th>
+            <th>首次入金</th>
+            <th>净入金</th>
+            <th>对接老师ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ customer.create }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.wxid }}</td>
+            <td>{{ customer.wxname }}</td>
+            <td>{{ customer.qqid }}</td>
+            <td>{{ customer.qqname }}</td>
+            <td>{{ customer.spotDay }}</td>
+            <td>{{ customer.spotCash }}</td>
+            <td>{{ customer.spotCash }}</td>
+            <td>{{ customer.teacher.teacherId }} {{ customer.teacher.binduser.userprofile.nick }}</td>
+        </tr>
+    </tbody>
+</table>

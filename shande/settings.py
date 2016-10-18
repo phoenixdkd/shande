@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'bursar',
     'wxqq',
     'trade',
+    'spot',
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -1,0 +1,108 @@
+{% extends 'base_full_noheader.html' %}
+
+{% block title %}现货交易管理{% endblock %}
+{% block content %}
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadSpotCustomerDiv();
+    });
+    function resetFormValidator(){
+        $('#searchCustomerHandleForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadSpotCustomerDiv(data){
+        $('#spotCustomerDiv').load("{% url 'spot:querySpotCustomer' %}", data);
+    }
+    function formValidator(){
+        $('#searchCustomerHandleForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadSpotCustomerDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+    }
+    function tradeManage(obj){
+        var customerId = $(obj).data("id");
+        var width = $(window).width();
+        var height = $(window).height()-100;
+        window.open('/spot/spotManage?customerId=' + customerId, '_blank', 'top=100px, left=0, height='+height+', width='+width);
+    }
+    </script>
+    <br/>
+    <br/>
+
+    <form id="searchCustomerHandleForm" method="POST" class="form-horizontal ">
+        <div class="form-group">
+            <label class="col-md-1 control-label">老师ID</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ teacherid }}" name="teacherid"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">姓名</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ name }}" name="name"/>
+            </div>
+            <label class="col-md-1 control-label">电话</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ phone }}" name="phone"/>
+            </div>
+
+            <label class="col-md-1 control-label">创建时间</label>
+            <div class="col-md-1 ">
+                 <input type="date" style="width: 101px" class="form-control datetime" value="{{ startDate }}" name="startDate"
+                 title="起始时间"/>
+            </div>
+            <div class="col-md-1 ">
+                 <input type="date" style="width:101px" class="form-control datetime" value="{{ endDate }}" name="endDate"
+                 title="结束时间"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">来源微信</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ saleswx }}" name="saleswx"/>
+            </div>
+            <label class="col-md-1 control-label">微信号</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxid }}" name="wxid"/>
+            </div>
+            <label class="col-md-1 control-label">微信昵称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">来源QQ</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ salesqq }}" name="salesqq"/>
+            </div>
+            <label class="col-md-1 control-label">QQ号</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ qqid }}" name="qqid"/>
+            </div>
+            <label class="col-md-1 control-label">QQ昵称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ qqname }}" name="qqname"/>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+        </div>
+    </form>
+    <div id="spotCustomerDiv"></div>
+{% endblock %}
