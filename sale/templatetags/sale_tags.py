@@ -42,8 +42,9 @@ def getChargebackByUserId(uid):
         user = User.objects.get(id=uid)
         commit = user.userprofile.commit
         grade = user.userprofile.grade
-        print("str = " +str(float(grade)/float(commit)))
-        return str(grade)+"/"+str(commit)+"("+str(float(grade)/float(commit) *100) + '%)'
+
+        x = float(grade)/float(commit) *100
+        return "%s / %s (%.2f" % (grade, commit, x) + '%)'
     except Exception as e:
         print("str"+ e.message)
         return 0
