@@ -72,11 +72,28 @@
                 <lable class="spotLable">{{ customerObj.spotStatus }}</lable>
                 <select class="spotSelect" style="display: none" value="{{ customerObj.spotStatus }}"
                 data-id="{{ customerObj.id }}">
-                    <option value="未开发" {% if customerObj.spotStatus == "未开发" %}selected{% endif %}>未开发</option>
-                    <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>
-                    <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
-                    <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
-                    <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                    {% if customerObj.spotStatus  == "未开发" %}
+                        <option value="未开发" {% if customerObj.spotStatus == "未开发" %}selected{% endif %}>未开发</option>
+                        <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>
+                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
+                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
+                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                    {% endif %}
+                    {% if customerObj.spotStatus  == "A" %}
+                        <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>
+                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
+                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
+                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                    {% endif %}
+                    {% if customerObj.spotStatus  == "B" %}
+                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
+                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
+                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                    {% endif %}
+                    {% if customerObj.spotStatus  == "C" %}
+                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
+                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                    {% endif %}
                 </select>
             </td>
 

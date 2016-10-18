@@ -219,7 +219,7 @@
     };
 
     {% if request.user.is_authenticated %}
-    setTimeout("showTransmission()", 3000);
+    setTimeout("showTransmission()", 5000);
     {% endif %}
     function showTransmission(){
         $.post(
@@ -232,7 +232,7 @@
                 },
                 'json'
         )
-        setTimeout("showTransmission()", 3000)
+        setTimeout("showTransmission()", 5000)
     }
 </script>
 
