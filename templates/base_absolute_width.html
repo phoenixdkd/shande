@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}默认标题{% endblock %} - 智库科技</title>
+    <meta name="description" content="{% block description %}智库科技{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}shande{% endblock %}">
+    {% include 'header.html' %}
+</head>
+<body style="width: 2048px;">
+{% include 'nav.html' %}
+<br/>
+
+<div class="container bs-docs-container col-md-12" >
+    <div class="row">
+        <div>
+            {% block content %}
+            <div>未找到指定模板,请联系管理员</div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% include 'bottom.html' %}
+</body>
+</html>
