@@ -62,7 +62,7 @@
                                 <option>无</option>
                                     {% if bindsales %}
                                         {% for bindsale in bindsales %}
-                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }}</option>
+                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }} {{ bindsale.binduser.userprofile.nick }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>

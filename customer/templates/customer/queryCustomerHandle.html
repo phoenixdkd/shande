@@ -16,6 +16,9 @@
             <td>GEM</td>
             <td>10W+</td>
             <td>大客户</td>
+            <td>最近买入产品</td>
+            <td>累计回款金额</td>
+            <td>已合作次数</td>
             <td>现货客户评级</td>
             <td>待收款交易</td>
             <td>状态</td>
@@ -68,9 +71,14 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
             </td>
+            <td>{% getLatestProductByCustomerId customerObj.id %}</td>
+            <td>{% getCommissionTotalByCustomerId customerObj.id %}</td>
+            <td>{% getTradeTotalByCustomerId customerObj.id %}</td>
             <td class="spotTd">
-                <lable class="spotLable">{{ customerObj.spotStatus }}</lable>
-                <select class="spotSelect" style="display: none" value="{{ customerObj.spotStatus }}"
+{#                <lable class="btn btn-xs btn-primary spotLable">{{ customerObj.spotStatus }}</lable>#}
+                <select class="spotSelect"
+{#                        style="display: none" #}
+                        value="{{ customerObj.spotStatus }}"
                 data-id="{{ customerObj.id }}">
                     {% if customerObj.spotStatus  == "未开发" %}
                         <option value="未开发" {% if customerObj.spotStatus == "未开发" %}selected{% endif %}>未开发</option>
@@ -92,6 +100,9 @@
                     {% endif %}
                     {% if customerObj.spotStatus  == "C" %}
                         <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
+                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
+                    {% endif %}
+                    {% if customerObj.spotStatus  == "D" %}
                         <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
                     {% endif %}
                 </select>
@@ -144,37 +155,57 @@
     </tbody>
 </table>
 <script type="text/javascript">
-    var spotTdSelecter  = $('.spotTd');
-    var spotLableSelecter  = $('.spotLable');
+{#    var spotTdSelecter  = $('.spotTd');#}
+{#    var spotLableSelecter  = $('.spotLable');#}
     var spotSelectSelecter  = $('.spotSelect');
-    spotTdSelecter.dblclick(function(){
-        var label = $(this).find(spotLableSelecter);
-        if(label.text() == 'D'){
-            return;
-        }
-        label.hide();
-        var select = $(this).find(spotSelectSelecter);
-        select.val(label.text());
-        select.show();
-        select.focus();
-    });
-    spotSelectSelecter.blur(function(){
-        $(this).parent().find(spotLableSelecter).show();
-        $(this).hide();
-    }).change(function(){
+{#    spotTdSelecter.click(function(){#}
+{#        var label = $(this).find(spotLableSelecter);#}
+{#        if(label.text() == 'D'){#}
+{#            return;#}
+{#        }#}
+{#        label.hide();#}
+{#        var select = $(this).find(spotSelectSelecter);#}
+{#        select.val(label.text());#}
+{#        select.show();#}
+{#        select.focus();#}
+{#    });#}
+    spotSelectSelecter
+{#            .blur(function(){#}
+{#                $(this).parent().find(spotLableSelecter).show();#}
+{#                $(this).hide();#}
+{#            })#}
+            .change(function(){
         var spot = $(this).val();
         var id = $(this).data('id');
         if(spot == 'D'){
             $('#spotCustomerId').val(id);
             $('#handleSpotCustomerModal').modal('show');
         }else{
-            $(this).parent().find(spotLableSelecter).text(spot);
+{#            $(this).parent().find(spotLableSelecter).text(spot);#}
             $.post(
                 "{% url 'customer:editSpot' %}",
                 "id="+id+'&spot='+spot,
                 function(){},
                 'json'
             );
+            if(spot == 'D'){
+                $(this).find("option[value='未开发']").remove();
+                $(this).find("option[value='A']").remove();
+                $(this).find("option[value='B']").remove();
+                $(this).find("option[value='C']").remove();
+            }
+            if(spot == 'C'){
+                $(this).find("option[value='未开发']").remove();
+                $(this).find("option[value='A']").remove();
+                $(this).find("option[value='B']").remove();
+            }
+            if(spot == 'B'){
+                $(this).find("option[value='未开发']").remove();
+                $(this).find("option[value='A']").remove();
+            }
+            if(spot == 'A'){
+                $(this).find("option[value='未开发']").remove();
+            }
         }
     });
 </script>

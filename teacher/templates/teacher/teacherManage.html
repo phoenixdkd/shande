@@ -43,7 +43,7 @@
                                     <option>无</option>
                                     {% if bindBursars %}
                                         {% for bindbursar in bindBursars %}
-                                            <option value="{{ bindbursar.id }}"> {{ bindbursar.bursarId }}</option>
+                                            <option value="{{ bindbursar.id }}"> {{ bindbursar.bursarId }} {{ bindbursar.binduser.userprofile.nick }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
@@ -56,7 +56,7 @@
                                     <option>无</option>
                                     {% if bindspotteachers %}
                                         {% for bindspotteacher in bindspotteachers %}
-                                            <option value="{{ bindspotteacher.id }}"> {{ bindspotteacher.teacherId }}</option>
+                                            <option value="{{ bindspotteacher.id }}"> {{ bindspotteacher.teacherId }} {{ bindspotteacher.binduser.userprofile.nick }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>

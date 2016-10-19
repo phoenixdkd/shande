@@ -65,6 +65,8 @@ def addTrade(request):
         existTrade = Trade.objects.filter(customer=customer)
         if existTrade.__len__() == 0:
             firstTrade = True
+        elif existTrade.__len__() == 1:
+            secondTrade = True
         newTrade = Trade.objects.create(customer=customer, stockid=request.POST.get("stockid"), create=timezone.now())
         # else:
         #     newTrade = Trade.objects.get(id=request.POST.get("id"))
@@ -78,7 +80,12 @@ def addTrade(request):
         buycash = buyprice * buycount
         newTrade.buycash = buycash
         customer.modify = timezone.now()
-        #如果是首笔交易，则判断是否VIP,并标记客户状态为有效客户
+        # 判断是否VIP和10W+
+        if buycash >= 100000:
+            customer.vip = True
+            customer.crude = True
+
+        #如果是首笔交易标记客户状态为有效客户
         if firstTrade:
             customer.status = 40
             customer.first_trade_cash = buycash
@@ -96,11 +103,8 @@ def addTrade(request):
             userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
             userCommitHis.total = customer.sales.binduser.userprofile.commit
             userCommitHis.save()
-
-            if buycash >= 100000:
-                customer.vip = True
-            else:
-                customer.vip = False
+        elif secondTrade:
+            customer.vip = True
 
         # newTrade.income = request.POST.get('income', 0)
         newTrade.share = request.POST.get('share')
@@ -137,12 +141,11 @@ def handleTrade(request):
         buycash = buyprice * buycount
         newTrade.buycash = buycash
         customer.modify = timezone.now()
-        # 如果是首笔交易，则判断是否VIP,并标记客户状态为有效客户
-        if firstTrade:
-            if buycash >= 100000:
-                customer.vip = True
-            else:
-                customer.vip = False
+        #判断是否VIP
+        if buycash >= 100000:
+            customer.vip = True
+            customer.crude = True
+
         newTrade.share = request.POST.get('htshare')
         newTrade.sellprice = request.POST.get('htsellprice', '0')
         newTrade.income = request.POST.get('htincome', 0)
@@ -176,6 +179,7 @@ def payTrade(request):
         trade.status = 30
         trade.paytime = timezone.now()
         trade.paytype = request.POST.get('ptpaytype')
+        trade.paycash = request.POST.get('ptpaycash')
         trade.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"

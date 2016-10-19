@@ -1,4 +1,4 @@
-{% extends 'base_full_noheader.html' %}
+{% extends 'base_absolute_width.html' %}
 
 {% block title %}客户管理{% endblock %}
 {% block content %}
@@ -83,6 +83,7 @@
                                 <label class="col-md-offset-2 col-md-2 control-label" for="salesqq" >来源QQ</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="salesqq" name="salesqq">
+                                        <option>请选择QQ来源</option>
                                         {% if qqList %}
                                             {% for qq in qqList %}
                                                 <option value="{{ qq.id }}">{{ qq.qqid }}</option>
@@ -111,6 +112,7 @@
                                 <label class="col-md-offset-2 col-md-2 control-label" for="saleswx" >来源微信</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="saleswx" name="saleswx">
+                                        <option>请选择微信来源</option>
                                         {% if wxList %}
                                             {% for wx in wxList %}
                                                 <option value="{{ wx.id }}">{{ wx.wxid }}</option>
@@ -174,6 +176,17 @@
                     validators: {
                         notEmpty: {
                             message: '必填项'
+                        }
+                    }
+                },
+                phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]{11}$/i,
+                            message: '请输入正确的手机号码'
                         }
                     }
                 },

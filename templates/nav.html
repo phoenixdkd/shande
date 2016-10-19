@@ -103,52 +103,58 @@
 {% load teacher_tags %}
 {% if request.user.is_authenticated  %}
 <div id="leftSidebar" class="left-sidebar" >
-    <table class="table table-bordered" style="margin-bottom: 0">
+<button id="leftSidebarToggle" style="width: 100%"><span class="glyphicon glyphicon-align-justify"></span></button>
+<div id="leftSidebarTable">
+<table class="table table-bordered"  style="margin-bottom: 0">
+    <tr>
+        <td>用户名</td>
+        <td>{{ request.user.username }}</td>
+    </tr>
+    <tr>
+        <td>职位</td>
+        <td>{{ request.user.userprofile.title.role_desc }}</td>
+    </tr>
+    {% if request.user.userprofile.title.role_name == 'sale' %}
         <tr>
-            <td>用户名</td>
-            <td>{{ request.user.username }}</td>
+            <td>ID</td>
+            <td>{% getSaleIdByUserId request.user.id %}</td>
         </tr>
         <tr>
-            <td>职位</td>
-            <td>{{ request.user.userprofile.title.role_desc }}</td>
+            <td>公司</td>
+            <td>{% getSaleCompanyByUserId request.user.id %}</td>
         </tr>
-        {% if request.user.userprofile.title.role_name == 'sale' %}
-            <tr>
-                <td>开发ID</td>
-                <td>{% getSaleIdByUserId request.user.id %}</td>
-            </tr>
-            <tr>
-                <td>开发公司</td>
-                <td>{% getSaleCompanyByUserId request.user.id %}</td>
-            </tr>
-            <tr>
-                <td>开发部门</td>
-                <td>{% getSaleDepartmentByUserId request.user.id %}</td>
-            </tr>
-            <tr>
-                <td>退单率</td>
-                <td>{% getChargebackByUserId request.user.id %}</td>
-            </tr>
-        {% endif %}
-        {% if request.user.userprofile.title.role_name == 'teacher' %}
-            <tr>
-                <td>老师ID</td>
-                <td>{% getTeacherIdByUserId request.user.id %}</td>
-            </tr>
-            <tr>
-                <td>老师公司</td>
-                <td>{% getTeacherCompanyByUserId request.user.id %}</td>
-            </tr>
-            <tr>
-                <td>老师部门</td>
-                <td>{% getTeacherDepartmentByUserId request.user.id %}</td>
-            </tr>
-        {% endif %}
-    </table>
+        <tr>
+            <td>部门</td>
+            <td>{% getSaleDepartmentByUserId request.user.id %}</td>
+        </tr>
+        <tr>
+            <td>退单率</td>
+            <td>{% getChargebackByUserId request.user.id %}</td>
+        </tr>
+    {% endif %}
+    {% if request.user.userprofile.title.role_name == 'teacher' %}
+        <tr>
+            <td>ID</td>
+            <td>{% getTeacherIdByUserId request.user.id %}</td>
+        </tr>
+        <tr>
+            <td>公司</td>
+            <td>{% getTeacherCompanyByUserId request.user.id %}</td>
+        </tr>
+        <tr>
+            <td>部门</td>
+            <td>{% getTeacherDepartmentByUserId request.user.id %}</td>
+        </tr>
+    {% endif %}
+</table>
+</div>
 </div>
 {% endif %}
 <script type="text/javascript">
     $(function(){
+        $('#leftSidebarToggle').click(function(){
+            $('#leftSidebarTable').slideToggle('fast');
+        });
         moveSidebarDiv();
         $(window).resize(function(){
             moveSidebarDiv();

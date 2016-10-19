@@ -31,6 +31,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="protect" >密保</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="protect" name="protect"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="qqname" >qq昵称</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="qqname" name="qqname"/>
@@ -43,7 +49,7 @@
                                     <option>无</option>
                                     {% if bindsales %}
                                         {% for bindsale in bindsales %}
-                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }}</option>
+                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }} {{ bindsale.binduser.userprofile.nick }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
@@ -292,6 +298,7 @@
     function editQq(obj){
         $('#id').val($(obj).data("id"));
         $('#password').val($(obj).data("password"));
+        $('#protect').val($(obj).data("protect"));
         $('#qqid').val($(obj).data("qqid"));
         $('#qqname').val($(obj).data("qqname"));
         $('#bindsale').val($(obj).data("bindsale"));

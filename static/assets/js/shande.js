@@ -9,6 +9,7 @@ function moveSidebarDiv(){
     // var offsetTop = (windowHeight - divHeight)/2;
     var offsetLeft = windowWidth - divWidth;
     $('#leftSidebar').offset({top:50 ,left:offsetLeft});
+    
 }
 
 

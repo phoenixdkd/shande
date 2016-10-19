@@ -56,7 +56,7 @@
                                     <option>无</option>
                                     {% if bindteachers %}
                                         {% for bindteacher in bindteachers %}
-                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }}</option>
+                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }} {{ bindteacher.binduser.userprofile.nick }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>

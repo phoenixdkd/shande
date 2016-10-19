@@ -247,27 +247,20 @@ def addQq(request):
     data = {}
     try:
         bindsaleid = request.POST.get('bindsale', '无')
-        print('debug 0')
         if request.POST['id'] == "":
-            print('debug 1')
             newQq = Qq.objects.create(qqid=request.POST['qqid'])
-            print('debug 2')
             newQq.create = datetime.date.today()
         else:
-            print('debug 3')
             newQq = Qq.objects.get(id=request.POST['id'])
             newQq.qqid = request.POST['qqid']
-        print('debug 4')
         if bindsaleid.isdigit():
-            print('debug 5')
             newQq.bindsale = Sale.objects.get(id=bindsaleid)
         else:
-            print('debug 6')
             newQq.bindsale = None
         newQq.password = request.POST['password']
+        newQq.protect = request.POST['protect']
         newQq.qqname = request.POST['qqname']
         newQq.save()
-        print('debug 7')
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:

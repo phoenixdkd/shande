@@ -34,6 +34,7 @@ class WxFriendHis(models.Model):
 class Qq(models.Model):
     qqid = models.CharField('qq号', max_length=30, unique=True)
     password = models.CharField('密码', max_length=30, default="")
+    protect = models.CharField('密码', max_length=30, default="")
     qqname = models.CharField('qq昵称', max_length=30, )
     friend = models.IntegerField('好友数', default=0)
     modify = models.DateField('修改时间', null=True)
