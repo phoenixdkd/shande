@@ -212,6 +212,9 @@
         $('#handleCustomerModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
+        $('#handleSpotCustomerModal').on('hidden.bs.modal', function() {
+            loadCustomerHandleDiv();
+        });
     });
     function resetFormValidator(){
         var customerFormSelector = $('#handleCustomerForm');
