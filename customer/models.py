@@ -26,6 +26,7 @@ class Customer(models.Model):
     spotDay = models.IntegerField('开发周期', null=True)
     spotTeacher = models.ForeignKey(SpotTeacher, null=True)
     spotCash = models.DecimalField('现货资金', max_digits=20, decimal_places=2, default=50000)
+    spotMessage = models.CharField('现货备注', max_length=100, default="")
     vip = models.BooleanField('大客户', default=False)
     honest = models.BooleanField('诚信客户', default=True)
     # message list

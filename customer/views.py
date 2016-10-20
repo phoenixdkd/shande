@@ -455,9 +455,13 @@ def handleSpotCustomer(request):
         customer.spotCash = request.POST.get('spotCash')
         customer.spotTime = datetime.date.today()
         currentTimeStamp = time.mktime(timezone.now().timetuple())
-        firstTradeTimeStamp = time.mktime(customer.first_trade.timetuple())
+        if customer.first_trade:
+            firstTradeTimeStamp = time.mktime(customer.first_trade.timetuple())
+        else:
+            raise Exception("nofirsttrade")
         spotDay = (currentTimeStamp - firstTradeTimeStamp) / 86400 + 1
         customer.spotDay = spotDay
+        customer.spotMessage = request.POST.get('spotMessage', '')
         customer.spotStatus = 'D'
         customer.save()
         spot = Spot.objects.create(customer=customer)
@@ -469,6 +473,9 @@ def handleSpotCustomer(request):
         data['msgLevel'] = "info"
     except Exception as e:
         print(e.__str__())
-        data['msg'] = "操作失败"
+        if e.__str__() == 'nofirsttrade':
+            data['msg'] = "该客户尚无交易记录"
+        else:
+            data['msg'] = "操作失败"
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
