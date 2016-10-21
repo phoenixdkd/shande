@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'wxqq',
     'trade',
     'spot',
+    'stock',
 ]
 
 MIDDLEWARE_CLASSES = [

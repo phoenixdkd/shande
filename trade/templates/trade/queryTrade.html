@@ -37,8 +37,8 @@
                     已收款
                 {% endif %}
             </td>
-            <td>{{ tradeObj.stockid}}</td>
-            <td>{{ tradeObj.stockname}}</td>
+            <td>{{ tradeObj.stock.stockid}}</td>
+            <td>{{ tradeObj.stock.stockname}}</td>
             <td>{{ tradeObj.buyprice}}</td>
             <td>{{ tradeObj.buycount}}</td>
             <td>{{ tradeObj.buycash}}</td>
@@ -54,8 +54,8 @@
                 {% if request.user.userprofile.title.role_name in "teacher" %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="handleTrade(this)"
                     data-htid="{{ tradeObj.id }}"
-                    data-htstockid="{{ tradeObj.stockid }}"
-                    data-htstockname="{{ tradeObj.stockname }}"
+                    data-htstockid="{{ tradeObj.stock.stockid }}"
+                    data-htstockname="{{ tradeObj.stock.stockname }}"
                     data-htbuyprice="{{ tradeObj.buyprice }}"
                     data-htbuycount="{{ tradeObj.buycount }}"
                     data-htshare="{{ tradeObj.share }}"

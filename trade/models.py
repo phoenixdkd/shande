@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from customer.models import *
 from django.utils import timezone
+from stock.models import *
 
 # Create your models here.
 class Trade(models.Model):
@@ -11,8 +12,9 @@ class Trade(models.Model):
     # 0 未出货(新录入); 10 亏损; 11 已补亏;  20 盈利 提交财务收款; 30 已收款;
 
     status = models.IntegerField('交易状态', default=0)
-    stockid = models.CharField('产品ID', max_length=30)
-    stockname = models.CharField('产品名称', max_length=30)
+    stock = models.ForeignKey(Stock, null=True, blank=True)
+    stockid = models.CharField('产品ID', max_length=30, null=True, blank=True)
+    stockname = models.CharField('产品名称', max_length=30, null=True, blank=True)
     buyprice = models.DecimalField('购入价格', max_digits=10, decimal_places=2, default=0)
     buycount = models.IntegerField('购入数量', default=0)
     buycash = models.DecimalField('购入总价',  max_digits=10, decimal_places=2, default=0)

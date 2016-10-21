@@ -278,9 +278,9 @@ def queryCustomerHandle(request):
     if (request.GET.get('status', '') != ''):
         customers = customers.filter(status=request.GET.get('status'))
     if (request.GET.get('stockid', '') != ''):
-        customers = customers.filter(trade__stockid=request.GET.get('stockid'), trade__status=0)
+        customers = customers.filter(trade__stock__stockid=request.GET.get('stockid'), trade__status=0)
     if (request.GET.get('stockiname', '') != ''):
-        customers = customers.filter(trade__stockname=request.GET.get('stockiname'), trade__status=0)
+        customers = customers.filter(trade__stock__stockname=request.GET.get('stockiname'), trade__status=0)
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))

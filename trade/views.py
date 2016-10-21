@@ -67,11 +67,13 @@ def addTrade(request):
             firstTrade = True
         elif existTrade.__len__() == 1:
             secondTrade = True
-        newTrade = Trade.objects.create(customer=customer, stockid=request.POST.get("stockid"), create=timezone.now())
-        # else:
-        #     newTrade = Trade.objects.get(id=request.POST.get("id"))
-        #     newTrade.stockid = request.POST.get('stockid')
+        stock, created = Stock.objects.get_or_create(stockid=request.POST.get('stockid'), stockname=request.POST.get('stockname'))
+        if stock:
+            newTrade = Trade.objects.create(customer=customer, stock=stock, create=timezone.now())
+        else:
+            raise Exception("stockerror")
         newTrade.status = 0
+        newTrade.stockid = request.POST.get('stockid')
         newTrade.stockname = request.POST.get('stockname')
         buyprice = float(request.POST.get('buyprice'))
         buycount = int(request.POST.get('buycount'))
@@ -117,7 +119,10 @@ def addTrade(request):
         data['msgLevel'] = "info"
     except Exception as e:
         print(e.__str__())
-        data['msg'] = "操作失败, %s" % e.__str__()
+        if e.__str__() == 'stockerror':
+            data['msg'] = "操作失败, 产品id或者产品名称不正确"
+        else:
+            data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
 
@@ -131,9 +136,15 @@ def handleTrade(request):
         if int(request.POST.get('htid')) == firstTrade.id:
             firstTrade = True
         newTrade = Trade.objects.get(id=request.POST.get("htid"))
+        stock, created = Stock.objects.get_or_create(stockid=request.POST.get('htstockid'),
+                                                     stockname=request.POST.get('htstockname'))
+        if stock:
+            newTrade.stock = stock
+        else:
+            raise Exception("stockerror")
         newTrade.stockid = request.POST.get('htstockid')
-        newTrade.status = request.POST.get('htstatus')
         newTrade.stockname = request.POST.get('htstockname')
+        newTrade.status = request.POST.get('htstatus')
         buyprice = float(request.POST.get('htbuyprice'))
         buycount = int(request.POST.get('htbuycount'))
         newTrade.buyprice = buyprice
@@ -156,7 +167,14 @@ def handleTrade(request):
         data['msgLevel'] = "info"
     except Exception as e:
         print(e.__str__())
-        data['msg'] = "操作失败, %s" % e.__str__()
+        if e.__str__() == 'stockerror':
+            data['msg'] = "操作失败, 产品ID或者产品名称不正确"
+        elif str(e.__str__()).__contains__('stock_stock_stockid'):
+            data['msg'] = "操作失败, 产品ID或者产品名称不正确"
+        elif str(e.__str__()).__contains__('stock_stock_stockname'):
+            data['msg'] = "操作失败, 产品ID或者产品名称不正确"
+        else:
+            data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
 

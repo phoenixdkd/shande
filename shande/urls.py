@@ -24,6 +24,7 @@ from bursar import urls as bursarurls
 from wxqq import urls as wxqqurls
 from trade import urls as tradeurls
 from spot import urls as spoturls
+from stock import urls as stockurls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
@@ -53,4 +54,7 @@ urlpatterns = [
 
     # app spot
     url(r'^spot/', include(spoturls, namespace="spot")),
+
+    # app stock
+    url(r'^stock/', include(stockurls, namespace="stock")),
 ]
