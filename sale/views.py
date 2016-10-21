@@ -196,7 +196,7 @@ def saleKpiReport(request):
     sql = """
         SELECT s.company, IFNULL(COUNT(c.id),0) as dcount
         FROM  sale_sale s
-        LEFT JOIN customer_customer c ON c.sales_id = s.id
+        LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40
         GROUP BY s.company
         ORDER by dcount desc
     """
@@ -220,7 +220,7 @@ def getCompanyDetail(request):
     cursor.execute("""
             SELECT s.department, IFNULL(COUNT(c.id),0) as dcount
             FROM  sale_sale s
-            LEFT JOIN customer_customer c ON c.sales_id = s.id
+            LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40
             WHERE s.company = %s
             GROUP BY s.department
             ORDER by dcount desc
@@ -245,7 +245,7 @@ def getDepartmentDetail(request):
     cursor.execute("""
                 SELECT s.group, IFNULL(COUNT(c.id),0) as dcount
                 FROM  sale_sale s
-                LEFT JOIN customer_customer c ON c.sales_id = s.id
+                LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status =40
                 WHERE s.company = %s and s.department = %s
                 GROUP BY s.group
                 ORDER by dcount desc
@@ -272,7 +272,7 @@ def getGroupDetail(request):
     cursor.execute("""
                 SELECT s.id, s.saleid, IFNULL(COUNT(c.id),0) as dcount
                 FROM  sale_sale s
-                LEFT JOIN customer_customer c ON c.sales_id = s.id
+                LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40
                 WHERE s.company = %s and s.department = %s and s.group = %s
                 GROUP BY s.saleid
                 ORDER by dcount desc
