@@ -85,7 +85,7 @@ def getChargebackByDepartment( company, department ):
     try:
         userCommits = UserProfile.objects.filter(user__sale__company=company, user__sale__department=department, title__role_name='sale').aggregate(Sum('commit'))
         userGrade = UserProfile.objects.filter(user__sale__company=company, user__sale__department=department, title__role_name='sale').aggregate(Sum('grade'))
-        chargeback = float(userGrade['grade__sum']) / float(userCommits['commit__sum'])  *100
+        chargeback = 100 -float(userGrade['grade__sum']) / float(userCommits['commit__sum'])  *100
         return "%s / %s (%.2f"%(userGrade['grade__sum'], userCommits['commit__sum'], chargeback)+'%)'
     except Exception as e:
         print(e.__str__())

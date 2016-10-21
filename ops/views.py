@@ -122,7 +122,7 @@ def chargebackSerial(request):
     chargebackData = []
     dayData = []
     for index in range(0, userCommitHis.__len__(), 1):
-        chargebackData.insert(0, float(userGradeHis[index].total) / float(userCommitHis[index].total) * 100)
+        chargebackData.insert(0, 100 - float(userGradeHis[index].total) / float(userCommitHis[index].total) * 100)
         userCommitDeltaData.insert(0, userCommitHis[index].delta)
         userGradeDeltaData.insert(0, userGradeHis[index].delta)
         dayData.insert(0, userGradeHis[index].day)
