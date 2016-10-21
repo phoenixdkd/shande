@@ -1,24 +1,16 @@
 # coding=utf-8
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.models import User
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.db.models import Q
+from django.db.models import Q, Count
+from django.db import connection
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 
-import os
-import random
-import string
-import datetime
-import traceback
-import json
-import re
-
-from shande.settings import BASE_DIR
-from shande.util import *
-from ops.models import *
-from super.models import *
 from sale.models import *
+from customer.models import *
+from shande.util import *
 
 
 @login_required()
@@ -196,3 +188,122 @@ def delSaleManagerPassword(request):
         print(e.__str__())
         print(e.message)
     return HttpResponseRedirect('/sale/saleManagerPasswordManage')
+
+@login_required()
+def saleKpiReport(request):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'salemanager', 'saleboss']):
+        return HttpResponseRedirect("/")
+    sql = """
+        SELECT s.company, IFNULL(COUNT(c.id),0) as dcount
+        FROM  sale_sale s
+        LEFT JOIN customer_customer c ON c.sales_id = s.id
+        GROUP BY s.company
+        ORDER by dcount desc
+    """
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    companys = []
+    for row in cursor.fetchall():
+        company = {}
+        company['company'] = row[0]
+        company['dcount'] = row[1]
+        companys.append(company)
+    data = {
+        "companys": companys,
+    }
+    return render(request, 'sale/saleKpiReport.html', data)
+
+@login_required()
+def getCompanyDetail(request):
+    company = request.POST.get('company')
+    cursor = connection.cursor()
+    cursor.execute("""
+            SELECT s.department, IFNULL(COUNT(c.id),0) as dcount
+            FROM  sale_sale s
+            LEFT JOIN customer_customer c ON c.sales_id = s.id
+            WHERE s.company = %s
+            GROUP BY s.department
+            ORDER by dcount desc
+        """, [company])
+    departments = []
+    for row in cursor.fetchall():
+        department = {}
+        department['department'] = row[0]
+        department['dcount'] = row[1]
+        departments.append(department)
+    data = {
+        "departments": departments,
+        "company": company,
+    }
+    return render(request, 'sale/getCompanyDetail.html', data)
+
+@login_required()
+def getDepartmentDetail(request):
+    company = request.POST.get('company')
+    department = request.POST.get('department')
+    cursor = connection.cursor()
+    cursor.execute("""
+                SELECT s.group, IFNULL(COUNT(c.id),0) as dcount
+                FROM  sale_sale s
+                LEFT JOIN customer_customer c ON c.sales_id = s.id
+                WHERE s.company = %s and s.department = %s
+                GROUP BY s.group
+                ORDER by dcount desc
+            """, [company, department])
+    groups = []
+    for row in cursor.fetchall():
+        group = {}
+        group['group'] = row[0]
+        group['dcount'] = row[1]
+        groups.append(group)
+    data = {
+        "groups": groups,
+        "company": company,
+        "department": department,
+    }
+    return render(request, 'sale/getDepartmentDetail.html', data)
+
+@login_required()
+def getGroupDetail(request):
+    company = request.POST.get('company')
+    department = request.POST.get('department')
+    group = request.POST.get('group')
+    cursor = connection.cursor()
+    cursor.execute("""
+                SELECT s.id, s.saleid, IFNULL(COUNT(c.id),0) as dcount
+                FROM  sale_sale s
+                LEFT JOIN customer_customer c ON c.sales_id = s.id
+                WHERE s.company = %s and s.department = %s and s.group = %s
+                GROUP BY s.saleid
+                ORDER by dcount desc
+            """, [company, department, group])
+    sales = []
+    for row in cursor.fetchall():
+        sale = {}
+        sale['id'] = row[0]
+        sale['sale'] = row[1]
+        sale['dcount'] = row[2]
+        sales.append(sale)
+    data = {
+        "sales": sales,
+        "group": group,
+        "company": company,
+        "department": department,
+    }
+    return render(request, 'sale/getGroupDetail.html', data)
+
+@login_required()
+def getSaleDetail(request):
+    company = request.POST.get('company')
+    department = request.POST.get('department')
+    group = request.POST.get('group')
+    sale = request.POST.get('sale')
+    customers = Customer.objects.filter(sales_id=sale, status=40).order_by('-first_trade')
+    data = {
+        "customers": customers,
+        "sale": sale,
+        "group": group,
+        "company": company,
+        "department": department,
+    }
+    return render(request, 'sale/getSaleDetail.html', data)

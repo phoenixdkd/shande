@@ -11,4 +11,12 @@ urlpatterns = [
     url(r'^saleManagerPasswordManage$', views.saleManagerPasswordManage, name='saleManagerPasswordManage'),
     url(r'^addSaleManagerPassword$', views.addSaleManagerPassword, name='addSaleManagerPassword'),
     url(r'^delSaleManagerPassword$', views.delSaleManagerPassword, name='delSaleManagerPassword'),
+
+    url(r'^saleKpiReport$', views.saleKpiReport, name='saleKpiReport'),
+    url(r'^getCompanyDetail$', views.getCompanyDetail, name='getCompanyDetail'),
+    url(r'^getDepartmentDetail$', views.getDepartmentDetail, name='getDepartmentDetail'),
+    url(r'^getGroupDetail$', views.getGroupDetail, name='getGroupDetail'),
+    url(r'^getSaleDetail$', views.getSaleDetail, name='getSaleDetail'),
+
+
 ]

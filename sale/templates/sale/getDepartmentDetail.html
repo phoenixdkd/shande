@@ -1,0 +1,38 @@
+{% load group_tags %}
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">名次</th>
+        <th width="2%">组</th>
+        <th width="5%">有效客户</th>
+        <th width="5%">大客户</th>
+        <th width="5%">合计买入资金</th>
+        <th width="5%">微信好友新增</th>
+        <th width="5%">微信好友总数</th>
+        <th width="5%">QQ好友新增</th>
+        <th width="5%">QQ好友总数</th>
+        <th width="5%">退单率</th>
+        <th width="5%">不诚信客户</th>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+        <tr data-company="{{ company }}" data-department="{{ department }}" data-group="{{ group.group }}"
+            id="group_row_{{ company }}_{{ department }}_{{ group.group }}"
+            ondblclick="showGroupDetail(this)" class="group_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ group.group }}</td>
+            <td>{{ group.dcount }}</td>
+            <td>{% getVipCountByGroup company department group.group %}</td>
+            <td>{% getTotalBuyCashByGroup  company department group.group %}</td>
+            <td>{% getWxFriendDeltaByGroup  company department group.group %}</td>
+            <td>{% getWxFriendTotalByGroup  company department group.group %}</td>
+            <td>{% getQqFriendDeltaByGroup  company department group.group %}</td>
+            <td>{% getQqFriendTotalByGroup  company department group.group %}</td>
+            <td>{% getChargebackByGroup  company department group.group %}</td>
+            <td>{% getDishonestByGroup  company department group.group %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="11" style="padding:0;">
+            <div id="group_detail_row_{{ company }}_{{ department }}_{{ group.group }}" class="group_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+        {% endfor %}
+    </tbody>
+</table>

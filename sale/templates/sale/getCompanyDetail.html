@@ -1,0 +1,41 @@
+{% load department_tags %}
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">名次</th>
+        <th width="2%">部门</th>
+        <th width="5%">有效客户</th>
+        <th width="5%">大客户</th>
+        <th width="5%">合计买入资金</th>
+        <th width="5%">微信好友新增</th>
+        <th width="5%">微信好友总数</th>
+        <th width="5%">QQ好友新增</th>
+        <th width="5%">QQ好友总数</th>
+        <th width="5%">退单率</th>
+        <th width="5%">不诚信客户</th>
+    </thead>
+    <tbody>
+        {% for department in departments %}
+            {% if request.user.userprofile.title.role_name in 'salemanager' and request.user.userprofile.department == department.department or request.user.userprofile.title.role_name in 'admin ops saleboss' %}
+        <tr data-company="{{ company }}" data-department="{{ department.department }}"
+            id="department_row_{{ company }}_{{ department.department }}"
+            ondblclick="showDepartmentDetail(this)" class="department_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ department.department }}</td>
+            <td>{{ department.dcount }}</td>
+            <td>{% getVipCountByDepartment  company department.department %}</td>
+            <td>{% getTotalBuyCashByDepartment  company department.department %}</td>
+            <td>{% getWxFriendDeltaByDepartment  company department.department %}</td>
+            <td>{% getWxFriendTotalByDepartment  company department.department %}</td>
+            <td>{% getQqFriendDeltaByDepartment  company department.department %}</td>
+            <td>{% getQqFriendTotalByDepartment  company department.department %}</td>
+            <td>{% getChargebackByDepartment  company department.department %}</td>
+            <td>{% getDishonestByDepartment  company department.department %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="11" style="padding:0;">
+            <div id="department_detail_row_{{ company }}_{{ department.department }}" class="department_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+

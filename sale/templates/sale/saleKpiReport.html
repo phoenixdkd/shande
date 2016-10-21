@@ -1,0 +1,163 @@
+{% extends 'base_full_noheader.html' %}
+{% load company_tags %}
+{% block title %}开发绩效报表{% endblock %}
+{% block content %}
+    <br/>
+    <h1>
+        <div class="alert alert-success" style="text-align:center">
+            开发绩效汇总表
+        </div>
+    </h1>
+    <hr/>
+
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">名次</th>
+        <th width="2%">公司</th>
+        <th width="5%">有效客户</th>
+        <th width="5%">大客户</th>
+        <th width="5%">合计买入资金</th>
+        <th width="5%">微信好友新增</th>
+        <th width="5%">微信好友总数</th>
+        <th width="5%">QQ好友新增</th>
+        <th width="5%">QQ好友总数</th>
+        <th width="5%">退单率</th>
+        <th width="5%">不诚信客户</th>
+    </thead>
+    <tbody>
+        {% for company in companys %}
+            {% if request.user.userprofile.title.role_name in 'saleboss salemanager' and request.user.userprofile.company == company.company or request.user.userprofile.title.role_name in 'admin ops' %}
+
+        <tr data-company="{{ company.company }}" id="company_row_{{ company.company }}" ondblclick="showCompanyDetail(this)" class="company_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ company.company }}</td>
+            <td>{{ company.dcount }}</td>
+            <td>{% getVipCountByCompany company.company %}</td>
+            <td>{% getTotalBuyCashByCompany company.company %}</td>
+            <td>{% getWxFriendDeltaByCompany company.company %}</td>
+            <td>{% getWxFriendTotalByCompany company.company %}</td>
+            <td>{% getQqFriendDeltaByCompany company.company %}</td>
+            <td>{% getQqFriendTotalByCompany company.company %}</td>
+            <td>{% getChargebackByCompany company.company %}</td>
+            <td>{% getDishonestByCompany company.company %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="11" style="padding:0;">
+            <div id="company_detail_row_{{ company.company }}" class="company_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript">
+    function showCompanyDetail(obj){
+        $('.company_detail_row').slideUp();
+        company = $(obj).data('company');
+        companyDetailRowSelector = $('#company_detail_row_'+company);
+        if(companyDetailRowSelector.is(':hidden')){
+            companyDetailRowSelector.slideDown();
+            loadCompanyDetail(company);
+        }else{
+            companyDetailRowSelector.slideUp();
+        }
+    }
+    function loadCompanyDetail(company){
+        companyDetailRowSelector = $('#company_detail_row_'+company);
+        $.ajax({
+            url: "{% url 'sale:getCompanyDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "company": company },
+            beforeSend:  function(){
+                companyDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                companyDetailRowSelector.html(data);
+            }
+        });
+    }
+    function showDepartmentDetail(obj){
+        $('.department_detail_row').slideUp();
+        company = $(obj).data('company');
+        department = $(obj).data('department');
+        departmentDetailRowSelector = $('#department_detail_row_'+company+'_'+department);
+        if(departmentDetailRowSelector.is(':hidden')){
+            departmentDetailRowSelector.slideDown();
+            loadDepartmentDetail(company, department);
+        }else{
+            departmentDetailRowSelector.slideUp();
+        }
+    }
+    function loadDepartmentDetail(company, department) {
+        departmnetDetailRowSelector = $('#department_detail_row_'+company+'_'+department);
+        $.ajax({
+            url: "{% url 'sale:getDepartmentDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "company": company, "department": department },
+            beforeSend:  function(){
+                departmentDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                departmentDetailRowSelector.html(data);
+            }
+        });
+    }
+    function showGroupDetail(obj){
+        $('.group_detail_row').slideUp();
+        company = $(obj).data('company');
+        department = $(obj).data('department');
+        group = $(obj).data('group');
+        groupDetailRowSelector = $('#group_detail_row_'+company+'_'+department+'_'+group);
+        if(groupDetailRowSelector.is(':hidden')){
+            groupDetailRowSelector.slideDown();
+            loadGroupDetail(company, department, group);
+        }else{
+            groupDetailRowSelector.slideUp();
+        }
+    }
+    function loadGroupDetail(company, department, group) {
+        groupDetailRowSelector = $('#group_detail_row_'+company+'_'+department+'_'+group);
+        $.ajax({
+            url: "{% url 'sale:getGroupDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "company": company, "department": department, "group":group },
+            beforeSend:  function(){
+                groupDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                groupDetailRowSelector.html(data);
+            }
+        });
+    }
+    function showSaleDetail(obj) {
+        $('.sale_detail_row').slideUp();
+        company = $(obj).data('company');
+        department = $(obj).data('department');
+        group = $(obj).data('group');
+        sale = $(obj).data('sale');
+        saleDetailRowSelector = $('#sale_detail_row_'+company+'_'+department+'_'+group+'_'+sale);
+        if(saleDetailRowSelector.is(':hidden')){
+            saleDetailRowSelector.slideDown();
+            loadSaleDetail(company, department, group, sale);
+        }else{
+            saleDetailRowSelector.slideUp();
+        }
+    }
+    function loadSaleDetail(company, department, group, sale) {
+        saleDetailRowSelector = $('#sale_detail_row_'+company+'_'+department+'_'+group+'_'+sale);
+        $.ajax({
+            url: "{% url 'sale:getSaleDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "company": company, "department": department, "group": group, "sale": sale },
+            beforeSend:  function(){
+                saleDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                saleDetailRowSelector.html(data);
+            }
+        });
+    }
+</script>
+{% endblock %}

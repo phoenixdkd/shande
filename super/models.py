@@ -19,6 +19,7 @@ class UserProfile (models.Model):
     commit = models.IntegerField('提交数', default=0)
     grade = models.IntegerField('有效客户数', default=0)
     department = models.CharField('部门', max_length=10, blank=True, null=True)
+    group = models.CharField('组', max_length=10, blank=True, null=True)
     cid = models.CharField('身份证号', max_length=18, blank=True, null=True)
     nick = models.CharField('真实姓名', max_length=10, blank=True, null=True)
     title = models.ForeignKey(Title)

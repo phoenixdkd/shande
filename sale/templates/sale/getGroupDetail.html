@@ -1,0 +1,39 @@
+{% load sale_tags %}
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">名次</th>
+        <th width="2%">开发</th>
+        <th width="5%">有效客户</th>
+        <th width="5%">大客户</th>
+        <th width="5%">合计买入资金</th>
+        <th width="5%">微信好友新增</th>
+        <th width="5%">微信好友总数</th>
+        <th width="5%">QQ好友新增</th>
+        <th width="5%">QQ好友总数</th>
+        <th width="5%">退单率</th>
+        <th width="5%">不诚信客户</th>
+    </thead>
+    <tbody>
+        {% for sale in sales %}
+        <tr data-company="{{ company }}" data-department="{{ department }}" data-group="{{ group }}"
+            data-sale="{{ sale.id }}" id="sale_row_{{ company }}_{{ department }}_{{ group }}_{{ sale.id }}"
+            ondblclick="showSaleDetail(this)" class="sale_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ sale.sale }}</td>
+            <td>{{ sale.dcount }}</td>
+            <td>{% getVipCountBySale sale.id %}</td>
+            <td>{% getTotalBuyCashBySale sale.id %}</td>
+            <td>{% getWxFriendDeltaBySale sale.id %}</td>
+            <td>{% getWxFriendTotalBySale sale.id %}</td>
+            <td>{% getQqFriendDeltaBySale sale.id %}</td>
+            <td>{% getQqFriendTotalBySale sale.id %}</td>
+            <td>{% getChargebackBySale sale.id %}</td>
+            <td>{% getDishonestBySale sale.id %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="11" style="padding:0">
+            <div id="sale_detail_row_{{ company }}_{{ department }}_{{ group }}_{{ sale.id }}"
+                 class="sale_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+        {% endfor %}
+    </tbody>
+</table>

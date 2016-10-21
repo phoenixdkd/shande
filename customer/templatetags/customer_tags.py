@@ -1,6 +1,7 @@
 # coding=utf-8
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.db.models import Sum
 from customer.models import *
 from trade.models import *
 register = template.Library()
@@ -40,6 +41,18 @@ def getTradeTotalByCustomerId( customerId ):
     try:
         trades = Trade.objects.filter(customer=Customer.objects.get(id=customerId))
         return trades.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0
+
+@register.simple_tag()
+def getTotalBuycashByCustomerId( customerId ):
+    try:
+        trades = Trade.objects.filter(customer_id=customerId).values('customer').annotate(dcount=Sum('buycash'))[0]
+        if trades['dcount']:
+            return trades['dcount']
+        else:
+            return 0
     except Exception as e:
         print(e.__str__())
         return 0
