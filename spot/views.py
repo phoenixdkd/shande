@@ -302,3 +302,22 @@ def handleSpot(request):
         data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def spotReport(request):
+    spotTeachers = SpotTeacher.objects.all()
+    print(spotTeachers)
+    data = {
+        "spotTeachers": spotTeachers,
+    }
+    return render(request, 'spot/spotReport.html', data)
+
+@login_required()
+def getSpotTeacherDetail(request):
+    spotTeacherId = request.POST.get('spotteacherid')
+    customers = Customer.objects.filter(spotTeacher_id=spotTeacherId)
+    data = {
+        "customers": customers,
+        "spotTeacherId": spotTeacherId,
+    }
+    return render(request, 'spot/getSpotTeacherDetail.html', data)

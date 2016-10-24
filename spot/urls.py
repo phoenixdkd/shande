@@ -16,5 +16,8 @@ urlpatterns = [
     url(r'^addSpot$', views.addSpot, name='addSpot'),
     url(r'^handleSpot$', views.handleSpot, name='handleSpot'),
 
+    url(r'^spotReport$', views.spotReport, name='spotReport'),
+    url(r'^getSpotTeacherDetail$', views.getSpotTeacherDetail, name='getSpotTeacherDetail'),
+
 
 ]

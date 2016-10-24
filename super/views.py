@@ -133,7 +133,7 @@ def wap(request):
     data = {
         "message": "手机网页暂时无法查看。",
     }
-    return render(request, 'wap.html')
+    return render(request, 'wap.html', data)
 
 @login_required()
 def userInfo(request):

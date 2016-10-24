@@ -1,0 +1,74 @@
+{% extends 'base_full_noheader.html' %}
+{% load spot_tags %}
+{% block title %}现货交易管理{% endblock %}
+{% block content %}
+<br/>
+<h1>
+    <div class="alert alert-success" style="text-align:center">
+        现货汇总表
+    </div>
+</h1>
+<hr/>
+
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">ID</th>
+        <th width="2%">现货老师姓名</th>
+        <th width="5%">客户数</th>
+        <th width="5%">首次入金总和</th>
+        <th width="5%">净入金总和</th>
+        <th width="5%">盈亏总和</th>
+        <th width="5%">手续费总和</th>
+        <th width="5%">剩余资金</th>
+    </thead>
+    <tbody>
+        {% for spotTeacher in spotTeachers %}
+        <tr class="spot_teacher_row" id="spot_teacher_row_{{ spotTeacher.id }}" ondblclick="showSpotTeacherDetailRow(this)"\
+            data-stid="{{ spotTeacher.id }}">
+            <td>{{ spotTeacher.teacherId }}</td>
+            <td>{{ spotTeacher.binduser.userprofile.nick }}</td>
+            <td>{% getCustomerCountBySpotTeacher spotTeacher.id %}</td>
+            <td>{% getFirstCashTotalBySpotTeacher spotTeacher.id %}</td>
+            <td>{% getCashTotalBySpotTeacher spotTeacher.id %}</td>
+            <td>{% getProfitTotalBySpotTeacher spotTeacher.id %}</td>
+            <td>{% getTaxTotalBySpotTeacher spotTeacher.id %}</td>
+            <td>{% getSpotTotalBySpotTeacher spotTeacher.id %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="8" style="padding:0;">
+            <div id="spot_teacher_detail_row_{{ spotTeacher.id }}" class="spot_teacher_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+        {% empty %}
+        <tr><td colspan="8">无现货老师信息</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript">
+    function showSpotTeacherDetailRow(obj){
+        $('.spot_teacher_detail_row').slideUp();
+        var spotTeacherId = $(obj).data('stid');
+        var spotTeacherDetailRowSelector = $('#spot_teacher_detail_row_'+spotTeacherId);
+        if(spotTeacherDetailRowSelector.is(':hidden')){
+            spotTeacherDetailRowSelector.slideDown();
+            loadSpotTeacherDetail(spotTeacherId);
+        }else{
+            spotTeacherDetailRowSelector.slideUp();
+        }
+    }
+    function loadSpotTeacherDetail(spotTeacherId) {
+        spotTeacherDetailRowSelector = $('#spot_teacher_detail_row_'+spotTeacherId);
+        $.ajax({
+            url: "{% url 'spot:getSpotTeacherDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "spotteacherid": spotTeacherId},
+            beforeSend:  function(){
+                spotTeacherDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                spotTeacherDetailRowSelector.html(data);
+            }
+        });
+    }
+</script>
+
+{% endblock %}
