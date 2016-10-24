@@ -1,37 +1,86 @@
  {% load customer_tags %}
+ {% load spot_tags %}
  <table class="table table-bordered">
     <thead>
         <tr class="bg-info">
-            <th>创建时间</th>
-            <th>姓名</th>
-            <th>电话</th>
-            <th>微信号</th>
-            <th>微信昵称</th>
-            <th>QQ号</th>
-            <th>QQ昵称</th>
-            <th>开发周期(天)</th>
-            <th>首次入金</th>
-            <th>净入金</th>
-            <th>对接老师ID</th>
+            <td>创建时间</td>
+            <td>对接老师ID</td>
+            <td>姓名</td>
+            <td>电话</td>
+            <td>微信号</td>
+            <td>微信昵称</td>
+            <td>QQ号</td>
+            <td>QQ昵称</td>
+            <td>GEM</td>
+            <td>10W+</td>
+            <td>大客户</td>
+            <td>状态</td>
+            <td>开发周期(天)</td>
+            <td>首次入金</td>
+            <td>净入金</td>
+            <td>加仓/次数</td>
+            <td>盈亏</td>
+            <td>手续费</td>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>{{ customer.create }}</td>
+            <td>{{ customer.teacher.teacherId }} {{ customer.teacher.binduser.userprofile.nick }}</td>
             <td>{{ customer.name }}</td>
             <td>{{ customer.phone }}</td>
             <td>{{ customer.wxid }}</td>
             <td>{{ customer.wxname }}</td>
             <td>{{ customer.qqid }}</td>
             <td>{{ customer.qqname }}</td>
+            <td>
+                {% if customer.gem %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+            <td>
+                {% if customer.crude %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+            <td>
+                {% if customer.vip %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+            <td>
+                {% if customer.status == 0 %}
+                    <span class="label label-success">&gt;</span> 新录入客户
+                {% elif customer.status == 10 %}
+                    <span class="label label-danger">&gt;</span> 待跟进
+                {% elif customer.status == 20 %}
+                    <span class="label label-success">&gt;</span> 老师已加微信或QQ
+                {% elif customer.status == 30 %}
+                    <span class="label label-danger">&gt;</span> 退回
+                {% elif customer.status == 40 %}
+                    <span class="label label-success">&gt;</span> 有效客户
+                {% elif customer.status == 98 %}
+                    <span class="label label-disable">&gt;</span> 不诚信客户
+                {% elif customer.status == 99 %}
+                    <span class="label label-disable">&gt;</span> 标记删除
+                {% endif %}
+            </td>
             <td>{{ customer.spotDay }}</td>
             <td>{{ customer.spotCash }}</td>
-            <td>{{ customer.spotCash }}</td>
-            <td>{{ customer.teacher.teacherId }} {{ customer.teacher.binduser.userprofile.nick }}</td>
+            <td>{% getCashTotalByCustomerId customer.id %}</td>
+            <td>{% getAddCountByCustomerId customer.id %}</td>
+            <td>{% getProfitTotalByCustomerId customer.id %}</td>
+            <td>{% getTaxTotalByCustomerId customer.id %}</td>
         </tr>
         <tr>
             <td>备注</td>
-            <td colspan="11">{{ customer.spotMessage }}</td>
+            <td colspan="17">{{ customer.spotMessage }}</td>
         </tr>
     </tbody>
 </table>

@@ -15,20 +15,32 @@
                 <form id="addSpotForm" method="post" class="form-horizontal">
                     <input type="hidden" value="{{ customer.id }}" class="" id="customerid" name="customerid"/>
                     <div class="form-group">
-                        <label class="col-md-offset-2 col-md-2 control-label" for="type" >交易动作</label>
+                        <label class="col-md-offset-2 col-md-2 control-label" for="spotday" >交易时间</label>
                         <div class="col-md-5">
-                            <select type="select" class="form-control" id="type" name="type">
-                                <option value="10">加仓</option>
-                                <option value="20">减仓</option>
-                                <option value="30">盈</option>
-                                <option value="40">亏</option>
-                            </select>
+                            <input type="date" value="" class="form-control" id="spotday" name="spotday"/>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var date = new Date();
+                        var dateString = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+                        $('#spotday').val(dateString);
+                    </script>
+                    <div class="form-group">
+                        <label class="col-md-offset-2 col-md-2 control-label" for="cash" >净入金</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="cash" name="cash"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-offset-2 col-md-2 control-label" for="cash" >金额</label>
+                        <label class="col-md-offset-2 col-md-2 control-label" for="profit" >盈亏</label>
                         <div class="col-md-5">
-                            <input type="text" class="form-control" id="cash" name="cash"/>
+                            <input type="text" class="form-control" id="profit" name="profit"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-offset-2 col-md-2 control-label" for="tax" >手续费</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="tax" name="tax"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -57,20 +69,32 @@
                 <form id="handleSpotForm" method="post" class="form-horizontal">
                     <input type="hidden" value="{{ customer.id }}" class="" id="hsid" name="hsid"/>
                     <div class="form-group">
-                        <label class="col-md-offset-2 col-md-2 control-label" for="hstype" >交易动作</label>
+                        <label class="col-md-offset-2 col-md-2 control-label" for="hsspotday" >交易时间</label>
                         <div class="col-md-5">
-                            <select type="select" class="form-control" id="hstype" name="hstype">
-                                <option value="10">加仓</option>
-                                <option value="20">减仓</option>
-                                <option value="30">盈</option>
-                                <option value="40">亏</option>
-                            </select>
+                            <input type="date" value="" class="form-control" id="hsspotday" name="hsspotday"/>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        var date = new Date();
+                        var dateString = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+                        $('#hsspotday').val(dateString);
+                    </script>
+                    <div class="form-group">
+                        <label class="col-md-offset-2 col-md-2 control-label" for="hscash" >净入金</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="hscash" name="hscash"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-offset-2 col-md-2 control-label" for="hscash" >金额</label>
+                        <label class="col-md-offset-2 col-md-2 control-label" for="hsprofit" >盈亏</label>
                         <div class="col-md-5">
-                            <input type="text" class="form-control" id="hscash" name="hscash"/>
+                            <input type="text" class="form-control" id="hsprofit" name="hsprofit"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-offset-2 col-md-2 control-label" for="hstax" >手续费</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" id="hstax" name="hstax"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -115,6 +139,12 @@
         $('#hsid').val($(obj).data("hsid"));
         $('#hstype').val($(obj).data("hstype"));
         $('#hscash').val($(obj).data("hscash"));
+        var hscreate = $(obj).data("hscreate");
+        hscreate = hscreate.replace("年", "-").replace("月", "-").replace("日", "").split(" ")[0];
+        console.log(hscreate);
+        $('#hsspotday').val(hscreate);
+        $('#hsprofit').val($(obj).data("hsprofit"));
+        $('#hstax').val($(obj).data("hstax"));
         $('#handleSpotModal').modal("show");
     }
     function formValidator(){
@@ -127,14 +157,7 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
-                create: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项'
-                        }
-                    }
-                },
-                type: {
+                spotday: {
                     validators: {
                         notEmpty: {
                             message: '必填项'
@@ -147,7 +170,27 @@
                             message: '必填项'
                         }
                     }
+                },
+                profit: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                tax: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greatThan:{
+                            value: 0,
+                            inclusive: true,
+                            message: '必须&le;0'
+                        }
+                    }
                 }
+
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addSpotModal').modal('hide');
@@ -180,20 +223,40 @@
                         }
                     }
                 },
-                hstype: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项'
-                        }
-                    }
-                },
                 hscash: {
                     validators: {
                         notEmpty: {
                             message: '必填项'
                         }
                     }
-                }
+                },
+                hsspotday: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                hsprofit: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                hstax: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greatThan:{
+                            value: 0,
+                            inclusive: true,
+                            message: '必须&le;0'
+                        }
+                    }
+                },
+
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#handleSpotModal').modal('hide');
@@ -230,7 +293,9 @@
         var tradeFormSelector = $('#addSpotForm');
         tradeFormSelector.find('input').not('#customerid').val("");
         tradeFormSelector.data('bootstrapValidator').destroy();
-
+        var date = new Date();
+        var dateString = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+        $('#spotday').val(dateString);
         var handleSpotFormSelector = $('#handleSpotForm');
         handleSpotFormSelector.find('input').not('#htcustomerid').val('');
         handleSpotFormSelector.data('bootstrapValidator').destroy();

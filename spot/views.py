@@ -224,8 +224,15 @@ def querySpot(request):
     customerId = request.GET.get("customerid")
     spots = Spot.objects.filter(customer_id=customerId)
     cashTotal = 0
+    profitTotal = 0
+    taxTotal = 0
     for spot in spots:
         cashTotal += spot.cash
+        profitTotal += spot.profit
+        taxTotal += spot.tax
+
+    sumTotal = cashTotal + profitTotal - taxTotal
+
     # 分页
     p = Paginator(spots, 20)
     try:
@@ -240,6 +247,9 @@ def querySpot(request):
         "spotPage": spotPage,
         "requestArgs": getArgsExcludePage(request),
         "cashTotal": cashTotal,
+        "profitTotal": profitTotal,
+        "taxTotal": taxTotal,
+        "sumTotal": sumTotal,
     }
     return render(request, 'spot/querySpot.html', data)
 
@@ -250,8 +260,16 @@ def addSpot(request):
         customer = Customer.objects.get(id=request.POST.get('customerid'))
         newSpot = Spot.objects.create(customer=customer)
         newSpot.create = timezone.now()
-        newSpot.type = request.POST.get('type')
-        newSpot.cash = request.POST.get('cash')
+        cash = request.POST.get('cash')
+        newSpot.cash = cash
+        if cash > 0:
+            newSpot.type = 10
+        elif cash < 0:
+            newSpot.type = 20
+        else:
+            newSpot.type = 99
+        newSpot.profit = request.POST.get('profit')
+        newSpot.tax = request.POST.get('tax')
         newSpot.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -266,8 +284,16 @@ def handleSpot(request):
     data = {}
     try:
         spot = Spot.objects.get(id=request.POST.get("hsid"))
-        spot.type = request.POST.get('hstype')
-        spot.cash = request.POST.get('hscash')
+        cash = request.POST.get('hscash')
+        if cash > 0:
+            spot.type = 10
+        elif cash < 0:
+            spot.type = 20
+        else:
+            spot.type = 99
+        spot.cash = cash
+        spot.profit = request.POST.get('hsprofit')
+        spot.tax = request.POST.get('hstax')
         spot.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
