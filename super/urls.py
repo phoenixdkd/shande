@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^captcha$', views.captcha, name='captcha'),
     url(r'^siteswitch$', views.siteswitch, name='siteswitch'),
     url(r'^maintaince$', views.maintaince, name='maintaince'),
+    url(r'^wap$', views.wap, name='wap'),
 
     url(r'^userInfo$', views.userInfo, name='userInfo'),
     url(r'^modifyPassword$', views.modifyPassword, name='modifyPassword'),

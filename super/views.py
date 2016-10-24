@@ -129,6 +129,12 @@ def maintaince(request):
     }
     return render(request, 'maintaince.html', data)
 
+def wap(request):
+    data = {
+        "message": "手机网页暂时无法查看。",
+    }
+    return render(request, 'wap.html')
+
 @login_required()
 def userInfo(request):
     return render(request, 'super/userInfo.html', locals())
