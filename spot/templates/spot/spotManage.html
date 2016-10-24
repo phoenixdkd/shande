@@ -133,7 +133,7 @@
         $('#customerDiv').load("{% url 'customer:getSpotCustomerById' %}", data);
     }
     function updateParentWindow(){
-        window.opener.loadCustomerHandleDiv();
+        window.opener.loadSpotCustomerDiv();
     }
     function handleSpot(obj){
         $('#hsid').val($(obj).data("hsid"));

@@ -15,9 +15,19 @@
         <tr>
 {#            <td>{{ spotObj.id }}</td>#}
             <td>{{ spotObj.create }}</td>
-            <td>{{ spotObj.cash}}</td>
-            <td>{{ spotObj.profit}}</td>
-            <td>{{ spotObj.tax}}</td>
+
+            <td style="color:
+                {% if spotObj.cash > 0 %}red {% endif %}
+                {% if spotObj.cash < 0 %}mediumseagreen {% endif %}
+                ">
+                {{ spotObj.cash}}
+            </td>
+            <td style="color:
+                {% if spotObj.profit > 0 %}red {% endif %}
+                {% if spotObj.profit < 0 %}mediumseagreen {% endif %}
+                ">
+                {{ spotObj.profit}}</td>
+            <td style="color:mediumseagreen ">{{ spotObj.tax}}</td>
             <td>
                 {% if request.user.userprofile.title.role_name == 'spotteacher' %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="handleSpot(this)"
@@ -36,18 +46,30 @@
     {% else %}
          <tr><td colspan="5">无交易信息</td></tr>
     {% endif %}
-        <tr style="color:red">
+        <tr>
             <td>合计</td>
-            <td>{{ cashTotal }}</td>
-            <td>{{ profitTotal }}</td>
-            <td>{{ taxTotal }}</td>
+            <td style="color:
+                {% if cashTotal > 0 %} red{% endif %}
+                {% if cashTotal < 0 %} mediumseagreen{% endif %}
+                ">
+                {{ cashTotal }}</td>
+            <td style="color:
+                {% if profitTotal > 0 %} red{% endif %}
+                {% if profitTotal < 0 %} mediumseagreen{% endif %}
+                ">
+                {{ profitTotal }}</td>
+            <td style="color: mediumseagreen">{{ taxTotal }}</td>
             <td></td>
         </tr>
-        <tr style="color:red">
+        <tr>
             <td></td>
             <td></td>
             <td>剩余</td>
-            <td>{{ sumTotal }}</td>
+            <td style="color:
+                {% if sumTotal > 0  %} red {% endif %}
+                {% if sumTotal < 0  %} mediumseagreen {% endif %}
+                ">
+                {{ sumTotal }}</td>
             <td></td>
         </tr>
     </tbody>
