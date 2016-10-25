@@ -211,3 +211,16 @@ def queryPayCompany(request):
         "endDate": endDate,
     }
     return render(request, 'bursar/queryPayCompany.html', data)
+
+@login_required()
+def payStockReport(request):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursarmanager']):
+        return HttpResponseRedirect("/")
+    trades = Trade.objects.filter(paytime__isnull=False)
+    tradeStockPaySum = trades.values('stock_id', 'stock__stockid', 'stock__stockname').annotate(Sum('paycash'))
+    total = tradeStockPaySum.aggregate(Sum('paycash__sum'))
+    data = {
+        "tradeStockPaySum": tradeStockPaySum,
+        "total": total,
+    }
+    return render(request, 'bursar/payStockReport.html', data)
