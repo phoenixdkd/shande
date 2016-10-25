@@ -1,0 +1,61 @@
+{% extends 'base_noheader.html' %}
+{% block title %}公司盈利归属汇总{% endblock %}
+{% block content %}
+<br/>
+<h1>
+    <div class="alert alert-success" style="text-align:center">
+        公司盈利归属汇总表
+    </div>
+</h1>
+<hr/>
+<form id="searchPayForm" method="POST" class="form-horizontal ">
+    <div class="form-group">
+        <label class="col-md-1 control-label">时间范围</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate"
+             title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadPayCompanyDiv();
+    });
+    function resetFormValidator(){
+        $('#searchPayForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function formValidator(){
+        $('#searchPayForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadPayCompanyDiv(form.serialize());
+            }
+        });
+    }
+    function loadPayCompanyDiv(data){
+        $('#payCompanyDiv').load("{% url 'bursar:queryPayCompany' %}", data);
+        resetFormValidator();
+    }
+</script>
+    <div id="payCompanyDiv"></div>
+
+{% endblock %}

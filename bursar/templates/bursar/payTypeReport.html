@@ -1,0 +1,35 @@
+{% extends 'base_noheader.html' %}
+{% block title %}支付方式收款汇总{% endblock %}
+{% block content %}
+<br/>
+<h1>
+    <div class="alert alert-success" style="text-align:center">
+        支付方式收款汇总表
+    </div>
+</h1>
+<hr/>
+
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="2%">支付方式</th>
+        <th width="5%">金额</th>
+    </thead>
+    <tbody>
+        {% for tradePayType in tradePayTypeSum %}
+        <tr class="trade_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ tradePayType.paytype }}</td>
+            <td>{{ tradePayType.dcount }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9">无交易信息</td></tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td>合计</td>
+            <td>{{ total.dcount__sum }}
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,34 @@
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="5%">日期</th>
+        <th width="5%">公司</th>
+        <th width="5%">金额</th>
+    </thead>
+    <tbody>
+        {% if tradePayCompanySum %}
+        {% for tradePayCompany in tradePayCompanySum %}
+        <tr class="trade_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ startDate }} ~ {{ endDate }}</td>
+            <td>{{ tradePayCompany.company }}</td>
+            <td>{{ tradePayCompany.dcount }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9">无交易信息</td></tr>
+        {% endfor %}
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td>合计</td>
+            <td>{{ total }}</td>
+
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="4">无交易信息</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>

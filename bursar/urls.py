@@ -7,4 +7,9 @@ urlpatterns = [
     url(r'^addBursar$', views.addBursar, name='addBursar'),
     url(r'^addBursarGroup$', views.addBursarGroup, name='addBursarGroup'),
     url(r'^delBursar$', views.delBursar, name='delBursar'),
+
+    url(r'^payReport$', views.payReport, name='payReport'),
+    url(r'^payTypeReport$', views.payTypeReport, name='payTypeReport'),
+    url(r'^payCompanyReport$', views.payCompanyReport, name='payCompanyReport'),
+    url(r'^queryPayCompany$', views.queryPayCompany, name='queryPayCompany'),
 ]

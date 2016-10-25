@@ -4,7 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.db.models import Q
+from django.db.models import Q, Sum
+from django.db import connection
 
 import os
 import random
@@ -18,6 +19,7 @@ from shande.util import *
 from ops.models import *
 from super.models import *
 from bursar.models import *
+from trade.models import *
 
 @login_required()
 def bursarManage(request):
@@ -122,3 +124,90 @@ def delBursar(request):
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def payReport(request):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
+        return HttpResponseRedirect("/")
+    trades = Trade.objects.filter(paytime__isnull=False)
+
+    if request.user.userprofile.title.role_name == 'bursar':
+        trades.filter(customer__bursar__binduser=request.user)
+    tradePayCashSum = trades.aggregate(Sum('paycash'))
+    if tradePayCashSum['paycash__sum']:
+        payCashTotal = tradePayCashSum['paycash__sum']
+    else:
+        payCashTotal = 0
+    data = {
+        "trades": trades,
+        "payCashTotal": payCashTotal,
+    }
+    return render(request, 'bursar/payReport.html', data)
+
+@login_required()
+def payTypeReport(request):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
+        return HttpResponseRedirect("/")
+    trades = Trade.objects.filter(paytime__isnull=False)
+    if request.user.userprofile.title.role_name == 'bursar':
+        trades.filter(customer__bursar__binduser=request.user)
+    tradePayTypeSum = trades.values('paytype').annotate(dcount=Sum('paycash'))
+    total = tradePayTypeSum.aggregate(Sum('dcount'))
+    data = {
+        "tradePayTypeSum": tradePayTypeSum,
+        "total": total,
+    }
+    return render(request, 'bursar/payTypeReport.html', data)
+
+@login_required()
+def payCompanyReport(request):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
+        return HttpResponseRedirect("/")
+    data = { }
+    return render(request, 'bursar/payCompanyReport.html', data)
+
+def queryPayCompany(request):
+    startDate = request.GET.get('startDate', '')
+    endDate = request.GET.get('endDate', '')
+    if startDate =='':
+        startDate = datetime.date.today()
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    if request.user.userprofile.title.role_name == 'bursar':
+        bursar = request.user.bursar_set[0]
+        bursarid = bursar.id
+        sql = """
+            SELECT s.company,IFNULL(SUM(t.paycash),0) FROM sale_sale s
+            LEFT JOIN customer_customer c ON c.sales_id = s.id and c.bursar_id = %s
+            LEFT JOIN trade_trade t ON t.customer_id = c.id AND t.paytime IS NOT NULL AND t.paytime > '%s' and t.paytime < '%s'
+            GROUP BY s.company
+        """ % (bursarid, startDate, endDate)
+    else:
+        sql = """
+            SELECT s.company,IFNULL(SUM(t.paycash),0) FROM sale_sale s
+            LEFT JOIN customer_customer c ON c.sales_id = s.id
+            LEFT JOIN trade_trade t ON t.customer_id = c.id AND t.paytime IS NOT NULL AND t.paytime > '%s' and t.paytime < '%s'
+            GROUP BY s.company
+        """ % (startDate, endDate)
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        tradePayCompanySum = []
+        total = 0
+        for row in cursor.fetchall():
+            company = {}
+            company['company'] = row[0]
+            company['dcount'] = row[1]
+            total += row[1]
+            tradePayCompanySum.append(company)
+    except Exception as e:
+        print(e.__str__())
+        tradePayCompanySum = None
+        total = 0
+    data = {
+        "tradePayCompanySum": tradePayCompanySum,
+        "total": total,
+        "startDate": startDate,
+        "endDate": endDate,
+    }
+    return render(request, 'bursar/queryPayCompany.html', data)

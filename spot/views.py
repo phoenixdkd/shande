@@ -306,7 +306,6 @@ def handleSpot(request):
 @login_required()
 def spotReport(request):
     spotTeachers = SpotTeacher.objects.all()
-    print(spotTeachers)
     data = {
         "spotTeachers": spotTeachers,
     }
