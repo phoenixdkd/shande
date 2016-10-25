@@ -224,3 +224,17 @@ def payStockReport(request):
         "total": total,
     }
     return render(request, 'bursar/payStockReport.html', data)
+
+@login_required()
+def payCompanySerialReport(request):
+
+    companys = Sale.objects.values('company').distinct()
+    days = []
+    for i in range(0,30):
+        day = datetime.date.today()-datetime.timedelta(days=i)
+        days.insert(0, day)
+    data = {
+        "companys": companys,
+        "days": days,
+    }
+    return render(request, 'bursar/payCompanySerialReport.html', data)

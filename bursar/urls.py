@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^payCompanyReport$', views.payCompanyReport, name='payCompanyReport'),
     url(r'^queryPayCompany$', views.queryPayCompany, name='queryPayCompany'),
     url(r'^payStockReport$', views.payStockReport, name='payStockReport'),
+    url(r'^payCompanySerialReport$', views.payCompanySerialReport, name='payCompanySerialReport'),
 ]

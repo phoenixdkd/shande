@@ -1,0 +1,66 @@
+{% extends 'base_full_noheader.html' %}
+{% load bursar_tags %}
+{% block title %}盈利归属趋势图{% endblock %}
+{% block content %}
+<br/>
+<h1>
+    <div class="alert alert-success" style="text-align:center">
+        过去三十天公司盈利归属趋势图
+    </div>
+</h1>
+<hr/>
+<div id="main" style="width: 850px;height:400px;margin:0 auto;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '趋势图'
+        },
+        tooltip: {
+            trigger: 'item',
+        },
+        legend: {
+            data: [{% for company in companys %} '{{ company.company }}',{% endfor %}],
+            align: 'left',
+            left: 100,
+        },
+        grid: {
+            left: '3%',
+            right: '10%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {},
+                dataView: {},
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [{% for day in days %} '{{ day }}',{% endfor %}]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {% for company in companys %}
+            {
+                name:'{{ company.company }}',
+                type:'line',
+{#                stack: '盈利',#}
+                data: [{% for day in days %} '{% getPayCashTotalByDayAndCompany company.company day %}',{% endfor %}],
+            },
+            {% endfor %}
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+{% endblock %}
