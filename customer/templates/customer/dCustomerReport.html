@@ -1,0 +1,67 @@
+{% extends 'base_noheader.html' %}
+{% load teacher_tags %}
+{% block title %}D类客户开发趋势图{% endblock %}
+{% block content %}
+    <br/>
+    <h1>
+        <div class="alert alert-success" style="text-align:center;">
+            D类客户开发趋势图
+        </div>
+    </h1>
+    <hr/>
+
+    <div id="main" style="width: 850px;height:400px;margin:0 auto;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: 'D类客户开发趋势图'
+        },
+        tooltip: {
+            trigger: 'item',
+
+        },
+        legend: {
+            data:[{% for teacher in teachers %} '{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}',{% endfor %}],
+            align: 'left',
+            left: 200,
+        },
+        grid: {
+            left: '3%',
+            right: '10%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {},
+                dataView: {},
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [{% for day in days %} '{{ day }}',{% endfor %}]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {% for teacher in teachers %}
+            {
+                name:'{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}',
+                type:'line',
+                data: [{% for day in days %} '{% getDCustomerCountByTeacherAndDay teacher.id day %}',{% endfor %}],
+            },
+            {% endfor %}
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+{% endblock %}

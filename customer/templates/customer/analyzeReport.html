@@ -1,0 +1,113 @@
+{% extends 'base_full_noheader.html' %}
+{% load stock_tags %}
+{% block title %}盈亏透视分析表{% endblock %}
+{% block content %}
+    <br/>
+    <h1>
+        <div class="alert alert-success" style="text-align:center">
+            盈亏透视分析表
+        </div>
+    </h1>
+    <hr/>
+
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="2%">产品代码</th>
+        <th width="5%">产品名称</th>
+        <th width="5%">最低买入价</th>
+        <th width="5%">最高买入价</th>
+        <th width="5%">总买入资金</th>
+        <th width="5%">客户数</th>
+        <th width="5%">现价</th>
+        <th width="5%">浮盈个数</th>
+        <th width="5%">浮盈金额</th>
+    </thead>
+    <tbody>
+        {% for stock in stocks %}
+        <tr data-stock="{{ stock.id }}" id="stock_row_{{ stock.id }}" ondblclick="showStockDetail(this)" class="stock_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ stock.stockid }}</td>
+            <td>{{ stock.stockname }}</td>
+            <td>{% getLowBuypriceByStockAndUser stock.id request.user.id %}</td>
+            <td>{% getHighBuypriceByStockAndUser stock.id request.user.id %}</td>
+            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id %}</td>
+            <td>{% getCustomerCountByStockAndUser stock.id request.user.id %}</td>
+            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price"
+                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}"/></td>
+            <td><lable id="earn_count_{{ stock.id }}"></lable></td>
+            <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
+        </tr>
+        <tr style="padding:0;"><td colspan="11" style="padding:0;">
+            <div id="stock_detail_row_{{ stock.id }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript">
+    function showStockDetail(obj){
+        $('.stock_detail_row_').slideUp();
+        stock = $(obj).data('stock');
+        stockDetailRowSelector = $('#stock_detail_row_'+stock);
+        if(stockDetailRowSelector.is(':hidden')){
+            stockDetailRowSelector.slideDown();
+            loadStockDetail(stock);
+        }else{
+            stockDetailRowSelector.slideUp();
+        }
+    }
+    function loadStockDetail(stock){
+        var stockDetailRowSelector = $('#stock_detail_row_'+stock);
+        $.ajax({
+            url: "{% url 'customer:getStockDetailForAnalyze' %}",
+            type: 'POST',
+            async: true,
+            data: { "stock": stock },
+            beforeSend:  function(){
+                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                stockDetailRowSelector.html(data);
+            }
+        });
+    }
+    function loadStockDetailBySellPrice(stock, sellprice){
+        var stockDetailRowSelector = $('#stock_detail_row_'+stock);
+        $.ajax({
+            url: "{% url 'customer:getStockDetailForAnalyze' %}",
+            type: 'POST',
+            async: true,
+            data: { "stock": stock , "sellprice": sellprice },
+            beforeSend:  function(){
+                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                stockDetailRowSelector.html(data);
+            }
+        });
+    }
+    function calcProfitByStockId(stockid, sellprice){
+        $.ajax({
+            url: "{% url 'customer:calcProfitByStockId' %}",
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: { "stockid": stockid , "sellprice": sellprice },
+            success: function (data) {
+                console.log(data.earnCash);
+                $('#earn_count_'+stockid).text(data.earnCount);
+                $('#earn_cash_'+stockid).text(data.earnCash);
+            }
+        });
+    }
+
+    $(function(){
+        $('.current_price').change(function(){
+            var stockid = $(this).data('stockid');
+            var sellPrice = $(this).val();
+            loadStockDetailBySellPrice(stockid, sellPrice );
+            calcProfitByStockId(stockid, sellPrice);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% load teacher_tags %}
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%"></th>
+        <th width="2%">客户姓名</th>
+        <th width="2%">电话</th>
+        <th width="5%">QQ/微信</th>
+        <th width="5%">昵称</th>
+        <th width="5%">买入价</th>
+        <th width="5%">买入数量</th>
+        <th width="5%">买入资金</th>
+        <th width="5%">分成比例</th>
+    </thead>
+    <tbody>
+        {% if highTrade %}
+            <tr>
+                <td>最高买入</td>
+                <td>{{ highTrade.customer.name }}</td>
+                <td>{{ highTrade.customer.phone }}</td>
+                <td>
+                    {% if highTrade.customer.wxid %}
+                        微信:{{ highTrade.customer.wxid }}
+                    {% else %}
+                        QQ:{{ highTrade.customer.qqid }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if highTrade.customer.wxid %}
+                        {{ highTrade.customer.wxname }}
+                    {% else %}
+                        {{ highTrade.customer.qqname }}
+                    {% endif %}
+                </td>
+                <td>{{ highTrade.buyprice }}</td>
+                <td>{{ highTrade.buycount }}</td>
+                <td>{{ highTrade.buycash }}</td>
+                <td>{{ highTrade.share }}</td>
+            </tr>
+        {% endif %}
+        {% if lowTrade %}
+            <tr>
+                <td>最低买入</td>
+                <td>{{ lowTrade.customer.name }}</td>
+                <td>{{ lowTrade.customer.phone }}</td>
+                <td>
+                    {% if lowTrade.customer.wxid %}
+                        微信:{{ lowTrade.customer.wxid }}
+                    {% else %}
+                        QQ:{{ lowTrade.customer.qqid }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if lowTrade.customer.wxid %}
+                        {{ lowTrade.customer.wxname }}
+                    {% else %}
+                        {{ lowTrade.customer.qqname }}
+                    {% endif %}
+                </td>
+                <td>{{ lowTrade.buyprice }}</td>
+                <td>{{ lowTrade.buycount }}</td>
+                <td>{{ lowTrade.buycash }}</td>
+                <td>{{ lowTrade.share }}</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+

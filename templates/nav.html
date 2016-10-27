@@ -63,6 +63,12 @@
                            aria-haspopup="true" aria-expanded="false">客户管理专员菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'customer:customerHandle' %}" target="_self">交易管理</a></li>
+                            {% if user.userprofile.title.role_name in 'admin ops teacherboss teachermanager' %}
+                                <li class=""><a href="{% url 'customer:noTradeCustomerReport' %}" target="_self">待交易客户汇总</a></li>
+                                <li class=""><a href="{% url 'customer:tradeTypeReport' %}" target="_self">交易分类汇总</a></li>
+                                <li class=""><a href="{% url 'customer:dCustomerReport' %}" target="_self">D类客户开发趋势图</a></li>
+                                <li class=""><a href="{% url 'customer:analyzeReport' %}" target="_self">盈亏透视分析表</a></li>
+                            {% endif %}
                         </ul>
                     </li>
                 {% endif %}

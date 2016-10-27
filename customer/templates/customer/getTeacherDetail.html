@@ -1,0 +1,31 @@
+{% load teacher_tags %}
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="2%">产品代码</th>
+        <th width="5%">产品名称</th>
+        <th width="5%">买入客户数</th>
+        <th width="5%">最低买入价</th>
+        <th width="5%">最高买入价</th>
+    </thead>
+    <tbody>
+        {% for stock in stocks %}
+        <tr data-stock="{{ stock.stock }}" data-teacherid="{{ teacherid }}"
+            id="stock_row_{{ teacherid }}_{{ stock.stock }}}"
+            ondblclick="showStockDetail(this)" class="stock_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ stock.stock__stockid }}</td>
+            <td>{{ stock.stock__stockname }}</td>
+            <td>{% getCustomerCountByStock  teacherid stock.stock %}</td>
+            <td>{% getMaxPriceByStock  teacherid stock.stock %}</td>
+            <td>{% getMinPriceByStock  teacherid stock.stock %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="6" style="padding:0;">
+            <div id="stock_detail_row_{{ teacherid }}_{{ stock.stock }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+        {% empty %}
+        <tr><td colspan="6">无产品信息</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+

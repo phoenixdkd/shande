@@ -22,6 +22,8 @@ from super.models import *
 from sale.models import *
 from customer.models import *
 from spot.models import *
+from trade.models import *
+from stock.models import *
 
 @login_required()
 def customerManage(request):
@@ -478,4 +480,162 @@ def handleSpotCustomer(request):
         else:
             data['msg'] = "操作失败"
         data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def noTradeCustomerReport(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
+        return HttpResponseRedirect("/")
+    customers = Customer.objects.filter(first_trade__isnull=True)
+    customers = Customer.objects.exclude(status=98)
+    customers = Customer.objects.exclude(status=99)
+    customers = Customer.objects.exclude(status=40)
+    if request.user.userprofile.title.role_name == 'teacher':
+        teacher = Teacher.objects.get(binduser=request.user)
+        customers = customers.filter(teacher=teacher)
+    elif request.user.userprofile.title.role_name == 'teachermanager':
+        customers = customers.filter(teacher__company=request.user.userprofile.company,
+                                     teacher__department=request.user.userprofile.department)
+    elif request.user.userprofile.title.role_name == 'teacherboss':
+        customers = customers.filter(teacher__company=request.user.userprofile.company)
+    else:
+        customers = customers
+    data = {
+        "customers": customers,
+    }
+    return render(request, 'customer/noTradeCustomerReport.html', data)
+
+@login_required()
+def tradeTypeReport(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
+        return HttpResponseRedirect("/")
+    teachers = Teacher.objects.all()
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        teachers = teachers.filter(company=request.user.userprofile.company, department=request.user.userprofile.department)
+    elif request.user.userprofile.title.role_name == 'teacherboss':
+        teachers = teachers.filter(company=request.user.userprofile.company)
+    else:
+        teachers = teachers
+
+    data = {
+        "teachers": teachers,
+    }
+    return render(request, 'customer/tradeTypeReport.html', data)
+
+@login_required()
+def getTeacherDetail(request):
+    teacherid = request.POST.get('teacher')
+    trades = Trade.objects.filter(customer__teacher_id=teacherid)
+    stocks = trades.values('stock', 'stock__stockname', 'stock__stockid').distinct()
+
+    data = {
+        "stocks": stocks,
+        "teacherid": teacherid,
+    }
+    return render(request, 'customer/getTeacherDetail.html', data)
+
+@login_required()
+def getStockDetail(request):
+    teacherid = request.POST.get('teacherid')
+    stockid = request.POST.get('stockid')
+    trades = Trade.objects.filter(customer__teacher_id=teacherid, stock_id=stockid)
+    highTrade = trades.latest('buyprice')
+    lowTrade = trades.earliest('buyprice')
+
+    data = {
+        "highTrade": highTrade,
+        "lowTrade": lowTrade,
+    }
+    return render(request, 'customer/getStockDetail.html', data)
+
+@login_required()
+def dCustomerReport(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
+        return HttpResponseRedirect("/")
+    teachers = Teacher.objects.all()
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        teachers = teachers.filter(company=request.user.userprofile.company, department=request.user.userprofile.department)
+    elif request.user.userprofile.title.role_name == 'teacherboss':
+        teachers = teachers.filter(company=request.user.userprofile.company)
+    else:
+        teachers = teachers
+
+    days = []
+    for i in range(0, 7):
+        day = datetime.date.today() - datetime.timedelta(days=i)
+        days.insert(0, day)
+    data = {
+        "teachers": teachers,
+        "days": days,
+    }
+    return render(request, 'customer/dCustomerReport.html', data)
+
+@login_required()
+def analyzeReport(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
+        return HttpResponseRedirect("/")
+    stocks = Stock.objects.all()
+
+    data = {
+        "stocks": stocks,
+    }
+    return render(request, 'customer/analyzeReport.html', data)
+
+@login_required()
+def getStockDetailForAnalyze(request):
+    stockid = request.POST.get('stock')
+    trades = Trade.objects.filter(stock_id=stockid, status=0)
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+                                      customer__teacher__department=request.user.userprofile.department)
+    elif request.user.userprofile.title.role_name == 'teacherboss':
+        trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
+    else:
+        trades = trades
+
+    try:
+        sellprice = request.POST.get('sellprice')
+        for trade in trades:
+            trade.sellprice = sellprice
+            trade.income = (float(sellprice) - float(trade.buyprice)) * trade.buycount
+            share = float(trade.share.split('|')[0]) / 10
+            trade.commission = trade.income * share
+    except Exception as e:
+        pass
+    data = {
+        "trades": trades,
+        "stockid": stockid,
+    }
+    return render(request, 'customer/getStockDetailForAnalyze.html', data)
+
+@login_required()
+def calcProfitByStockId(request):
+    stockid = request.POST.get('stockid')
+    trades = Trade.objects.filter(stock_id=stockid, status=0)
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+                               customer__teacher__department=request.user.userprofile.department)
+    elif request.user.userprofile.title.role_name == 'teacherboss':
+        trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
+    else:
+        trades = trades
+
+    earnCount = 0
+    earnCash = 0
+    try:
+        sellprice = request.POST.get('sellprice')
+        for trade in trades:
+            trade.sellprice = sellprice
+            trade.income = (float(sellprice) - float(trade.buyprice)) * trade.buycount
+            if trade.income > 0:
+                earnCount += 1
+                earnCash += trade.income
+            share = float(trade.share.split('|')[0]) / 10
+            trade.commission = trade.income * share
+    except Exception as e:
+        pass
+    data = {
+        "earnCount": earnCount,
+        "earnCash": earnCash,
+    }
     return HttpResponse(json.dumps(data))

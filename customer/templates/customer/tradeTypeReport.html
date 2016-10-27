@@ -1,0 +1,95 @@
+{% extends 'base_full_noheader.html' %}
+{% load teacher_tags %}
+{% block title %}交易分类汇总表{% endblock %}
+{% block content %}
+    <br/>
+    <h1>
+        <div class="alert alert-success" style="text-align:center">
+            交易分类汇总表
+        </div>
+    </h1>
+    <hr/>
+
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="2%">姓名</th>
+        <th width="5%">客户数</th>
+        <th width="5%">未出货</th>
+        <th width="5%">合计买入资金</th>
+        <th width="5%">合计已收款</th>
+        <th width="5%">D类客户数</th>
+    </thead>
+    <tbody>
+        {% for teacher in teachers %}
+        <tr data-teacher="{{ teacher.id }}" id="teacher_row_{{ teacher.id }}" ondblclick="showTeacherDetail(this)" class="teacher_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</td>
+            <td>{% getCustomerCountByTeacher teacher.id %}</td>
+            <td>{% getNoSellTradeCountByTeacher teacher.id %}</td>
+            <td>{% getBuyCashTotalByTeacher teacher.id %}</td>
+            <td>{% getPayCashTotalByTeacher teacher.id %}</td>
+            <td>{% getDCustomerCountByTeacher teacher.id %}</td>
+        </tr>
+        <tr style="padding:0;"><td colspan="11" style="padding:0;">
+            <div id="teacher_detail_row_{{ teacher.id }}" class="teacher_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
+        </td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript">
+    function showTeacherDetail(obj){
+        $('.teacher_detail_row').slideUp();
+        teacher = $(obj).data('teacher');
+        teacherDetailRowSelector = $('#teacher_detail_row_'+teacher);
+        if(teacherDetailRowSelector.is(':hidden')){
+            teacherDetailRowSelector.slideDown();
+            loadTeacherDetail(teacher);
+        }else{
+            teacherDetailRowSelector.slideUp();
+        }
+    }
+    function loadTeacherDetail(teacher){
+        teacherDetailRowSelector = $('#teacher_detail_row_'+teacher);
+        $.ajax({
+            url: "{% url 'customer:getTeacherDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "teacher": teacher },
+            beforeSend:  function(){
+                teacherDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                teacherDetailRowSelector.html(data);
+            }
+        });
+    }
+    function showStockDetail(obj){
+        $('.stock_detail_row').slideUp();
+        teacherid = $(obj).data('teacherid');
+        stockid = $(obj).data('stock');
+        stockDetailRowSelector = $('#stock_detail_row_'+teacherid+'_'+stockid);
+        if(stockDetailRowSelector.is(':hidden')){
+            stockDetailRowSelector.slideDown();
+            loadStockDetail(teacherid, stockid);
+        }else{
+            stockDetailRowSelector.slideUp();
+        }
+    }
+    function loadStockDetail(teacherid, stockid) {
+        stockDetailRowSelector = $('#stock_detail_row_'+teacherid+'_'+stockid);
+        $.ajax({
+            url: "{% url 'customer:getStockDetail' %}",
+            type: 'POST',
+            async: true,
+            data: { "teacherid": teacherid, "stockid": stockid },
+            beforeSend:  function(){
+                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
+            },
+            success: function (data) {
+                stockDetailRowSelector.html(data);
+            }
+        });
+    }
+</script>
+{% endblock %}

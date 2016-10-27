@@ -25,6 +25,16 @@ urlpatterns = [
     url(r'^getCustomerById$', views.getCustomerById, name='getCustomerById'),
     url(r'^getSpotCustomerById$', views.getSpotCustomerById, name='getSpotCustomerById'),
 
+    #for report
+    url(r'^noTradeCustomerReport$', views.noTradeCustomerReport, name='noTradeCustomerReport'),
+    url(r'^tradeTypeReport$', views.tradeTypeReport, name='tradeTypeReport'),
+    url(r'^getTeacherDetail$', views.getTeacherDetail, name='getTeacherDetail'),
+    url(r'^getStockDetail$', views.getStockDetail, name='getStockDetail'),
+    url(r'^dCustomerReport$', views.dCustomerReport, name='dCustomerReport'),
+    url(r'^analyzeReport$', views.analyzeReport, name='analyzeReport'),
+    url(r'^getStockDetailForAnalyze$', views.getStockDetailForAnalyze, name='getStockDetailForAnalyze'),
+    url(r'^calcProfitByStockId$', views.calcProfitByStockId, name='calcProfitByStockId'),
+
 
 
 ]

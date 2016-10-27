@@ -1,0 +1,63 @@
+{% extends 'base_full_noheader.html' %}
+{% block title %}待交易客户汇总{% endblock %}
+{% block content %}
+<br/>
+<h1>
+    <div class="alert alert-success" style="text-align:center">
+        待交易客户汇总表
+    </div>
+</h1>
+<hr/>
+
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="5%">创建时间</th>
+        <th width="5%">开发专员</th>
+        <th width="5%">客户姓名</th>
+        <th width="5%">电话</th>
+        <th width="5%">客户来源</th>
+        <th width="5%">昵称</th>
+        <th width="5%">状态</th>
+        <th width="5%">客户专员</th>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr class="customer_row">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ customer.create }}</td>
+            <td>{{ customer.sales.saleId }} {{ customer.sales.binduser.userprofile.nick }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>
+                {% if customer.saleswx %}
+                    微信：{{ customer.saleswx.wxid }}
+                {% else %}
+                    QQ：{{ customer.salesqq.qqid }}
+                {% endif %}
+            </td>
+            <td>{% if customer.saleswx %}
+                    {{ customer.saleswx.wxname }}
+                {% else %}
+                    {{ customer.salesqq.qqname }}
+                {% endif %}
+            </td>
+            <td>
+                {% if customer.status == '0' %}
+                    待确认建立联系
+                {% elif customer.status == '10' %}
+                    待跟进
+                {% elif customer.status == '20 ' %}
+                    待确认交易
+                {% elif customer.status == '30 ' %}
+                    退回
+                {% endif %}
+            </td>
+            <td>{{ customer.teacher.teacherId }} {{ customer.teacher.binduser.userprofile.nick }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="9">无客户信息</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
