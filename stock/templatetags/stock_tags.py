@@ -67,7 +67,7 @@ def getBuyCashTotalByStockAndUser(stockid, userid):
 def getCustomerCountByStockAndUser(stockid, userid):
     try:
         user = User.objects.get(id=userid)
-        customers = Customer.objects.filter(stock_id=stockid, stock__status=0)
+        customers = Customer.objects.filter(trade__stock_id=stockid, trade__status=0)
         if user.userprofile.title.role_name == 'teachermanager':
             customers = customers.filter(teacher__company=user.userprofile.company,
                                    teacher__department=user.userprofile.department)
