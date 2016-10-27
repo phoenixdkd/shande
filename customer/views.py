@@ -490,6 +490,8 @@ def noTradeCustomerReport(request):
     customers = Customer.objects.exclude(status=98)
     customers = Customer.objects.exclude(status=99)
     customers = Customer.objects.exclude(status=40)
+    customers = Customer.objects.exclude(status=10)
+    customers = Customer.objects.exclude(status=30)
     if request.user.userprofile.title.role_name == 'teacher':
         teacher = Teacher.objects.get(binduser=request.user)
         customers = customers.filter(teacher=teacher)
