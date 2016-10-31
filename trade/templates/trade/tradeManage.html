@@ -409,9 +409,11 @@
     }
 </script>
 <div id="customerDiv"></div>
+    {% if request.user.userprofile.title.role_name == 'teacher' %}
 <div class="col-md-2">
         <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTradeModal">新增交易</button>
 </div>
+    {% endif %}
     <br/>
     <br/>
 <div id="tradeDiv" data-customerid="{{ customer.id }}"></div>

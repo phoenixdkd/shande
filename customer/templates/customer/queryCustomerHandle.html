@@ -140,7 +140,7 @@
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleValidCustomer(this)"
                         data-id="{{ customerObj.id }}">处理</button>
                 {% endif %}
-                {% if request.user.userprofile.title.role_name in "teacher teachermanager teacherboss" %}
+                {% if request.user.userprofile.title.role_name in "teacher teachermanager teacherboss admin" %}
                     {% if customerObj.status == 20 or customerObj.status == 40 %}
                     <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"
                         data-id="{{ customerObj.id }}">交易管理</button>

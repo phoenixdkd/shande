@@ -24,7 +24,7 @@ from sale.models import *
 def teacherManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
-    bindUsers = User.objects.filter(userprofile__title__role_name='teacher').order_by("userprofile__nick")
+    bindUsers = User.objects.filter(userprofile__title__role_name='teacher').order_by("username")
     bindBursars = Bursar.objects.all()
     bindspotteachers = SpotTeacher.objects.all().order_by('teacherId')
     data = {
@@ -40,10 +40,11 @@ def queryTeacher(request):
     teachers = teachers.filter(teacherId__icontains=request.GET.get('teacherid', ''))
     teachers = teachers.filter(company__icontains=request.GET.get('company', ''))
     teachers = teachers.filter(department__icontains=request.GET.get('department', ''))
+    teachers = teachers.filter(group__icontains=request.GET.get('group', ''))
 
     if 'binduser' in request.GET and request.GET['binduser'] != '':
         teachers = teachers.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
-    p = Paginator(teachers, 20)
+    p = Paginator(teachers, 5)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:

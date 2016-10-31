@@ -51,7 +51,7 @@
             <td>{% if tradeObj.paytime %}{{ tradeObj.paytime}}{% endif %}</td>
             <td>{{ tradeObj.paytype}}</td>
             <td>
-                {% if request.user.userprofile.title.role_name in "teacher" %}
+                {% if request.user.userprofile.title.role_name in "admin teacher" %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="handleTrade(this)"
                     data-htid="{{ tradeObj.id }}"
                     data-htstockid="{{ tradeObj.stock.stockid }}"

@@ -17,6 +17,7 @@
                     <form id="addTeacherForm" method="post" class="form-horizontal">
                         <div class="form-group">
                             <input type="hidden" value="" class="" id="id" name="id"/>
+                            <input type="hidden" value="" class="" id="page" name="page"/>
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="teacherid">老师ID</label>
                             <div class="col-lg-5 col-md-5">
                                 <input type="text" class="form-control" id="teacherid" name="teacherid"
@@ -149,10 +150,10 @@
     });
     function resetFormValidator(){
         var teacherFormSelector = $('#addTeacherForm');
-        teacherFormSelector.find(':input').val("");
+        teacherFormSelector.find(':input').not('#page').val("");
         teacherFormSelector.data('bootstrapValidator').destroy();
         var teacherGroupFormSelector = $('#addTeacherGroupForm');
-        teacherGroupFormSelector.find(':input').val("");
+        teacherGroupFormSelector.find(':input').not('#page').val("");
         teacherGroupFormSelector.data('bootstrapValidator').destroy();
         $('#searchTeacherForm').data('bootstrapValidator').destroy();
         formValidator();
@@ -193,16 +194,17 @@
                 },
             },
             submitHandler: function (validator, form, submitButton) {
-                $('#addTeacherModal').modal('hide');
                 $.post(
                     "{% url 'teacher:addTeacher' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadTeacherDiv();
+                        data = 'page='+$('#page').val();
+                        loadTeacherDiv(data);
                     },
                     'json'
                 );
+                $('#addTeacherModal').modal('hide');
             }
         });
         $('#addTeacherGroupForm').bootstrapValidator({
@@ -274,6 +276,7 @@
     }
     function editTeacher(obj){
         $('#id').val($(obj).data("id"));
+        $('#page').val($(obj).data("page"));
         $('#teacherid').val($(obj).data("teacherid"));
         $('#company').val($(obj).data("company"));
         $('#department').val($(obj).data("department"));
@@ -307,6 +310,10 @@
             <label class="col-md-1 control-label">部门</label>
             <div class="col-md-2 form-inline">
                  <input type="text" class="form-control" value="{{ department }}" name="department"/>
+            </div>
+            <label class="col-md-1 control-label">组</label>
+            <div class="col-md-2 form-inline">
+                 <input type="text" class="form-control" value="{{ group }}" name="group"/>
             </div>
             <label class="col-md-1 control-label"></label>
             <div class="col-md-2">

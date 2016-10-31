@@ -5,6 +5,7 @@
             <td>老师ID</td>
             <td>隶属公司</td>
             <td>隶属部门</td>
+            <td>隶属组</td>
             <td>绑定用户</td>
             <td>绑定开发</td>
             <td>绑定财务</td>
@@ -20,6 +21,7 @@
             <td>{{ teacherObj.teacherId }}</td>
             <td>{{ teacherObj.company }}</td>
             <td>{{ teacherObj.department }}</td>
+            <td>{{ teacherObj.group }}</td>
             <td >
                 <span class="tooltips" data-toggle="tooltip" title="用户ID:{{ teacherObj.binduser.username }}">{{ teacherObj.binduser.userprofile.nick }}</span>
             </td>
@@ -40,6 +42,7 @@
             <td>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editTeacher(this)"
                     data-id="{{ teacherObj.id }}"
+                    data-page="{{ teacherPage.number }}"
                     data-teacherid="{{ teacherObj.teacherId }}"
                     data-company="{{ teacherObj.company }}"
                     data-department="{{ teacherObj.department }}"
@@ -49,12 +52,13 @@
                 >编辑</button>
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delTeacher(this)"
+                    data-page="{{ teacherPage.number }}"
                     data-id="{{ teacherObj.id }}">删除</button>
             </td>
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="6">无老师信息</td></tr>
+         <tr><td colspan="9">无老师信息</td></tr>
     {% endif %}
     </tbody>
 </table>
