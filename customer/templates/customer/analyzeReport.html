@@ -47,9 +47,9 @@
             <td>{{ stock.stockid }}</td>
             <td>{{ stock.stockname }}</td>
             <td>{% getLowBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
-            <td>{% getHighBuypriceByStockAndUser stock.id request.user.id %}</td>
-            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id %}</td>
-            <td>{% getCustomerCountByStockAndUser stock.id request.user.id %}</td>
+            <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
+            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>
+            <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
             <td><input type="text" id="current_price_{{ stock.id }}" class="current_price"
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}"/></td>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
@@ -79,7 +79,7 @@
             url: "{% url 'customer:getStockDetailForAnalyze' %}",
             type: 'POST',
             async: true,
-            data: { "stock": stock },
+            data: { "stock": stock, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },
             beforeSend:  function(){
                 stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },
@@ -94,7 +94,7 @@
             url: "{% url 'customer:getStockDetailForAnalyze' %}",
             type: 'POST',
             async: true,
-            data: { "stock": stock , "sellprice": sellprice },
+            data: { "stock": stock , "sellprice": sellprice, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },
             beforeSend:  function(){
                 stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },
@@ -109,7 +109,7 @@
             type: 'POST',
             dataType: 'json',
             async: true,
-            data: { "stockid": stockid , "sellprice": sellprice },
+            data: { "stockid": stockid , "sellprice": sellprice, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },
             success: function (data) {
                 console.log(data.earnCash);
                 $('#earn_count_'+stockid).text(data.earnCount);

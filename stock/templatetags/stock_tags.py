@@ -25,10 +25,10 @@ def getLowBuypriceByStockAndUser(stockid, userid, startDate, endDate):
         return 0
 
 @register.simple_tag
-def getHighBuypriceByStockAndUser(stockid, userid):
+def getHighBuypriceByStockAndUser(stockid, userid, startDate, endDate):
     try:
         user = User.objects.get(id=userid)
-        trades = Trade.objects.filter(status=0, stock_id=stockid)
+        trades = Trade.objects.filter(status=0, stock_id=stockid, create__gte=startDate, create__lte=endDate)
         if user.userprofile.title.role_name == 'teachermanager':
             trades = trades.filter(customer__teacher__company=user.userprofile.company,
                                    customer__teacher__department=user.userprofile.department)
@@ -43,10 +43,10 @@ def getHighBuypriceByStockAndUser(stockid, userid):
         return 0
 
 @register.simple_tag
-def getBuyCashTotalByStockAndUser(stockid, userid):
+def getBuyCashTotalByStockAndUser(stockid, userid, startDate, endDate):
     try:
         user = User.objects.get(id=userid)
-        trades = Trade.objects.filter(status=0, stock_id=stockid)
+        trades = Trade.objects.filter(status=0, stock_id=stockid, create__gte=startDate, create__lte=endDate)
         if user.userprofile.title.role_name == 'teachermanager':
             trades = trades.filter(customer__teacher__company=user.userprofile.company,
                                    customer__teacher__department=user.userprofile.department)
@@ -64,10 +64,10 @@ def getBuyCashTotalByStockAndUser(stockid, userid):
         return 0
 
 @register.simple_tag
-def getCustomerCountByStockAndUser(stockid, userid):
+def getCustomerCountByStockAndUser(stockid, userid, startDate, endDate):
     try:
         user = User.objects.get(id=userid)
-        customers = Customer.objects.filter(trade__stock_id=stockid, trade__status=0)
+        customers = Customer.objects.filter(trade__stock_id=stockid, trade__status=0, create__gte=startDate, create__lte=endDate)
         if user.userprofile.title.role_name == 'teachermanager':
             customers = customers.filter(teacher__company=user.userprofile.company,
                                    teacher__department=user.userprofile.department)

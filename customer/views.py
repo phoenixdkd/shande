@@ -581,15 +581,18 @@ def analyzeReport(request):
     endDate = request.POST.get('endDate', datetime.date.today()- datetime.timedelta(days=-7))
     data = {
         "stocks": stocks,
-        "startDate": startDate,
-        "endDate": endDate,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'customer/analyzeReport.html', data)
 
 @login_required()
 def getStockDetailForAnalyze(request):
     stockid = request.POST.get('stock')
-    trades = Trade.objects.filter(stock_id=stockid, status=0)
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
+    print(startDate)
+    trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
     if request.user.userprofile.title.role_name == 'teachermanager':
         trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
                                       customer__teacher__department=request.user.userprofile.department)
@@ -616,7 +619,9 @@ def getStockDetailForAnalyze(request):
 @login_required()
 def calcProfitByStockId(request):
     stockid = request.POST.get('stockid')
-    trades = Trade.objects.filter(stock_id=stockid, status=0)
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
+    trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
     if request.user.userprofile.title.role_name == 'teachermanager':
         trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
                                customer__teacher__department=request.user.userprofile.department)
