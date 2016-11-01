@@ -108,7 +108,7 @@ def addTeacherGroup(request):
                 index = '0' + str(i)
             else:
                 index = str(i)
-            teacherId = company + group + department + index
+            teacherId = company + department + group + index
             spotTeacher, created = SpotTeacher.objects.get_or_create(teacherId=teacherId)
             spotTeacher.company = company
             spotTeacher.department = department

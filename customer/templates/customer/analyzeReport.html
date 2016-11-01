@@ -9,7 +9,24 @@
         </div>
     </h1>
     <hr/>
-
+<form id="searchAnalyzeForm" method="POST" class="form-horizontal ">
+    <div class="form-group">
+        <label class="col-md-1 control-label">时间范围</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate"
+             title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
 <table class="table table-bordered">
     <thead class="bg-info">
         <th width="2%">序号</th>
@@ -29,7 +46,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ stock.stockid }}</td>
             <td>{{ stock.stockname }}</td>
-            <td>{% getLowBuypriceByStockAndUser stock.id request.user.id %}</td>
+            <td>{% getLowBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
             <td>{% getHighBuypriceByStockAndUser stock.id request.user.id %}</td>
             <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id %}</td>
             <td>{% getCustomerCountByStockAndUser stock.id request.user.id %}</td>

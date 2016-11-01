@@ -7,10 +7,10 @@ from trade.models import *
 register = template.Library()
 
 @register.simple_tag
-def getLowBuypriceByStockAndUser(stockid, userid):
+def getLowBuypriceByStockAndUser(stockid, userid, startDate, endDate):
     try:
         user = User.objects.get(id=userid)
-        trades = Trade.objects.filter(status=0, stock_id=stockid)
+        trades = Trade.objects.filter(status=0, stock_id=stockid, create__gte=startDate, create__lte=endDate)
         if user.userprofile.title.role_name == 'teachermanager':
             trades = trades.filter(customer__teacher__company=user.userprofile.company,
                                    customer__teacher__department=user.userprofile.department)

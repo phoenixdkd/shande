@@ -577,9 +577,12 @@ def analyzeReport(request):
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
-
+    startDate = request.POST.get('startDate', datetime.date.today())
+    endDate = request.POST.get('endDate', datetime.date.today()- datetime.timedelta(days=-7))
     data = {
         "stocks": stocks,
+        "startDate": startDate,
+        "endDate": endDate,
     }
     return render(request, 'customer/analyzeReport.html', data)
 
