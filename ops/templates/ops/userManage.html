@@ -23,6 +23,7 @@
                         </div>
                         <div class="form-group">
                             <input type="hidden" value="" class="" id="userid" name="userid"/>
+                            <input type="hidden" value="" class="" id="page" name="page"/>
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="username">ID</label>
                             <div class="col-lg-5 col-md-5">
                                 <input type="text" class="form-control" id="username" name="username"
@@ -102,7 +103,7 @@
         });
     });
     function resetFormValidator(){
-        $('#addUserForm input').val("");
+        $('#addUserForm input').not('#page').val("");
         $('#addUserForm').data('bootstrapValidator').destroy();
         $('#searchUserForm').data('bootstrapValidator').destroy();
         formValidator();
@@ -153,7 +154,8 @@
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadUserDiv();
+                        data = 'page='+$('#page').val();
+                        loadUserDiv(data);
                     },
                     'json'
                 );
@@ -177,6 +179,7 @@
     }
     function editUser(obj){
         $('#userid').val($(obj).data("userid"));
+        $('#page').val($(obj).data("page"));
         $('#username').val($(obj).data("username"));
         $('#nick').val($(obj).data("nick"));
         $('#cid').val($(obj).data("cid"));

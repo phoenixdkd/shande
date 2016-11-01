@@ -44,7 +44,7 @@ def queryTeacher(request):
 
     if 'binduser' in request.GET and request.GET['binduser'] != '':
         teachers = teachers.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
-    p = Paginator(teachers, 5)
+    p = Paginator(teachers, 20)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:

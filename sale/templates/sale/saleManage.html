@@ -17,6 +17,7 @@
                     <form id="addSaleForm" method="post" class="form-horizontal">
                         <div class="form-group">
                             <input type="hidden" value="" class="" id="id" name="id"/>
+                            <input type="hidden" value="" class="" id="page" name="page"/>
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="saleid">开发ID</label>
                             <div class="col-lg-5 col-md-5">
                                 <input type="text" class="form-control" id="saleid" name="saleid"
@@ -137,10 +138,10 @@
     });
     function resetFormValidator(){
         var saleFormSelector = $('#addSaleForm');
-        saleFormSelector.find('input').val("");
+        saleFormSelector.find('input').not('#page').val("");
         saleFormSelector.data('bootstrapValidator').destroy();
         var saleGroupFormSelector = $('#addSaleGroupForm');
-        saleGroupFormSelector.find('input').val("");
+        saleGroupFormSelector.find('input').not('#page').val("");
         saleGroupFormSelector.data('bootstrapValidator').destroy();
 
         $('#searchSaleForm').data('bootstrapValidator').destroy();
@@ -188,7 +189,8 @@
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadSaleDiv();
+                        data = 'page='+$('#page').val();
+                        loadSaleDiv(data);
                     },
                     'json'
                 );
@@ -256,6 +258,7 @@
     }
     function editSale(obj){
         $('#id').val($(obj).data("id"));
+        $('#page').val($(obj).data("page"));
         $('#saleid').val($(obj).data("saleid"));
         $('#company').val($(obj).data("company"));
         $('#department').val($(obj).data("department"));

@@ -17,6 +17,7 @@
                     <form id="addBursarForm" method="post" class="form-horizontal">
                         <div class="form-group">
                             <input type="hidden" value="" class="" id="id" name="id"/>
+                            <input type="hidden" value="" class="" id="page" name="page"/>
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="bursarid">财务ID</label>
                             <div class="col-lg-5 col-md-5">
                                 <input type="text" class="form-control" id="bursarid" name="bursarid"
@@ -105,10 +106,10 @@
     });
     function resetFormValidator(){
         var bursarFormSelector = $('#addBursarForm');
-        bursarFormSelector.find(':input').val("");
+        bursarFormSelector.find(':input').not('#page').val("");
         bursarFormSelector.data('bootstrapValidator').destroy();
         var bursarFormGroupSelector = $('#addBursarGroupForm');
-        bursarFormGroupSelector.find(':input').val("");
+        bursarFormGroupSelector.find(':input').not('#page').val("");
         bursarFormGroupSelector.data('bootstrapValidator').destroy();
         $('#searchBursarForm').data('bootstrapValidator').destroy();
         formValidator();
@@ -155,7 +156,8 @@
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadBursarDiv();
+                        data = 'page='+$('#page').val();
+                        loadBursarDiv(data);
                     },
                     'json'
                 );
@@ -209,6 +211,7 @@
     }
     function editBursar(obj){
         $('#id').val($(obj).data("id"));
+        $('#page').val($(obj).data("page"));
         $('#bursarid').val($(obj).data("bursarid"));
         $('#binduser').val($(obj).data("binduser"));
         $('#addBursarModal').modal("show");
