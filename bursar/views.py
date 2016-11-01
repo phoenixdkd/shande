@@ -41,7 +41,7 @@ def queryBursar(request):
     # bursars = bursars.filter(department__icontains=request.GET.get('department', ''))
     if 'binduser' in request.GET and request.GET['binduser'] != '':
         bursars = bursars.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
-    p = Paginator(bursars, 5)
+    p = Paginator(bursars, 20)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
