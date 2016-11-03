@@ -50,19 +50,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="bindspotteacher" >现货老师</label>
-                            <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindspotteacher" name="bindspotteacher">
-                                    <option>无</option>
-                                    {% if bindspotteachers %}
-                                        {% for bindspotteacher in bindspotteachers %}
-                                            <option value="{{ bindspotteacher.id }}"> {{ bindspotteacher.teacherId }} {{ bindspotteacher.binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
+{#                        <div class="form-group">#}
+{#                            <label class="col-md-offset-2 col-md-2 control-label" for="bindspotteacher" >现货老师</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <select type="select" class="form-control" id="bindspotteacher" name="bindspotteacher">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindspotteachers %}#}
+{#                                        {% for bindspotteacher in bindspotteachers %}#}
+{#                                            <option value="{{ bindspotteacher.id }}"> {{ bindspotteacher.teacherId }} {{ bindspotteacher.binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
+{#                            </div>#}
+{#                        </div>#}
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
                             <div class="col-md-5">

@@ -9,7 +9,7 @@
             <td>绑定用户</td>
             <td>绑定开发</td>
             <td>绑定财务</td>
-            <td>绑定现货老师</td>
+{#            <td>绑定现货老师</td>#}
             <td>操作</td>
         </tr>
     </thead>
@@ -37,7 +37,7 @@
             </td>
 
             <td>{{ teacherObj.bindbursar.bursarId }} {{ teacherObj.bindbursar.binduser.userprofile.nick }}</td>
-            <td>{{ teacherObj.bindspotteacher.teacherId}} {{ teacherObj.bindspotteacher.binduser.userprofile.nick }}</td>
+{#            <td>{{ teacherObj.bindspotteacher.teacherId}} {{ teacherObj.bindspotteacher.binduser.userprofile.nick }}</td>#}
 
             <td>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editTeacher(this)"
@@ -48,7 +48,7 @@
                     data-department="{{ teacherObj.department }}"
                     data-binduser="{{ teacherObj.binduser.id }}"
                     data-bindbursar="{{ teacherObj.bindbursar.id }}"
-                    data-bindspotteacher="{{ teacherObj.bindspotteacher.id }}"
+{#                    data-bindspotteacher="{{ teacherObj.bindspotteacher.id }}"#}
                 >编辑</button>
 
                 <button type="button" class="btn btn-sm btn-danger" onclick="delTeacher(this)"

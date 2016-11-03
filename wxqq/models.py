@@ -17,7 +17,7 @@ class Wx(models.Model):
     bindemail = models.CharField('绑定邮件', max_length=30, default="")
     bindqq = models.CharField('绑定QQ', max_length=30, default="")
     modify = models.DateField('修改时间', null=True)
-    create = models.DateField('创建时间')
+    create = models.DateField('创建时间', null=True)
     delete = models.DateField('失效时间', null=True)
     reason = models.CharField('删除理由', max_length=30, default="")
     bindsale = models.ForeignKey(Sale, null=True, blank=True)  #绑定开发

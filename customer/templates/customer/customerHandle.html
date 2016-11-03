@@ -189,7 +189,9 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="spotTeacher">现货老师</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="spotTeacher" name="spotTeacher">
-                                    <option>{{ request.user.teacher_set.all.0.teacherId }} {{ request.user.teacher_set.all.0.binduser.userprofile.nick }}</option>
+                                    {% for spotTeacher in spotTeachers %}
+                                    <option value="{{ spotTeacher.id }}">{{ spotTeacher.teacherId }} {{ spotTeacher.binduser.userprofile.nick }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

@@ -24,6 +24,7 @@ from customer.models import *
 from spot.models import *
 from trade.models import *
 from stock.models import *
+from spot.models import *
 
 @login_required()
 def customerManage(request):
@@ -222,7 +223,10 @@ def delCustomer(request):
 def customerHandle(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
-    data = {}
+    spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
+    data = {
+        "spotTeachers": spotTeachers,
+    }
     return render(request, 'customer/customerHandle.html', data)
 
 @login_required()
@@ -453,7 +457,7 @@ def handleSpotCustomer(request):
     data = {}
     try:
         customer = Customer.objects.get(id=request.POST.get('spotCustomerId'))
-        customer.spotTeacher = Teacher.objects.get(binduser=request.user).bindspotteacher
+        customer.spotTeacher = SpotTeacher.objects.get(id=request.POST.get('spotTeacher'))
         customer.spotCash = request.POST.get('spotCash')
         customer.spotTime = datetime.date.today()
         currentTimeStamp = time.mktime(timezone.now().timetuple())
