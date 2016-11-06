@@ -25,6 +25,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >所属公司</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="company" name="company"
+                                {% if request.user.userprofile.title.role_name in 'saleboss salemanager' %}
+                                    value="{{ request.user.userprofile.company }}" readonly
+                                {% endif %}
+
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="password" >密码</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="password" name="password"/>
@@ -181,7 +192,7 @@
     });
     function resetFormValidator(){
         var wxFormSelector = $('#addWxForm');
-        wxFormSelector.find('input').val("");
+        wxFormSelector.find('input').not('#company').val("");
         wxFormSelector.find('select').val("无");
         wxFormSelector.data('bootstrapValidator').destroy();
         var editWxFriendFormSelector = $('#editWxFriendForm');
@@ -310,6 +321,7 @@
     }
     function editWx(obj){
         $('#id').val($(obj).data("id"));
+        $('#company').val($(obj).data("company"));
         $('#password').val($(obj).data("password"));
         $('#wxid').val($(obj).data("wxid"));
         $('#wxname').val($(obj).data("wxname"));
@@ -377,9 +389,11 @@
             <div class="col-md-1">
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
+            {% if request.user.userprofile.title.role_name in "saleboss admin ops" %}
             <div class="col-md-2">
                     <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWxModal">新增微信</button>
             </div>
+            {% endif %}
         </div>
     </form>
     {% endif %}

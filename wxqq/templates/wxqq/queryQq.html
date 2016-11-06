@@ -3,6 +3,7 @@
         <tr>
 {#            <td>ID</td>#}
             <td>QQ号</td>
+            <td>所属公司</td>
             <td>QQ密码</td>
             <td>密保</td>
             <td>QQ昵称</td>
@@ -22,6 +23,7 @@
             <td>{% if qqObj.delete %}
                 <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>
                 {% endif %}{{ qqObj.qqid }}</td>
+            <td>{{ qqObj.company }}</td>
             <td>{{ qqObj.password }}</td>
             <td>{{ qqObj.protect }}</td>
             <td>{{ qqObj.qqname }}</td>
@@ -56,6 +58,7 @@
                 {% if request.user.userprofile.title.role_name != 'sale'  and not qqObj.delete %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editQq(this)"
                     data-id="{{ qqObj.id }}"
+                    data-company="{{ qqObj.company }}"
                     data-password="{{ qqObj.password }}"
                     data-protect="{{ qqObj.protect }}"
                     data-qqid="{{ qqObj.qqid }}"
@@ -74,7 +77,7 @@
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="9">无开发QQ信息</td></tr>
+         <tr><td colspan="11">无开发QQ信息</td></tr>
     {% endif %}
     </tbody>
 </table>

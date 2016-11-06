@@ -39,10 +39,10 @@ def queryWx(request):
     if request.user.userprofile.title.role_name in ['salemanager']:
         company = request.user.userprofile.company
         department = request.user.userprofile.department
-        wxs = wxs.filter(bindsale__company=company, bindsale__department=department)
+        wxs = wxs.filter(company=company, bindsale__company=company, bindsale__department=department)
     elif request.user.userprofile.title.role_name in ['saleboss']:
         company = request.user.userprofile.company
-        wxs = wxs.filter(bindsale__company=company)
+        wxs = wxs.filter(company=company)
     elif request.user.userprofile.title.role_name in ['sale']:
         sale = Sale.objects.get(binduser=request.user)
         wxs = wxs.filter(bindsale=sale)
@@ -92,6 +92,7 @@ def addWx(request):
         else:
             newWx.bindsale = None
         newWx.password = request.POST['password']
+        newWx.company = request.POST['company']
         newWx.wxname = request.POST['wxname']
         newWx.bindphone = request.POST.get('bindphone', '')
         newWx.bindemail = request.POST.get('bindemail', '')
@@ -203,12 +204,14 @@ def queryQq(request):
     qqs = Qq.objects.all().order_by('delete','qqid')
     # 不同角色看到的范围不同
     if request.user.userprofile.title.role_name in ['salemanager']:
+
         company = request.user.userprofile.company
         department = request.user.userprofile.department
-        qqs = qqs.filter(bindsale__company=company, bindsale__department=department)
+        print(company)
+        qqs = qqs.filter(company=company, bindsale__company=company, bindsale__department=department)
     elif request.user.userprofile.title.role_name in ['saleboss']:
         company = request.user.userprofile.company
-        qqs = qqs.filter(bindsale__company=company)
+        qqs = qqs.filter(company=company)
     elif request.user.userprofile.title.role_name in ['sale']:
         sale = Sale.objects.get(binduser=request.user)
         qqs = qqs.filter(bindsale=sale)
@@ -258,6 +261,7 @@ def addQq(request):
         else:
             newQq.bindsale = None
         newQq.password = request.POST['password']
+        newQq.company = request.POST['company']
         newQq.protect = request.POST['protect']
         newQq.qqname = request.POST['qqname']
         newQq.save()

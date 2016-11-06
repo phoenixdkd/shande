@@ -25,6 +25,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >所属公司</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="company" name="company"
+                                {% if request.user.userprofile.title.role_name in 'saleboss salemanager' %}
+                                    value="{{ request.user.userprofile.company }}" readonly
+                                {% endif %}
+
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="password" >密码</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="password" name="password"/>
@@ -169,7 +180,7 @@
     });
     function resetFormValidator(){
         var qqFormSelector = $('#addQqForm');
-        qqFormSelector.find(':input').val("");
+        qqFormSelector.find(':input').not('#company').val("");
         qqFormSelector.data('bootstrapValidator').destroy();
         var editQqFriendFormSelector = $('#editQqFriendForm');
         editQqFriendFormSelector.find('input').val("");
@@ -297,6 +308,7 @@
     }
     function editQq(obj){
         $('#id').val($(obj).data("id"));
+        $('#company').val($(obj).data("company"));
         $('#password').val($(obj).data("password"));
         $('#protect').val($(obj).data("protect"));
         $('#qqid').val($(obj).data("qqid"));
@@ -362,9 +374,11 @@
             <div class="col-md-1">
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
+            {% if request.user.userprofile.title.role_name in "saleboss admin ops" %}
             <div class="col-md-2">
                     <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addQqModal">新增qq</button>
             </div>
+                {% endif %}
 
         </div>
     </form>

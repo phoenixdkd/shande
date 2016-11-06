@@ -21,6 +21,7 @@ class Wx(models.Model):
     delete = models.DateField('失效时间', null=True)
     reason = models.CharField('删除理由', max_length=30, default="")
     bindsale = models.ForeignKey(Sale, null=True, blank=True)  #绑定开发
+    company = models.CharField('所属公司', max_length=30, default="")
 
 class WxFriendHis(models.Model):
     wx = models.ForeignKey(Wx)
@@ -42,6 +43,7 @@ class Qq(models.Model):
     delete = models.DateField('失效时间', null=True)
     reason = models.CharField('删除理由', max_length=30, default="")
     bindsale = models.ForeignKey(Sale, null=True, blank=True)  # 绑定开发
+    company = models.CharField('所属公司', max_length=30, default="")
 
 class QqFriendHis(models.Model):
     qq = models.ForeignKey(Qq)
