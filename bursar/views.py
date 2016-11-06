@@ -161,7 +161,7 @@ def payTypeReport(request):
 
 @login_required()
 def payCompanyReport(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'saleboss']):
         return HttpResponseRedirect("/")
     data = { }
     return render(request, 'bursar/payCompanyReport.html', data)
@@ -182,6 +182,15 @@ def queryPayCompany(request):
             LEFT JOIN trade_trade t ON t.customer_id = c.id AND t.paytime IS NOT NULL AND t.paytime > '%s' and t.paytime < '%s'
             GROUP BY s.company
         """ % (bursarid, startDate, endDate)
+    elif request.user.userprofile.title.role_name == 'saleboss':
+        company = request.user.userprofile.company
+        sql = """
+            SELECT s.company,IFNULL(SUM(t.paycash),0) FROM sale_sale s
+            LEFT JOIN customer_customer c ON c.sales_id = s.id
+            LEFT JOIN trade_trade t ON t.customer_id = c.id AND t.paytime IS NOT NULL AND t.paytime > '%s' and t.paytime < '%s'
+            WHERE s.company = '%s'
+            GROUP BY s.company
+        """ % (startDate, endDate, company)
     else:
         sql = """
             SELECT s.company,IFNULL(SUM(t.paycash),0) FROM sale_sale s
@@ -229,6 +238,7 @@ def payStockReport(request):
 def payCompanySerialReport(request):
 
     companys = Sale.objects.values('company').distinct()
+    companys = companys.filter(company=request.user.userprofile.company)
     days = []
     for i in range(0,30):
         day = datetime.date.today()-datetime.timedelta(days=i)
