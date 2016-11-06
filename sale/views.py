@@ -15,9 +15,11 @@ from shande.util import *
 
 @login_required()
 def saleManage(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='sale').order_by("userprofile__nick")
+    if request.user.userprofile.title.role_name == 'saleboss':
+        bindUsers = bindUsers.filter(userprofile__company=request.user.userprofile.company)
     bindTeachers = Teacher.objects.all().order_by("teacherId")
     # for sale in Sale.objects.all():
     #     bindUsers = bindUsers.filter(~Q(id=sale.binduser.id))
@@ -30,7 +32,9 @@ def saleManage(request):
 @login_required()
 def querySale(request):
     sales = Sale.objects.all().order_by('saleId')
-    sales = sales.filter(~Q(id=1))
+    #不同的用户看到不同的列表
+    if request.user.userprofile.title.role_name == 'saleboss':
+        sales = sales.filter(company=request.user.userprofile.company)
     sales = sales.filter(saleId__icontains=request.GET.get('saleid', ''))
     sales = sales.filter(company__icontains=request.GET.get('company', ''))
     sales = sales.filter(department__icontains=request.GET.get('department', ''))
@@ -40,6 +44,7 @@ def querySale(request):
         sales = sales.filter(bindteacher__teacherId__icontains=request.GET.get('bindteacher'))
     if 'bindbursar' in request.GET and request.GET['bindbursar'] != '':
         sales = sales.filter(bindteacher__bindbursar__bursarId__icontains=request.GET.get('bindbursar'))
+
     p = Paginator(sales, 20)
     try:
         page = int(request.GET.get('page', '1'))

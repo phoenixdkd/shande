@@ -91,6 +91,9 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="saleCompany">开发公司</label>
                             <div class="col-lg-5 col-md-5">
                                 <input type="text" class="form-control" id="saleCompany" name="saleCompany"
+                                       {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                                           value="{{ request.user.userprofile.company }}" readonly
+                                        {% endif %}
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="不允许为空"/>
                             </div>
@@ -138,10 +141,10 @@
     });
     function resetFormValidator(){
         var saleFormSelector = $('#addSaleForm');
-        saleFormSelector.find('input').not('#page').val("");
+        saleFormSelector.find('input').not('#page').not('#saleCompany').val("");
         saleFormSelector.data('bootstrapValidator').destroy();
         var saleGroupFormSelector = $('#addSaleGroupForm');
-        saleGroupFormSelector.find('input').not('#page').val("");
+        saleGroupFormSelector.find('input').not('#page').not('#saleCompany').val("");
         saleGroupFormSelector.data('bootstrapValidator').destroy();
 
         $('#searchSaleForm').data('bootstrapValidator').destroy();
