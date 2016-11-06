@@ -93,7 +93,7 @@
                                 <input type="text" class="form-control" id="saleCompany" name="saleCompany"
                                        {% if request.user.userprofile.title.role_name == 'saleboss' %}
                                            value="{{ request.user.userprofile.company }}" readonly
-                                        {% endif %}
+                                       {% endif %}
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="不允许为空"/>
                             </div>

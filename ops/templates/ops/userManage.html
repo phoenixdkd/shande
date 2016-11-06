@@ -47,7 +47,11 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="company" name="company"/>
+                                <input type="text" class="form-control" id="company" name="company"
+                                {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                                    value="{{ request.user.userprofile.company }}" readonly
+                                {% endif %}
+                                />
                             </div>
                         </div>
                         <div class="form-group">
@@ -103,7 +107,7 @@
         });
     });
     function resetFormValidator(){
-        $('#addUserForm input').not('#page').val("");
+        $('#addUserForm input').not('#page').not('#company').val("");
         $('#addUserForm').data('bootstrapValidator').destroy();
         $('#searchUserForm').data('bootstrapValidator').destroy();
         formValidator();

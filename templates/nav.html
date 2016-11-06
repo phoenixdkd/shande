@@ -53,6 +53,7 @@
                                 <li class=""><a href="{% url 'sale:saleManagerPasswordManage' %}" target="_self">开发部门密钥管理</a></li>
                             {% endif %}
                             {% if user.userprofile.title.role_name == 'saleboss' %}
+                                <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
                                 <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                             {% endif %}
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">开发微信管理</a></li>

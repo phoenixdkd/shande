@@ -20,7 +20,7 @@ from super.models import *
 
 @login_required()
 def userManage(request):
-    if (not request.user.userprofile.title.role_name in ['admin' ,'ops'] ):
+    if (not request.user.userprofile.title.role_name in ['admin' ,'ops', 'saleboss'] ):
         return HttpResponseRedirect("/")
     titles = Title.objects.all()
     data = {
@@ -60,6 +60,8 @@ def addUser(request):
 def queryUser(request):
     users = User.objects.all().order_by('-username')
     users = users.filter(~Q(username='admin'))
+    if request.user.userprofile.title.role_name == 'saleboss':
+        users = users.filter(userprofile__company=request.user.userprofile.company)
     users = users.filter(userprofile__company__icontains=request.GET.get('company', ''))
     users = users.filter(userprofile__department__icontains=request.GET.get('department', ''))
     if 'title' in request.GET:
