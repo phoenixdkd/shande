@@ -304,7 +304,7 @@
     }
 </script>
 <div id="customerDiv"></div>
-{% if request.user.userprofile.title.role_name == 'spotteacher' %}
+{% if request.user.userprofile.title.role_name in 'spotteacher spotmanager' %}
 <div class="col-md-2">
     <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSpotModal">新增交易</button>
 </div>

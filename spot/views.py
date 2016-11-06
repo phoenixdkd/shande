@@ -26,7 +26,7 @@ from spot.models import *
 def teacherManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
-    bindUsers = User.objects.filter(userprofile__title__role_name='spotteacher').order_by("userprofile__nick")
+    bindUsers = User.objects.filter(userprofile__title__role_name__in=["spotteacher", "spotmanager"]).order_by("userprofile__nick")
     data = {
         "bindusers": bindUsers,
     }
@@ -144,7 +144,7 @@ def delTeacher(request):
 
 @login_required()
 def spotCustomer(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'spotteacher', 'teacher', 'teachermanager', 'teacherboss']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'spotteacher', 'spotmanager','teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
     data = {}
     return render(request, 'spot/spotCustomer.html', data)
@@ -153,7 +153,7 @@ def spotCustomer(request):
 def querySpotCustomer(request):
     customers = Customer.objects.all().order_by('-modify')
     # 不同角色看到不同的列表
-    if request.user.userprofile.title.role_name in ['spotteacher']:
+    if request.user.userprofile.title.role_name in ['spotteacher', 'spotmanager']:
         spotTeacher = SpotTeacher.objects.get(binduser=request.user)
         customers = customers.filter(spotTeacher=spotTeacher)
         customers = customers.exclude(status=99)
@@ -210,7 +210,7 @@ def querySpotCustomer(request):
 
 @login_required()
 def spotManage(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'spotteacher', 'teacher', 'teachermanager', 'teacherboss']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'spotteacher', 'spotmanager', 'teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
     customerId = request.GET.get("customerId")
     customer = Customer.objects.get(id=customerId)

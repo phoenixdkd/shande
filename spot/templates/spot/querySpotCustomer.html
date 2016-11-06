@@ -83,7 +83,7 @@
             <td>{% getProfitTotalByCustomerId customerObj.id %}</td>
             <td>{% getTaxTotalByCustomerId customerObj.id %}</td>
             <td>
-                {% if request.user.userprofile.title.role_name in "spotteacher" %}
+                {% if request.user.userprofile.title.role_name in "spotteacher spotmanager" %}
                     <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"
                         data-id="{{ customerObj.id }}">现货管理</button>
                 {% endif %}
