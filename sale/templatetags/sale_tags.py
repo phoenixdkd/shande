@@ -143,3 +143,13 @@ def getDishonestBySale( saleid ):
     except Exception as e:
         print(e.__str__())
         return 0
+
+@register.simple_tag()
+def getDishonestCustomerByCompanyAndDay(company, day):
+    try:
+        y, m, d = str(day).split('-')
+        customers = Customer.objects.filter(modify__year=y, modify__month=m, modify__day=d, status=98, sales__company=company)
+        return customers.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0

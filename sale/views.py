@@ -7,7 +7,7 @@ from django.db.models import Q, Count
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-
+import datetime
 from sale.models import *
 from customer.models import *
 from shande.util import *
@@ -312,3 +312,34 @@ def getSaleDetail(request):
         "department": department,
     }
     return render(request, 'sale/getSaleDetail.html', data)
+
+@login_required()
+def dishonestCustomerReport(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
+        return HttpResponseRedirect("/")
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today()
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    companys = Sale.objects.values('company').distinct()
+    if request.user.userprofile.title.role_name == 'saleboss':
+        companys = companys.filter(company=request.user.userprofile.company)
+    days = []
+    tmpDay = startDate
+    while tmpDay <= endDate:
+        days.append(tmpDay)
+        tmpDay = tmpDay + datetime.timedelta(days=1)
+    print(days)
+    data = {
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+        "days": days,
+        "companys": companys,
+    }
+    return render(request, 'sale/dishonestCustomerReport.html', data)

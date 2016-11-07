@@ -50,9 +50,11 @@
                                 <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                                 <li class=""><a href="{% url 'bursar:payCompanyReport' %}" target="_self">公司盈利归属汇总</a></li>
                                 <li class=""><a href="{% url 'bursar:payCompanySerialReport' %}" target="_self">盈利归属趋势图</a></li>
+
                             {% endif %}
                             <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
                             {% if user.userprofile.title.role_name != 'sale' %}
+                                <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
                             {% endif %}
                             {% if user.userprofile.title.role_name != 'sale' %}
