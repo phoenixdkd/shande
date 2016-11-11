@@ -153,3 +153,13 @@ def getDishonestCustomerByCompanyAndDay(company, day):
     except Exception as e:
         print(e.__str__())
         return 0
+
+@register.simple_tag()
+def getEffectCustomerByCompanyAndDay(company, day):
+    try:
+        y, m, d = str(day).split('-')
+        customers = Customer.objects.filter(first_trade__year=y, first_trade__month=m, first_trade__day=d, status=40, sales__company=company)
+        return customers.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0

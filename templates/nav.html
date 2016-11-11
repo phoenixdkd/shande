@@ -55,6 +55,7 @@
                             <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
                             {% if user.userprofile.title.role_name != 'sale' %}
                                 <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
+                                <li class=""><a href="{% url 'sale:saleKpiReportSerial' %}" target="_self">有效客户增长趋势</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
                             {% endif %}
                             {% if user.userprofile.title.role_name != 'sale' %}
