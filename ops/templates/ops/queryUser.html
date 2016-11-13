@@ -7,6 +7,7 @@
             <td>身份证号</td>
             <td>隶属公司</td>
             <td>隶属部门</td>
+            <td>组</td>
             <td>职位</td>
             <td>操作</td>
         </tr>
@@ -21,6 +22,7 @@
             <td>{{ userObj.userprofile.cid }}</td>
             <td>{{ userObj.userprofile.company }}</td>
             <td>{{ userObj.userprofile.department }}</td>
+            <td>{{ userObj.userprofile.group }}</td>
             <td>{{ userObj.userprofile.title.role_desc }}</td>
             <td>
 
@@ -34,6 +36,7 @@
                     data-cid="{{ userObj.userprofile.cid }}"
                     data-company="{{ userObj.userprofile.company }}"
                     data-department="{{ userObj.userprofile.department }}"
+                    data-group="{{ userObj.userprofile.group }}"
                     data-titleid="{{ userObj.userprofile.title.id }}"
                 >编辑</button>
 

@@ -328,8 +328,8 @@ def dishonestCustomerReport(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     companys = Sale.objects.values('company').distinct()
-    if request.user.userprofile.title.role_name == 'saleboss':
-        companys = companys.filter(company=request.user.userprofile.company)
+    # if request.user.userprofile.title.role_name == 'saleboss':
+    #     companys = companys.filter(company=request.user.userprofile.company)
     days = []
     tmpDay = startDate
     while tmpDay <= endDate:

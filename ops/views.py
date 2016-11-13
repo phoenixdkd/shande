@@ -46,6 +46,7 @@ def addUser(request):
         newUser.userprofile.cid = request.POST['cid']
         newUser.userprofile.company = request.POST['company']
         newUser.userprofile.department = request.POST['department']
+        newUser.userprofile.group = request.POST['group']
         newUser.save()
         newUser.userprofile.save()
         data['msg'] = "操作成功"
