@@ -242,7 +242,7 @@ def getCompanyDetail(request):
             LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40 and c.first_trade > %s and c.first_trade < %s
             WHERE s.company = %s
             GROUP BY s.department
-            ORDER by dcount desc
+            ORDER by dcount desc, s.department
         """, [startDate, endDate, company])
     departments = []
     for row in cursor.fetchall():
