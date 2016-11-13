@@ -1,15 +1,17 @@
 {% load customer_tags %}
 <table class="table table-bordered">
     <thead class="bg-info">
+        <th width="2%">序号</th>
         <th width="2%">生效日期</th>
         <th width="5%">客户姓名</th>
         <th width="5%">客户电话</th>
-        <th width="5%">实际买入资金</th>
+        <th width="5%">买入资金</th>
     </thead>
     <tbody>
     {% for customer in customers %}
         <tr>
-            <td>{{ customer.first_trade }}</td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ customer.first_trade.date }}</td>
             <td>{{ customer.name }}</td>
             <td>{{ customer.phone }}</td>
             <td>{% getTotalBuycashByCustomerId customer.id %}</td>

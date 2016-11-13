@@ -5,24 +5,46 @@
     <br/>
     <h1>
         <div class="alert alert-success" style="text-align:center">
-            开发绩效汇总表
+
+            {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                {{ request.user.userprofile.company }}公司开发绩效汇总表
+            {% else %}
+                开发绩效汇总表
+            {% endif %}
         </div>
     </h1>
     <hr/>
-
+    <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
+    <div class="form-group">
+        <label class="col-md-1 control-label">时间范围</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
+             title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
 <table class="table table-bordered">
     <thead class="bg-info">
         <th width="2%">名次</th>
         <th width="2%">公司</th>
         <th width="5%">有效客户</th>
-        <th width="5%">大客户</th>
+        <th width="5%">10W+客户</th>
         <th width="5%">合计买入资金</th>
         <th width="5%">微信好友新增</th>
-        <th width="5%">微信好友总数</th>
+{#        <th width="5%">微信好友总数</th>#}
         <th width="5%">QQ好友新增</th>
-        <th width="5%">QQ好友总数</th>
+{#        <th width="5%">QQ好友总数</th>#}
         <th width="5%">退单率</th>
-        <th width="5%">不诚信客户</th>
+{#        <th width="5%">不诚信客户</th>#}
     </thead>
     <tbody>
         {% for company in companys %}
@@ -32,14 +54,14 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ company.company }}</td>
             <td>{{ company.dcount }}</td>
-            <td>{% getVipCountByCompany company.company %}</td>
-            <td>{% getTotalBuyCashByCompany company.company %}</td>
-            <td>{% getWxFriendDeltaByCompany company.company %}</td>
-            <td>{% getWxFriendTotalByCompany company.company %}</td>
-            <td>{% getQqFriendDeltaByCompany company.company %}</td>
-            <td>{% getQqFriendTotalByCompany company.company %}</td>
+            <td>{% getVipCountByCompany company.company startDate endDate %}</td>
+            <td>{% getTotalBuyCashByCompany company.company startDate endDate %}</td>
+            <td>{% getWxFriendDeltaByCompany company.company startDate endDate %}</td>
+{#            <td>{% getWxFriendTotalByCompany company.company %}</td>#}
+            <td>{% getQqFriendDeltaByCompany company.company startDate endDate %}</td>
+{#            <td>{% getQqFriendTotalByCompany company.company%}</td>#}
             <td>{% getChargebackByCompany company.company %}</td>
-            <td>{% getDishonestByCompany company.company %}</td>
+{#            <td>{% getDishonestByCompany company.company startDate endDate %}</td>#}
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="company_detail_row_{{ company.company }}" class="company_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
@@ -62,11 +84,14 @@
     }
     function loadCompanyDetail(company){
         companyDetailRowSelector = $('#company_detail_row_'+company);
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+
         $.ajax({
             url: "{% url 'sale:getCompanyDetail' %}",
             type: 'POST',
             async: true,
-            data: { "company": company },
+            data: { "company": company, "startDate": startDate, "endDate": endDate },
             beforeSend:  function(){
                 companyDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },
@@ -89,11 +114,13 @@
     }
     function loadDepartmentDetail(company, department) {
         departmnetDetailRowSelector = $('#department_detail_row_'+company+'_'+department);
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
         $.ajax({
-            url: "{% url 'sale:getDepartmentDetail' %}",
+            url: "{% url 'sale:getDepartmentGroupDetail' %}",
             type: 'POST',
             async: true,
-            data: { "company": company, "department": department },
+            data: { "company": company, "department": department, "startDate": startDate, "endDate": endDate  },
             beforeSend:  function(){
                 departmentDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },
@@ -146,11 +173,13 @@
     }
     function loadSaleDetail(company, department, group, sale) {
         saleDetailRowSelector = $('#sale_detail_row_'+company+'_'+department+'_'+group+'_'+sale);
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
         $.ajax({
             url: "{% url 'sale:getSaleDetail' %}",
             type: 'POST',
             async: true,
-            data: { "company": company, "department": department, "group": group, "sale": sale },
+            data: { "company": company, "department": department, "group": group, "sale": sale, "startDate": startDate, "endDate": endDate },
             beforeSend:  function(){
                 saleDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },

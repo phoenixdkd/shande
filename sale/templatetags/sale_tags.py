@@ -55,18 +55,20 @@ def getChargebackByUserId(uid):
         return 0
 
 @register.simple_tag()
-def getVipCountBySale(saleid):
+def getVipCountBySale(saleid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(status=40, vip=True, sales__id=saleid)
+        customers = Customer.objects.filter(status=40, vip=True, sales__id=saleid,
+                                            first_trade__lte = endDate, first_trade__gte = startDat)
         return customers.__len__()
     except Exception as e:
         print(e.__str__())
         return 0
 
 @register.simple_tag()
-def getTotalBuyCashBySale( saleid ):
+def getTotalBuyCashBySale( saleid, startDate, endDate ):
     try:
-        trades = Trade.objects.filter(customer__status=40, customer__sales__id=saleid).aggregate(Sum('buycash'))
+        trades = Trade.objects.filter(customer__status=40, customer__first_trade__lte=endDate, customer__first_trade__gte=startDate,
+                                      customer__sales__id=saleid).aggregate(Sum('buycash'))
         if trades['buycash__sum']:
             return trades['buycash__sum']
         else:
@@ -76,9 +78,9 @@ def getTotalBuyCashBySale( saleid ):
         return 0
 
 @register.simple_tag()
-def getWxFriendDeltaBySale( saleid ):
+def getWxFriendDeltaBySale( saleid, startDate, endDate ):
     try:
-        wx = WxFriendHis.objects.filter(wx__bindsale__id=saleid, day=datetime.date.today()).aggregate(Sum('delta'))
+        wx = WxFriendHis.objects.filter(wx__bindsale__id=saleid, day__lte=endDate, day__gte=startDate).aggregate(Sum('delta'))
         if wx['delta__sum']:
             return wx['delta__sum']
         else:
@@ -100,9 +102,9 @@ def getWxFriendTotalBySale( saleid ):
         return 0
 
 @register.simple_tag()
-def getQqFriendDeltaBySale( saleid ):
+def getQqFriendDeltaBySale( saleid, startDate, endDate ):
     try:
-        qq = QqFriendHis.objects.filter(qq__bindsale__id=saleid, day=datetime.date.today()).aggregate(
+        qq = QqFriendHis.objects.filter(qq__bindsale__id=saleid, day__lte=endDate, day__gte=startDate).aggregate(
             Sum('delta'))
         if qq['delta__sum']:
             return qq['delta__sum']
@@ -163,3 +165,12 @@ def getEffectCustomerByCompanyAndDay(company, day):
     except Exception as e:
         print(e.__str__())
         return 0
+
+@register.simple_tag()
+def getNickBySaleId(saleid):
+    try:
+        sale = Sale.objects.get(id=saleid)
+        return sale.binduser.userprofile.nick
+    except Exception as e:
+        print(e.__str__())
+        return ""

@@ -11,18 +11,19 @@ register = template.Library()
 
 
 @register.simple_tag()
-def getVipCountByCompany( company ):
+def getVipCountByCompany( company, startDate, endDate ):
     try:
-        companys = Customer.objects.filter(status=40, vip=True, sales__company=company)
+        companys = Customer.objects.filter(status=40, vip=True, sales__company=company, first_trade__lte=endDate, first_trade__gte=startDate)
         return companys.__len__()
     except Exception as e:
         print(e.__str__())
         return 0
 
 @register.simple_tag()
-def getTotalBuyCashByCompany( company ):
+def getTotalBuyCashByCompany( company, startDate, endDate ):
     try:
-        trades = Trade.objects.filter(customer__status=40, customer__sales__company=company).aggregate(Sum('buycash'))
+        trades = Trade.objects.filter(customer__status=40, customer__first_trade__lte=endDate, customer__first_trade__gte=startDate,
+                                      customer__sales__company=company).aggregate(Sum('buycash'))
         if trades['buycash__sum']:
             return trades['buycash__sum']
         else:
@@ -32,9 +33,9 @@ def getTotalBuyCashByCompany( company ):
         return 0
 
 @register.simple_tag()
-def getWxFriendDeltaByCompany( company ):
+def getWxFriendDeltaByCompany( company, startDate, endDate ):
     try:
-        wx = WxFriendHis.objects.filter(wx__bindsale__company=company, day=datetime.date.today()).aggregate(Sum('delta'))
+        wx = WxFriendHis.objects.filter(wx__bindsale__company=company, day__lte=endDate, day__gte=startDate).aggregate(Sum('delta'))
         if wx['delta__sum']:
             return wx['delta__sum']
         else:
@@ -56,9 +57,9 @@ def getWxFriendTotalByCompany( company ):
         return 0
 
 @register.simple_tag()
-def getQqFriendDeltaByCompany( company ):
+def getQqFriendDeltaByCompany( company, startDate, endDate ):
     try:
-        qq = QqFriendHis.objects.filter(qq__bindsale__company=company, day=datetime.date.today()).aggregate(
+        qq = QqFriendHis.objects.filter(qq__bindsale__company=company, day__gte=startDate, day__lte=endDate).aggregate(
             Sum('delta'))
         if qq['delta__sum']:
             return qq['delta__sum']
@@ -92,9 +93,9 @@ def getChargebackByCompany( company ):
         return 0
 
 @register.simple_tag()
-def getDishonestByCompany( company ):
+def getDishonestByCompany( company, startDate, endDate ):
     try:
-        customers = Customer.objects.filter(sales__company=company, honest=False)
+        customers = Customer.objects.filter(sales__company=company, honest=False, modify__lte=endDate, modify__gte=startDate)
         return customers.__len__()
     except Exception as e:
         print(e.__str__())

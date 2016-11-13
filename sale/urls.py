@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^saleKpiReport$', views.saleKpiReport, name='saleKpiReport'),
     url(r'^getCompanyDetail$', views.getCompanyDetail, name='getCompanyDetail'),
     url(r'^getDepartmentDetail$', views.getDepartmentDetail, name='getDepartmentDetail'),
+    url(r'^getDepartmentGroupDetail$', views.getDepartmentGroupDetail, name='getDepartmentGroupDetail'),
     url(r'^getGroupDetail$', views.getGroupDetail, name='getGroupDetail'),
     url(r'^getSaleDetail$', views.getSaleDetail, name='getSaleDetail'),
 

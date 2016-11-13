@@ -158,7 +158,7 @@ def delSale(request):
 def saleManagerPasswordManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
-    passwordList = SaleManagerPassword.objects.all()
+    passwordList = SaleManagerPassword.objects.all().order_by("company", "department")
     if request.user.userprofile.title.role_name in ['saleboss']:
         company = request.user.userprofile.company
         passwordList = passwordList.filter(company=company)
@@ -198,13 +198,23 @@ def delSaleManagerPassword(request):
 def saleKpiReport(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     sql = """
         SELECT s.company, IFNULL(COUNT(c.id),0) as dcount
         FROM  sale_sale s
-        LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40
+        LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40 and c.first_trade > '%s' and c.first_trade < '%s'
         GROUP BY s.company
         ORDER by dcount desc
-    """
+    """ % (startDate, endDate)
     cursor = connection.cursor()
     cursor.execute(sql)
     companys = []
@@ -215,21 +225,25 @@ def saleKpiReport(request):
         companys.append(company)
     data = {
         "companys": companys,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'sale/saleKpiReport.html', data)
 
 @login_required()
 def getCompanyDetail(request):
     company = request.POST.get('company')
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
     cursor = connection.cursor()
     cursor.execute("""
             SELECT s.department, IFNULL(COUNT(c.id),0) as dcount
             FROM  sale_sale s
-            LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40
+            LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40 and c.first_trade > %s and c.first_trade < %s
             WHERE s.company = %s
             GROUP BY s.department
             ORDER by dcount desc
-        """, [company])
+        """, [startDate, endDate, company])
     departments = []
     for row in cursor.fetchall():
         department = {}
@@ -239,6 +253,8 @@ def getCompanyDetail(request):
     data = {
         "departments": departments,
         "company": company,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'sale/getCompanyDetail.html', data)
 
@@ -267,6 +283,37 @@ def getDepartmentDetail(request):
         "department": department,
     }
     return render(request, 'sale/getDepartmentDetail.html', data)
+
+@login_required()
+def getDepartmentGroupDetail(request):
+    company = request.POST.get('company')
+    department = request.POST.get('department')
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
+    cursor = connection.cursor()
+    cursor.execute("""
+                SELECT s.id, s.saleid, IFNULL(COUNT(c.id),0) as dcount
+                FROM  sale_sale s
+                LEFT JOIN customer_customer c ON c.sales_id = s.id and c.status = 40 and c.first_trade > %s and c.first_trade < %s
+                WHERE s.company = %s and s.department = %s and s.binduser_id is not null
+                GROUP BY s.saleid
+                ORDER by s.group, s.saleid
+            """, [startDate, endDate, company, department])
+    sales = []
+    for row in cursor.fetchall():
+        sale = {}
+        sale['id'] = row[0]
+        sale['sale'] = row[1]
+        sale['dcount'] = row[2]
+        sales.append(sale)
+    data = {
+        "sales": sales,
+        "company": company,
+        "department": department,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+    }
+    return render(request, 'sale/getDepartmentGroupDetail.html', data)
 
 @login_required()
 def getGroupDetail(request):
@@ -303,13 +350,18 @@ def getSaleDetail(request):
     department = request.POST.get('department')
     group = request.POST.get('group')
     sale = request.POST.get('sale')
-    customers = Customer.objects.filter(sales_id=sale, status=40).order_by('-first_trade')
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
+    customers = Customer.objects.filter(sales_id=sale, status=40,
+                                        first_trade__lte=endDate, first_trade__gte=startDate).order_by('-first_trade')
     data = {
         "customers": customers,
         "sale": sale,
         "group": group,
         "company": company,
         "department": department,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'sale/getSaleDetail.html', data)
 
