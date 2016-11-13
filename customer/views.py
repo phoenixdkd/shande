@@ -51,20 +51,17 @@ def queryCustomer(request):
         company = request.user.userprofile.company
         department = request.user.userprofile.department
         customers = customers.filter(sales__company=company, sales__department=department)
-        customers = customers.filter(~Q(status=99))
     elif request.user.userprofile.title.role_name in ['saleboss']:
         company = request.user.userprofile.company
         customers = customers.filter(sales__company=company)
-        customers = customers.filter(~Q(status=99))
     elif request.user.userprofile.title.role_name in ['sale']:
         sale = Sale.objects.get(binduser=request.user)
         customers = customers.filter(sales=sale)
-        customers = customers.filter(~Q(status=99))
     else:
         customers = customers
     # 去掉不诚信和删除状态的客户
-    customers = customers.filter(~Q(status=98))
-    customers = customers.filter(~Q(status=99))
+    customers = customers.exclude(status=98)
+    customers = customers.exclude(status=99)
 
     #按条件查询
     customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
@@ -74,6 +71,10 @@ def queryCustomer(request):
         customers = customers.filter(saleswx__wxid__icontains=request.GET.get('saleswx', ''))
     if request.GET.get('salesqq', '') != '':
         customers = customers.filter(salesqq__qqid__icontains=request.GET.get('salesqq', ''))
+    if request.GET.get('wxqq', '') != '':
+        print(customers)
+        customers = customers.filter(Q(wxid="", qqid__icontains=request.GET.get('wxqq'))|Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
+        print(customers)
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
     customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
     if request.GET.get('wxid', '') != '':
@@ -92,11 +93,14 @@ def queryCustomer(request):
     if request.GET.get('gem', '') != '':
         customers = customers.filter(gem=request.GET.get('gem'))
     if request.GET.get('startDate', '') != '':
-        customers = customers.filter(modify__gte=request.GET.get('startDate'))
+        customers = customers.filter(create__gte=request.GET.get('startDate'))
     if request.GET.get('endDate', '') != '':
-        customers = customers.filter(modify__lte=request.GET.get('endDate'))
+        customers = customers.filter(create__lte=request.GET.get('endDate'))
     if(request.GET.get('status', '') != ''):
-        customers = customers.filter(status=request.GET.get('status'))
+        if request.GET.get('status') == '40':
+            customers = customers.filter(status=request.GET.get('status'))
+        else:
+            customers = customers.exclude(status=40)
 
     #分页
     p = Paginator(customers, 20)

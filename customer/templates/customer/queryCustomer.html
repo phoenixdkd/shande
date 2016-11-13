@@ -2,21 +2,26 @@
     <thead class="bg-info">
         <tr>
 {#            <td>ID</td>#}
-            <td>开发ID</td>
-            <td>来源微信</td>
-            <td>来源QQ</td>
-            <td>姓名</td>
+            <td>序号</td>
+            <td>合作时间</td>
+            <td>开发专员</td>
+            <td>来源工具</td>
+{#            <td>来源微信</td>#}
+{#            <td>来源QQ</td>#}
+            <td>客户姓名</td>
             <td>电话</td>
-            <td>微信号</td>
-            <td>微信昵称</td>
-            <td>QQ号</td>
-            <td>QQ昵称</td>
+            <td>沟通方式</td>
+            <td>昵称</td>
+{#            <td>微信号</td>#}
+{#            <td>微信昵称</td>#}
+{#            <td>QQ号</td>#}
+{#            <td>QQ昵称</td>#}
             <td>初始资金</td>
             <td>GEM</td>
-            <td>状态</td>
-            <td>消息</td>
-            <td>创建时间</td>
-            <td>修改时间</td>
+            <td>合作状态</td>
+{#            <td>消息</td>#}
+
+{#            <td>修改时间</td>#}
             <td>操作</td>
         </tr>
     </thead>
@@ -25,22 +30,37 @@
     {% for customerObj in customerPage %}
         <tr>
 {#            <td>{{ customerObj.id }}</td>#}
+            <td>{{ forloop.counter }}</td>
+            <td>{{ customerObj.create }}</td>
             <td>
                 <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">
-                    {{ customerObj.sales.saleId }}
+                    {{ customerObj.sales.saleId }} {{ customerObj.sales.binduser.userprofile.nick }}
                 </span>
             </td>
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
-            <td>{% if customerObj.saleswx.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.saleswx.wxid }}</td>
-            <td>{% if customerObj.salesqq.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.salesqq.qqid }}</td>
+            <td>
+                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid }}{% endif %}
+            </td>
+
+{#            <td>{% if customerObj.saleswx.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.saleswx.wxid }}</td>#}
+{#            <td>{% if customerObj.salesqq.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.salesqq.qqid }}</td>#}
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
-            <td>{{ customerObj.wxid }}</td>
-            <td>{{ customerObj.wxname }}</td>
-            <td>{{ customerObj.qqid }}</td>
-            <td>{{ customerObj.qqname }}</td>
+            <td>
+                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid }}{% endif %}
+            </td>
+            <td>
+                {% if customerObj.saleswx %} {{ customerObj.wxname }}{% endif %}
+                {% if customerObj.salesqq %} {{ customerObj.qqname }}{% endif %}
+            </td>
+{#            <td>{{ customerObj.wxid }}</td>#}
+{#            <td>{{ customerObj.wxname }}</td>#}
+{#            <td>{{ customerObj.qqid }}</td>#}
+{#            <td>{{ customerObj.qqname }}</td>#}
             <td>{{ customerObj.startup }}</td>
             <td>
                 {% if customerObj.gem %}
@@ -51,11 +71,11 @@
             </td>
             <td>
                 {% if customerObj.status == 0 %}
-                    <span class="label label-success">&gt;</span> 新录入客户
+                    <span class="label label-success">&gt;</span> 提交老师
                 {% elif customerObj.status == 10 %}
                     <span class="label label-danger">&gt;</span> 待跟进
                 {% elif customerObj.status == 20 %}
-                    <span class="label label-success">&gt;</span> 老师已加微信或QQ
+                    <span class="label label-success">&gt;</span> 已加老师
                 {% elif customerObj.status == 30 %}
                     <span class="label label-danger">&gt;</span> 退回
                 {% elif customerObj.status == 40 %}
@@ -66,9 +86,9 @@
                     <span class="label label-disable">&gt;</span> 标记删除
                 {% endif %}
             </td>
-            <td>{{ customerObj.message }}</td>
-            <td>{{ customerObj.create }}</td>
-            <td>{{ customerObj.modify }}</td>
+{#            <td>{{ customerObj.message }}</td>#}
+
+{#            <td>{{ customerObj.modify }}</td>#}
             <td>
                 {% if customerObj.status == 0 or customerObj.status == 10 or customerObj.status == 30 %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editCustomer(this)"
