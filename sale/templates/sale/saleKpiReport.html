@@ -73,10 +73,12 @@
 <script type="text/javascript">
     function showCompanyDetail(obj){
         $('.company_detail_row').slideUp();
+        $('.company_row').removeClass("bg-danger");
         company = $(obj).data('company');
         companyDetailRowSelector = $('#company_detail_row_'+company);
         if(companyDetailRowSelector.is(':hidden')){
             companyDetailRowSelector.slideDown();
+            $('#company_row_'+company).addClass("bg-danger");
             loadCompanyDetail(company);
         }else{
             companyDetailRowSelector.slideUp();
@@ -102,11 +104,13 @@
     }
     function showDepartmentDetail(obj){
         $('.department_detail_row').slideUp();
+        $('.department_row').removeClass("bg-danger");
         company = $(obj).data('company');
         department = $(obj).data('department');
         departmentDetailRowSelector = $('#department_detail_row_'+company+'_'+department);
         if(departmentDetailRowSelector.is(':hidden')){
             departmentDetailRowSelector.slideDown();
+            $('#department_row_'+company+'_'+department).addClass('bg-danger');
             loadDepartmentDetail(company, department);
         }else{
             departmentDetailRowSelector.slideUp();
