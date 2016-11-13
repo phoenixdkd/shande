@@ -55,9 +55,10 @@
                     data-binduser="{{ saleObj.binduser.id }}"
                     data-bindteacher="{{ saleObj.bindteacher.id }}"
                 >编辑</button>
-
+                {% if request.user.userprofile.title.role_name in 'admin ops' %}
                 <button type="button" class="btn btn-sm btn-danger" onclick="delSale(this)"
                     data-id="{{ saleObj.id }}">删除</button>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
