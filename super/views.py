@@ -101,7 +101,7 @@ def logout_view(request):
 def captcha(request):
     image = Image.new('RGB', (147, 49), color=(255, 255, 255))
     # model, size, background color
-    font_file = os.path.join(BASE_DIR, 'static/assets/fonts/captcha.TTF')
+    font_file = os.path.join(BASE_DIR, 'static/assets/fonts/simsun.ttc')
     font = ImageFont.truetype(font_file, 30)
     # the font object
     draw = ImageDraw.Draw(image)
