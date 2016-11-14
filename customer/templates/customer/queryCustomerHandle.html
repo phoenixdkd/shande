@@ -215,7 +215,7 @@
   <ul class="pagination">
     <li>
         {% if customerPage.has_previous %}
-            <span aria-hidden="true" onclick="loadCustomerDiv('page={{ customerPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+            <span aria-hidden="true" onclick="loadCustomerHandleDiv('page={{ customerPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
         {% endif %}
     </li>
     <li><span class="current">
@@ -223,7 +223,7 @@
         </span></li>
     <li>
         {% if customerPage.has_next %}
-            <span aria-hidden="true" onclick="loadCustomerDiv('page={{ customerPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+            <span aria-hidden="true" onclick="loadCustomerHandleDiv('page={{ customerPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
         {% endif %}
     </li>
   </ul>
