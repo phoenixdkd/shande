@@ -56,3 +56,18 @@ def getTotalBuycashByCustomerId( customerId ):
     except Exception as e:
         print(e.__str__())
         return 0
+
+@register.filter(name="maskphone")
+@stringfilter
+def maskphone(phone):
+    if phone.__len__() < 5:
+        return '***'
+    return phone[0:-4]+'****'
+
+
+@register.filter(name="maskname")
+@stringfilter
+def maskname(name):
+    if name.__len__() < 5:
+        return '***'
+    return name[0:-4]+'****'

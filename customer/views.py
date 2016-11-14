@@ -227,15 +227,27 @@ def delCustomer(request):
 def customerHandle(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
     data = {
         "spotTeachers": spotTeachers,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'customer/customerHandle.html', data)
 
 @login_required()
 def queryCustomerHandle(request):
-    customers = Customer.objects.all().order_by('-modify')
+    customers = Customer.objects.all().order_by('-create')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -254,8 +266,9 @@ def queryCustomerHandle(request):
         customers = customers
 
     # 去掉退回状态的客户
-    customers = customers.filter(~Q(status=10))
-    customers = customers.filter(~Q(status=30))
+    customers = customers.exclude(status=10)
+    customers = customers.exclude(status=30)
+    customers = customers.exclude(status=98)
     # 按条件查询
     # customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
     # customers = customers.filter(sales__department__icontains=request.GET.get('department', ''))
@@ -282,10 +295,11 @@ def queryCustomerHandle(request):
     if request.GET.get('gem', '') != '':
         customers = customers.filter(gem=request.GET.get('gem'))
     if request.GET.get('startDate', '') != '':
-        customers = customers.filter(modify__gte=request.GET.get('startDate'))
+        customers = customers.filter(create__gte=request.GET.get('startDate'))
     if request.GET.get('endDate', '') != '':
-        customers = customers.filter(modify__lte=request.GET.get('endDate'))
-    if (request.GET.get('status', '') != ''):
+        customers = customers.filter(create__lte=request.GET.get('endDate'))
+    if request.GET.get('status', '') != '':
+        print(request.GET.get('status'))
         customers = customers.filter(status=request.GET.get('status'))
     if (request.GET.get('stockid', '') != ''):
         customers = customers.filter(trade__stock__stockid=request.GET.get('stockid'), trade__status=0)
