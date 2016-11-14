@@ -58,7 +58,7 @@ def getChargebackByUserId(uid):
 def getVipCountBySale(saleid, startDate, endDate):
     try:
         customers = Customer.objects.filter(status=40, vip=True, sales__id=saleid,
-                                            first_trade__lte = endDate, first_trade__gte = startDat)
+                                            first_trade__lte = endDate, first_trade__gte = startDate)
         return customers.__len__()
     except Exception as e:
         print(e.__str__())
