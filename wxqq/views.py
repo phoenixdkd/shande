@@ -25,6 +25,8 @@ def wxManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     bindsales = Sale.objects.all().order_by("saleId")
+    if request.user.userprofile.title.role_name == 'saleboss':
+        bindsales = bindsales.filter(company=request.user.userprofile.company)
     data = {
         "bindsales": bindsales,
     }
@@ -193,6 +195,8 @@ def qqManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     bindsales = Sale.objects.all().order_by("saleId")
+    if request.user.userprofile.title.role_name == 'saleboss':
+        bindsales = bindsales.filter(company=request.user.userprofile.company)
     data = {
         "bindsales": bindsales,
     }

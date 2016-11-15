@@ -4,8 +4,8 @@
 {#            <td>ID</td>#}
             <td>老师ID</td>
             <td>隶属公司</td>
-            <td>隶属部门</td>
             <td>隶属组</td>
+            <td>隶属部门</td>
             <td>绑定用户</td>
             <td>绑定开发</td>
             <td>绑定财务</td>
@@ -20,8 +20,9 @@
 {#            <td>{{ teacherObj.id }}</td>#}
             <td>{{ teacherObj.teacherId }}</td>
             <td>{{ teacherObj.company }}</td>
-            <td>{{ teacherObj.department }}</td>
             <td>{{ teacherObj.group }}</td>
+            <td>{{ teacherObj.department }}</td>
+
             <td >
                 <span class="tooltips" data-toggle="tooltip" title="用户ID:{{ teacherObj.binduser.username }}">{{ teacherObj.binduser.userprofile.nick }}</span>
             </td>
