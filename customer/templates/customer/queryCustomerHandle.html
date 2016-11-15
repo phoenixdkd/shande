@@ -54,15 +54,15 @@
             </td>
             <td>
                 {% if customerObj.status == 40 %}
-                    {{ customerObj.phone | maskphone }}
+                    {{ customerObj.phone  }}
                 {% else %}
                     {{ customerObj.phone }}
                 {% endif %}
             </td>
             <td>
                 {% if customerObj.status == 40 %}
-                    {% if customerObj.saleswx %} 微信: {{ customerObj.wxid | maskname }}{% endif %}
-                    {% if customerObj.salesqq %} QQ: {{ customerObj.qqid | maskname }}{% endif %}
+                    {% if customerObj.saleswx %} 微信: {{ customerObj.wxid  }}{% endif %}
+                    {% if customerObj.salesqq %} QQ: {{ customerObj.qqid  }}{% endif %}
                 {% else %}
                     {% if customerObj.saleswx %} 微信: {{ customerObj.wxid }}{% endif %}
                     {% if customerObj.salesqq %} QQ: {{ customerObj.qqid }}{% endif %}
@@ -70,8 +70,8 @@
             </td>
             <td>
                 {% if customerObj.status == 40 %}
-                    {% if customerObj.saleswx %} {{ customerObj.wxname | maskname }}{% endif %}
-                    {% if customerObj.salesqq %} {{ customerObj.qqname | maskname }}{% endif %}
+                    {% if customerObj.saleswx %} {{ customerObj.wxname  }}{% endif %}
+                    {% if customerObj.salesqq %} {{ customerObj.qqname  }}{% endif %}
                 {% else %}
                     {% if customerObj.saleswx %} {{ customerObj.wxname  }}{% endif %}
                     {% if customerObj.salesqq %} {{ customerObj.qqname  }}{% endif %}
