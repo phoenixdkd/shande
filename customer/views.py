@@ -30,6 +30,16 @@ from spot.models import *
 def customerManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     wxList = None
     qqList = None
     if request.user.userprofile.title.role_name in ['sale']:
@@ -39,6 +49,8 @@ def customerManage(request):
     data = {
         "wxList": wxList,
         "qqList": qqList,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'customer/customerManage.html', data)
 
@@ -247,7 +259,7 @@ def customerHandle(request):
 
 @login_required()
 def queryCustomerHandle(request):
-    customers = Customer.objects.all().order_by('-create')
+    customers = Customer.objects.all().order_by('status', '-create')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -299,7 +311,6 @@ def queryCustomerHandle(request):
     if request.GET.get('endDate', '') != '':
         customers = customers.filter(create__lte=request.GET.get('endDate'))
     if request.GET.get('status', '') != '':
-        print(request.GET.get('status'))
         customers = customers.filter(status=request.GET.get('status'))
     if (request.GET.get('stockid', '') != ''):
         customers = customers.filter(trade__stock__stockid=request.GET.get('stockid'), trade__status=0)

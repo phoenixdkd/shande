@@ -15,36 +15,7 @@
                     <!-- The form is placed inside the body of modal -->
                     <form id="addCustomerForm" method="post" class="form-horizontal">
                         <div class="form-group">
-                            <input type="hidden" value="" class="" id="id" name="id"/>
-                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="name">客户姓名</label>
-                            <div class="col-lg-5 col-md-5">
-                                <input type="text" class="form-control" id="name" name="name"
-                                data-bv-notempty="true"
-                                data-bv-notempty-message="不允许为空"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="phone" >电话</label>
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" id="phone" name="phone"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="startup" >初始资金</label>
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" id="startup" name="startup"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="gem" >GEM</label>
-                            <div class="checkbox col-md-5">
-                                <label>
-                                    <input type="checkbox" name="gem" value="gem" />
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="saletool" >开发工具</label>
+                            <label class="col-md-offset-2 col-md-2 control-label" for="saletool" >来源</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="saletool" name="saletool">
                                     <option value="wx">微信</option>
@@ -52,35 +23,21 @@
                                 </select>
                             </div>
                         </div>
-                        <script type="text/javascript">
-                            $('#saletool').on('change', function(){
-
-                                if($(this).val() == 'qq'){
-                                    $('#qqDiv').show();
-                                    $('#wxDiv').hide();
-
-                                }else {
-                                    $('#qqDiv').hide();
-                                    $('#wxDiv').show();
-                                }
-                                $('#addCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
-                            });
-                        </script>
                         <div id="qqDiv" style="display:none">
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="qqid" >qq</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="qqid" >QQ号</label>
                                 <div class="col-md-5">
                                     <input type="text" class="form-control" id="qqid" name="qqid"/>
                                 </div>
                             </div>
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="qqname" >qq昵称</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="qqname" >昵称</label>
                                 <div class="col-md-5">
                                     <input type="text" class="form-control" id="qqname" name="qqname"/>
                                 </div>
                             </div>
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="salesqq" >来源QQ</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="salesqq" >工具</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="salesqq" name="salesqq">
                                         <option>请选择QQ来源</option>
@@ -103,13 +60,13 @@
                                 </div>
                             </div>
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="wxname" >微信昵称</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="wxname" >昵称</label>
                                 <div class="col-md-5">
                                     <input type="text" class="form-control" id="wxname" name="wxname"/>
                                 </div>
                             </div>
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="saleswx" >来源微信</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="saleswx" >工具</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="saleswx" name="saleswx">
                                         <option>请选择微信来源</option>
@@ -124,6 +81,52 @@
                                 </div>
                             </div>
                         </div>
+                        <script type="text/javascript">
+                            $('#saletool').on('change', function(){
+
+                                if($(this).val() == 'qq'){
+                                    $('#qqDiv').show();
+                                    $('#wxDiv').hide();
+
+                                }else {
+                                    $('#qqDiv').hide();
+                                    $('#wxDiv').show();
+                                }
+                                $('#addCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
+                            });
+                        </script>
+                        <hr/>
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="id" name="id"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="name">姓名</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="name" name="name"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="phone" >电话</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="phone" name="phone"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="startup" >资金</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="startup" name="startup"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="gem" >GEM</label>
+                            <div class="checkbox col-md-5">
+                                <label>
+                                    <input type="checkbox" name="gem" value="gem" />
+                                </label>
+                            </div>
+                        </div>
+
+
                         <div id="managerPasswordDiv" style="display:none">
                             <div class="form-group" >
                                 <label class="col-md-offset-2 col-md-2 control-label" for="managerPassword" >部门密钥</label>
@@ -161,6 +164,13 @@
         formValidator();
     }
     function loadCustomerDiv(data){
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        if(data){
+            data = data +'&startDate='+startDate+'&endDate='+endDate;
+        }else{
+            data = 'startDate='+startDate+'&endDate='+endDate;
+        }
         $('#customerDiv').load("{% url 'customer:queryCustomer' %}", data);
     }
     function formValidator(){
@@ -423,12 +433,12 @@
 {#        </div>#}
         <div class="form-group">
             <label class="col-md-1 control-label">合作时间</label>
-            <div class="col-md-1 ">
-                 <input type="date" style="width: 110px" class="form-control datetime" value="{{ startDate }}" name="startDate"
+            <div class="col-md-2 ">
+                 <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
                  title="起始时间"/>
             </div>
             <div class="col-md-2 ">
-                 <input type="date" style="width:110px" class="form-control datetime" value="{{ endDate }}" name="endDate"
+                 <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
                  title="结束时间"/>
             </div>
         </div>
