@@ -43,9 +43,15 @@ def customerManage(request):
     wxList = None
     qqList = None
     if request.user.userprofile.title.role_name in ['sale']:
-        sale = Sale.objects.get(binduser=request.user)
-        wxList = Wx.objects.filter(bindsale=sale)
-        qqList = Qq.objects.filter(bindsale=sale)
+        try:
+            sale = Sale.objects.get(binduser=request.user)
+            wxList = Wx.objects.filter(bindsale=sale)
+            qqList = Qq.objects.filter(bindsale=sale)
+        except:
+            data = {
+                "message": "该用户尚未绑定开发ID，请联系经理绑定ID后重新登陆。"
+            }
+            return render(request, 'error.html', data)
     data = {
         "wxList": wxList,
         "qqList": qqList,
