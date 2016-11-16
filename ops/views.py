@@ -140,3 +140,62 @@ def chargebackSerial(request):
     }
 
     return render(request, "ops/chargebackSerial.html", data)
+
+@login_required()
+def checkUserId(request):
+    username = request.POST.get('username')
+    try:
+        user = User.objects.get(username=username)
+        valid = False
+    except:
+        valid = True
+    data = {
+        'valid': valid,
+    }
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def checkCId(request):
+    cid = request.POST.get('cid')
+    valid = False
+    try:
+        user = User.objects.filter(userprofile__cid=cid)
+        if user.__len__() == 0:
+            valid = True
+    except:
+        traceback.print_exc()
+    data = {
+        'valid': valid,
+    }
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def checkEditUserId(request):
+    username = request.POST.get('username')
+    try:
+        user = User.objects.filter(username=username)
+        if user.__len__() > 1:
+            valid = False
+        else:
+            valid = True
+    except:
+        valid = True
+    data = {
+        'valid': valid,
+    }
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def checkEditCId(request):
+    cid = request.POST.get('cid')
+    valid = False
+    try:
+        user = User.objects.filter(userprofile__cid=cid)
+        if user.__len__() <= 1:
+            valid = True
+    except:
+        traceback.print_exc()
+    data = {
+        'valid': valid,
+    }
+    return HttpResponse(json.dumps(data))

@@ -8,4 +8,8 @@ urlpatterns = [
     url(r'^delUser$', views.delUser, name='delUser'),
     url(r'^resetPw$', views.resetPw, name='resetPw'),
     url(r'^chargebackSerial$', views.chargebackSerial, name='chargebackSerial'),
+    url(r'^checkUserId$', views.checkUserId, name='checkUserId'),
+    url(r'^checkEditUserId$', views.checkEditUserId, name='checkEditUserId'),
+    url(r'^checkCId$', views.checkCId, name='checkCId'),
+    url(r'^checkEditCId$', views.checkEditCId, name='checkEditCId'),
 ]

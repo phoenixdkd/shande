@@ -89,6 +89,92 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">用户管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="editUserForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="nick" >姓名</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="enick" name="nick"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="euserid" name="userid"/>
+                            <input type="hidden" value="" class="" id="epage" name="page"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="username">ID</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="eusername" name="username"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+
+                        <script type="text/javascript">
+                            $('#enick').on('change', function(){
+                                $('#eusername').val(codefans_net_CC2PY($('#enick').val()));
+
+                            });
+                        </script>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="cid" >身份证</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="ecid" name="cid"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="ecompany" name="company"
+                                {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                                    value="{{ request.user.userprofile.company }}" readonly
+                                {% endif %}
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="edepartment" name="department"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="group" >组</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="egroup" name="group"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="title" >职位</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="etitle" name="title">
+                                    {% for title in titles %}
+                                        <option value="{{ title.id }}"> {{ title.role_desc }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="editUserBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="chargebackSerialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -111,10 +197,15 @@
         $('#addUserModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
+        $('#editUserModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
     });
     function resetFormValidator(){
         $('#addUserForm input').not('#page').not('#company').val("");
         $('#addUserForm').data('bootstrapValidator').destroy();
+        $('#editUserForm input').not('#page').not('#company').val("");
+        $('#editUserForm').data('bootstrapValidator').destroy();
         $('#searchUserForm').data('bootstrapValidator').destroy();
         formValidator();
     }
@@ -135,7 +226,12 @@
                     validators: {
                         notEmpty: {
                             message: '请输入用户ID'
+                        },
+                        remote: {
+                            message: 'ID已存在,请手动编辑',
+                            url: '{% url "ops:checkUserId" %}',
                         }
+
                     }
                 },
                 nick: {
@@ -153,11 +249,16 @@
                         regexp: {
                             regexp: "^[0-9|x|X]{18}$",
                             message: "请输入正确的18位身份证号"
+                        },
+                        remote: {
+                            message: '身份证号已存在',
+                            url: '{% url "ops:checkCId" %}',
                         }
                     }
                 }
             },
             submitHandler: function (validator, form, submitButton) {
+
                 $('#addUserModal').modal('hide');
                 $.post(
                     "{% url 'ops:addUser' %}",
@@ -165,6 +266,69 @@
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
                         data = 'page='+$('#page').val();
+                        loadUserDiv(data);
+                    },
+                    'json'
+                );
+            }
+        });
+        $('#editUserForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                username: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入用户ID'
+                        },
+                        remote: {
+                            message: 'ID已存在,请手动编辑',
+                            url: '{% url "ops:checkEditUserId" %}',
+                        }
+
+                    }
+                },
+                nick: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入用户姓名'
+                        }
+                    }
+                },
+                cid: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入身份证号',
+                        },
+                        regexp: {
+                            regexp: "^[0-9|x|X]{18}$",
+                            message: "请输入正确的18位身份证号"
+                        },
+                        remote: {
+                            message: '身份证号已存在',
+                            url: '{% url "ops:checkEditCId" %}',
+                        }
+                    }
+                }
+            },
+            submitHandler: function (validator, form, submitButton) {
+                console.log();
+                $('#editUserModal').modal('hide');
+                $.post(
+                    "{% url 'ops:addUser' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        data = 'page='+$('#epage').val();
+                        var arr = new Array(2);
+                        arr[0] = data;
+                        arr[1] = $('#searchUserForm').serialize();
+                        data = arr.join("&");
                         loadUserDiv(data);
                     },
                     'json'
@@ -188,16 +352,16 @@
         });
     }
     function editUser(obj){
-        $('#userid').val($(obj).data("userid"));
-        $('#page').val($(obj).data("page"));
-        $('#username').val($(obj).data("username"));
-        $('#nick').val($(obj).data("nick"));
-        $('#cid').val($(obj).data("cid"));
-        $('#company').val($(obj).data("company"));
-        $('#department').val($(obj).data("department"));
-        $('#group').val($(obj).data("group"));
-        $('#title').val($(obj).data("titleid"));
-        $('#addUserModal').modal("show");
+        $('#euserid').val($(obj).data("userid"));
+        $('#epage').val($(obj).data("page"));
+        $('#eusername').val($(obj).data("username"));
+        $('#enick').val($(obj).data("nick"));
+        $('#ecid').val($(obj).data("cid"));
+        $('#ecompany').val($(obj).data("company"));
+        $('#edepartment').val($(obj).data("department"));
+        $('#egroup').val($(obj).data("group"));
+        $('#etitle').val($(obj).data("titleid"));
+        $('#editUserModal').modal("show");
     }
     function delUser(obj){
         if(confirm("删除确认")){
@@ -221,7 +385,13 @@
                 {userid:userid},
                 function(result) {
                     showMsgModal(result.msg, result.msgLevel);
-                    loadUserDiv();
+                    var pagenum = 'page='+$('#pagenum').val();
+                    var searchForm = $('#searchUserForm').serialize();
+                    var arr = new Array(2);
+                    arr[0] = pagenum;
+                    arr[1] = searchForm;
+                    data = arr.join("&");
+                    loadUserDiv(data);
                 },
                 'json'
             );

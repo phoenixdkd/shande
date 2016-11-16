@@ -2,11 +2,12 @@
     <thead class="bg-info">
         <tr>
 {#            <td>用户ID</td>#}
-            <td>用户名</td>
+            <td>序号</td>
+            <td>用户ID</td>
             <td>姓名</td>
             <td>身份证号</td>
-            <td>隶属公司</td>
-            <td>隶属部门</td>
+            <td>公司</td>
+            <td>部门</td>
             <td>组</td>
             <td>职位</td>
             <td>操作</td>
@@ -17,6 +18,7 @@
     {% for userObj in userpage %}
         <tr>
 {#            <td>{{ userObj.id }}</td>#}
+            <td>{{ forloop.counter }}</td>
             <td>{{ userObj.username }}</td>
             <td>{{ userObj.userprofile.nick }}</td>
             <td>{{ userObj.userprofile.cid }}</td>
@@ -57,6 +59,7 @@
 <nav class="navbar-right">
   <ul class="pagination">
     <li>
+    <input type="hidden" id="pagenum"  value="{{ userpage.number }}"/>
         {% if userpage.has_previous %}
             <span aria-hidden="true" onclick="loadUserDiv('page={{ userpage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
         {% endif %}
