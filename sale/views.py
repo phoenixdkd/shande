@@ -17,10 +17,10 @@ from shande.util import *
 def saleManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']):
         return HttpResponseRedirect("/")
-    bindUsers = User.objects.filter(userprofile__title__role_name='sale').order_by("userprofile__nick")
+    bindUsers = User.objects.filter(userprofile__title__role_name='sale').order_by("username")
     if request.user.userprofile.title.role_name == 'saleboss':
         bindUsers = bindUsers.filter(userprofile__company=request.user.userprofile.company)
-    bindTeachers = Teacher.objects.all().order_by("teacherId")
+    bindTeachers = Teacher.objects.filter(binduser__isnull=False).order_by("teacherId")
     # for sale in Sale.objects.all():
     #     bindUsers = bindUsers.filter(~Q(id=sale.binduser.id))
     data = {

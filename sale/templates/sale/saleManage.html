@@ -21,6 +21,9 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="saleid">开发ID</label>
                             <div class="col-lg-5 col-md-5">
                                 <input type="text" class="form-control" id="saleid" name="saleid"
+                                {% if request.user.userprofile.title.role_name != 'admin' %}
+                                    readonly
+                                {% endif %}
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="不允许为空"/>
                             </div>
@@ -113,7 +116,7 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="saleCount" >开发数量</label>
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="saleCount" name="saleCount"/>
+                                <input type="text" class="form-control" id="saleCount" name="saleCount" value="5"/>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -145,6 +148,7 @@
         saleFormSelector.data('bootstrapValidator').destroy();
         var saleGroupFormSelector = $('#addSaleGroupForm');
         saleGroupFormSelector.find('input').not('#page').not('#saleCompany').val("");
+        $('#saleCount').val(5);
         saleGroupFormSelector.data('bootstrapValidator').destroy();
 
         $('#searchSaleForm').data('bootstrapValidator').destroy();
@@ -193,6 +197,11 @@
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
                         data = 'page='+$('#page').val();
+                        searchData = $('#searchSaleForm').serialize();
+                        var arr = new Array(2);
+                        arr[0] = data;
+                        arr[1] = searchData;
+                        data = arr.join("&");
                         loadSaleDiv(data);
                     },
                     'json'
@@ -292,37 +301,40 @@
             <div class="col-md-2 form-inline">
                  <input type="text" class="form-control" value="{{ saleid }}" name="saleid"/>
             </div>
-            <label class="col-md-1 control-label">公司</label>
+            <label class="col-md-1 control-label">用户名</label>
             <div class="col-md-2 form-inline">
-                 <input type="text" class="form-control" value="{{ company }}" name="company"/>
+                 <input type="text" class="form-control" value="{{ binduser }}" name="binduser"/>
             </div>
+{#            <label class="col-md-1 control-label">公司</label>#}
+{#            <div class="col-md-2 form-inline">#}
+{#                 <input type="text" class="form-control" value="{{ company }}" name="company"/>#}
+{#            </div>#}
             <label class="col-md-1 control-label">部门</label>
             <div class="col-md-2 form-inline">
                  <input type="text" class="form-control" value="{{ department }}" name="department"/>
             </div>
-            <label class="col-md-1 control-label"></label>
-            <div class="col-md-2">
-{#                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleModal">新增开发</button>#}
-                    <lable class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleGroupModal">新增开发组</lable>
-            </div>
-
-        </div>
-        <div class="form-group">
             <label class="col-md-1 control-label">对接老师</label>
             <div class="col-md-2 form-inline">
                  <input type="text" class="form-control" value="{{ bindteacher }}" name="bindteacher"/>
             </div>
-            <label class="col-md-1 control-label">对接财务</label>
-            <div class="col-md-2 form-inline">
-                 <input type="text" class="form-control" value="{{ bindbursar }}" name="bindbursar"/>
-            </div>
-            <label class="col-md-1 control-label">用户姓名</label>
-            <div class="col-md-2 form-inline">
-                 <input type="text" class="form-control" value="{{ binduser }}" name="binduser"/>
-            </div>
+            <label class="col-md-1 control-label"></label>
+
+
+        </div>
+        <div class="form-group">
+
+{#            <label class="col-md-1 control-label">对接财务</label>#}
+{#            <div class="col-md-2 form-inline">#}
+{#                 <input type="text" class="form-control" value="{{ bindbursar }}" name="bindbursar"/>#}
+{#            </div>#}
+
             <label class="col-md-1 control-label"></label>
             <div class="col-md-2">
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+            <div class="col-md-2">
+{#                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleModal">新增开发</button>#}
+                    <lable class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleGroupModal">新增开发组</lable>
             </div>
         </div>
     </form>
