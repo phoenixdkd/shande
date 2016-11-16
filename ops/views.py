@@ -47,6 +47,7 @@ def addUser(request):
         newUser.userprofile.company = request.POST['company']
         newUser.userprofile.department = request.POST['department']
         newUser.userprofile.group = request.POST['group']
+        newUser.userprofile.faillocktime = None
         newUser.save()
         newUser.userprofile.save()
         data['msg'] = "操作成功"
@@ -106,6 +107,8 @@ def resetPw(request):
     try:
         tmpUser = User.objects.get(id=request.POST['userid'])
         tmpUser.set_password("123456")
+        tmpUser.userprofile.faillocktime = None
+        tmpUser.userprofile.save()
         tmpUser.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"

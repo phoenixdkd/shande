@@ -56,7 +56,7 @@ def login_view(request):
                     deltatime = (datetime.datetime.now() - faillocktime).total_seconds() - 900
                     if deltatime < 0:
                         error_msg = "用户已锁定，解锁倒计时 %s 秒" % int(deltatime)
-                        return render(request, 'shande/login_view.html', locals())
+                        return render(request, 'super/login_view.html', locals())
                 userauth = authenticate(username=request.POST['username'], password=request.POST['password'])
                 if userauth is not None:
                     login(request, userauth)
