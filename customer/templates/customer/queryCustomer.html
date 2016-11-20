@@ -6,7 +6,9 @@
             <td>序号</td>
             <td>合作时间</td>
             <td>开发ID</td>
+            {% if not request.user.userprofile.title.role_name == 'salemanager' %}
             <td>对接老师</td>
+            {% endif %}
             <td>来源工具</td>
 {#            <td>来源微信</td>#}
 {#            <td>来源QQ</td>#}
@@ -44,7 +46,9 @@
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
+            {% if not request.user.userprofile.title.role_name == 'salemanager' %}
             <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
+            {% endif %}
             <td>
                 {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid | mask8 }}{% endif %}
                 {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid | mask8 }}{% endif %}
@@ -52,6 +56,18 @@
 
 {#            <td>{% if customerObj.saleswx.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.saleswx.wxid }}</td>#}
 {#            <td>{% if customerObj.salesqq.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.salesqq.qqid }}</td>#}
+            {% if request.user.userprofile.title.role_name == 'salemanager' %}
+            <td>{{ customerObj.name | maskname }}</td>
+            <td>{{ customerObj.phone | maskphone }}</td>
+            <td>
+                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid | masklast4 }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid | masklast4 }}{% endif %}
+            </td>
+            <td>
+                {% if customerObj.saleswx %} {{ customerObj.wxname | masklast4 }}{% endif %}
+                {% if customerObj.salesqq %} {{ customerObj.qqname | masklast4 }}{% endif %}
+            </td>
+            {% else %}
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
             <td>
@@ -62,6 +78,7 @@
                 {% if customerObj.saleswx %} {{ customerObj.wxname | mask8 }}{% endif %}
                 {% if customerObj.salesqq %} {{ customerObj.qqname | mask8 }}{% endif %}
             </td>
+            {% endif %}
 {#            <td>{{ customerObj.wxid }}</td>#}
 {#            <td>{{ customerObj.wxname }}</td>#}
 {#            <td>{{ customerObj.qqid }}</td>#}

@@ -365,7 +365,7 @@
             <div class="col-md-1 ">
                 <select type="select" class="form-control" id="status" name="status">
                      <option></option>
-                     {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                     {% if request.user.userprofile.title.role_name in 'saleboss salemanager' %}
                      <option value="0">已提交老师</option>
                      <option value="20">客户已添加专员</option>
                      {% endif %}
@@ -373,7 +373,9 @@
 
 {#                     <option value="30">退回</option>#}
                      <option value="40">有效客户</option>
+                    {% if not request.user.userprofile.title.role_name in 'saleboss salemanager' %}
                      <option value="39">待跟进客户</option>
+                    {% endif %}
 {#                     <option value="99">标记删除</option>#}
                 </select>
             </div>

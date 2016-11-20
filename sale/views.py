@@ -398,7 +398,7 @@ def dishonestCustomerReport(request):
 
 @login_required()
 def dishonestCustomer(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager']:
         return HttpResponseRedirect("/")
     # endDate = request.POST.get('endDate', "")
     # if endDate == '':
@@ -413,6 +413,9 @@ def dishonestCustomer(request):
     customers = Customer.objects.filter(status=98).order_by('sales__company')
     if request.user.userprofile.title.role_name == 'saleboss':
         customers = Customer.objects.filter(sales__company=request.user.userprofile.company)
+    if request.user.userprofile.title.role_name == 'salemanager':
+        customers = Customer.objects.filter(sales__company=request.user.userprofile.company,
+                                            sales__department=request.user.userprofile.department)
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
