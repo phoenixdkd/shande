@@ -35,7 +35,7 @@ def wxManage(request):
 @login_required()
 def queryWx(request):
     data = {}
-    wxs = Wx.objects.all().order_by('delete', 'wxid')
+    wxs = Wx.objects.all().order_by('delete', 'bindsale__saleId')
 
     #不同角色看到的范围不同
     if request.user.userprofile.title.role_name in ['salemanager']:
@@ -205,7 +205,7 @@ def qqManage(request):
 @login_required()
 def queryQq(request):
     data = {}
-    qqs = Qq.objects.all().order_by('delete','qqid')
+    qqs = Qq.objects.all().order_by('delete','bindsale__saleId')
     # 不同角色看到的范围不同
     if request.user.userprofile.title.role_name in ['salemanager']:
 
@@ -234,7 +234,7 @@ def queryQq(request):
             qqs = qqs.filter(delete__isnull=False)
         else:
             qqs = qqs.filter(delete__isnull=True)
-    p = Paginator(qqs, 20)
+    p = Paginator(qqs, 1)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:

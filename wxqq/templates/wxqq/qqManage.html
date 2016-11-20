@@ -218,13 +218,19 @@
                 },
             },
             submitHandler: function (validator, form, submitButton) {
+                var searchData = $('#searchQqForm').serialize();
+                var pageData = 'page='+$('#page').val();
+                var arr = new Array(2);
+                arr[0] = pageData;
+                arr[1] = searchData;
+                var data = arr.join('&');
                 $('#addQqModal').modal('hide');
                 $.post(
                     "{% url 'wxqq:addQq' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadQqDiv();
+                        loadQqDiv(data);
                     },
                     'json'
                 );
@@ -248,13 +254,20 @@
                 }
             },
             submitHandler: function (validator, form, submitButton) {
+                var searchData = $('#searchQqForm').serialize();
+                var pageData = 'page='+$('#page').val();
+                var arr = new Array(2);
+                arr[0] = pageData;
+                arr[1] = searchData;
+                var data = arr.join('&');
+                $('#delWxModal').modal('hide');
                 $('#delQqModal').modal('hide');
                 $.post(
                     "{% url 'wxqq:delQq' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadQqDiv();
+                        loadQqDiv(data);
                     },
                     'json'
                 );
@@ -278,13 +291,20 @@
                 }
             },
             submitHandler: function (validator, form, submitButton) {
+                var searchData = $('#searchQqForm').serialize();
+                var pageData = 'page='+$('#page').val();
+                var arr = new Array(2);
+                arr[0] = pageData;
+                arr[1] = searchData;
+                var data = arr.join('&');
+                $('#delWxModal').modal('hide');
                 $('#editQqFriendModal').modal('hide');
                 $.post(
                     "{% url 'wxqq:editQqFriend' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadQqDiv();
+                        loadQqDiv(data);
                     },
                     'json'
                 );

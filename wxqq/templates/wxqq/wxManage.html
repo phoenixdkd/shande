@@ -231,13 +231,19 @@
                 }
             },
             submitHandler: function (validator, form, submitButton) {
+                var searchData = $('#searchWxForm').serialize();
+                var pageData = 'page='+$('#page').val();
+                var arr = new Array(2);
+                arr[0] = pageData;
+                arr[1] = searchData;
+                var data = arr.join('&');
                 $('#addWxModal').modal('hide');
                 $.post(
                     "{% url 'wxqq:addWx' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadWxDiv();
+                        loadWxDiv(data);
                     },
                     'json'
                 );
@@ -261,13 +267,19 @@
                 }
             },
             submitHandler: function (validator, form, submitButton) {
+                var searchData = $('#searchWxForm').serialize();
+                var pageData = 'page='+$('#page').val();
+                var arr = new Array(2);
+                arr[0] = pageData;
+                arr[1] = searchData;
+                var data = arr.join('&');
                 $('#delWxModal').modal('hide');
                 $.post(
                     "{% url 'wxqq:delWx' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadWxDiv();
+                        loadWxDiv(data);
                     },
                     'json'
                 );
@@ -292,12 +304,18 @@
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#editWxFriendModal').modal('hide');
+                var searchData = $('#searchWxForm').serialize();
+                var pageData = 'page='+$('#page').val();
+                var arr = new Array(2);
+                arr[0] = pageData;
+                arr[1] = searchData;
+                var data = arr.join('&');
                 $.post(
                     "{% url 'wxqq:editWxFriend' %}",
                     form.serialize(),
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
-                        loadWxDiv();
+                        loadWxDiv(data);
                     },
                     'json'
                 );
@@ -376,7 +394,7 @@
                  <input type="text" class="form-control" value="{{ bindsale }}" name="bindsale"/>
             </div>
             <label class="col-md-1 control-label" style="width:70px">失效</label>
-            <div class="col-md-2 ">
+            <div class="col-md-1 ">
                  <select type="select" class="form-control" id="delete" name="delete">
                      <option></option>
                      <option value="1">是</option>

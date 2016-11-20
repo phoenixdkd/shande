@@ -24,7 +24,9 @@
 {#            <td>消息</td>#}
 
 {#            <td>修改时间</td>#}
-            <td>操作</td>
+            {% if not request.user.userprofile.title.role_name == 'saleboss' %}
+                <td>操作</td>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -92,6 +94,7 @@
 {#            <td>{{ customerObj.message }}</td>#}
 
 {#            <td>{{ customerObj.modify }}</td>#}
+            {% if not request.user.userprofile.title.role_name == 'saleboss' %}
             <td>
                 {% if customerObj.status == 0 or customerObj.status == 10 or customerObj.status == 30 %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editCustomer(this)"
@@ -117,6 +120,7 @@
                     data-id="{{ customerObj.id }}">彻底删除</button>
                 {% endif %}
             </td>
+            {% endif %}
         </tr>
     {% endfor %}
     {% else %}

@@ -2,16 +2,17 @@
     <thead class="bg-info">
         <tr>
 {#            <td>ID</td>#}
-            <td>QQ号</td>
+            <td>序号</td>
             <td>所属公司</td>
-            <td>QQ密码</td>
-            <td>密保</td>
-            <td>QQ昵称</td>
-            <td>绑定开发</td>
-            <td>当前好友数</td>
+            <td>QQ</td>
+{#            <td>QQ密码</td>#}
+{#            <td>密保</td>#}
+            <td>昵称</td>
+            <td>绑定用户</td>
+            <td>当前好友</td>
             <td>创建时间</td>
             <td>失效时间</td>
-            <td>失效原因</td>
+{#            <td>失效原因</td>#}
             <td>操作</td>
         </tr>
     </thead>
@@ -20,12 +21,14 @@
     {% for qqObj in qqPage %}
         <tr>
 {#            <td>{{ qqObj.id }}</td>#}
+            <td>{{ forloop.counter }}</td>
+            <td>{{ qqObj.company }}</td>
             <td>{% if qqObj.delete %}
                 <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>
                 {% endif %}{{ qqObj.qqid }}</td>
-            <td>{{ qqObj.company }}</td>
-            <td>{{ qqObj.password }}</td>
-            <td>{{ qqObj.protect }}</td>
+
+{#            <td>{{ qqObj.password }}</td>#}
+{#            <td>{{ qqObj.protect }}</td>#}
             <td>{{ qqObj.qqname }}</td>
             <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ qqObj.bindsale.id }}">{{ qqObj.bindsale.saleId }} {{ qqObj.bindsale.binduser.userprofile.nick }}</span></td>
             <script type="text/javascript">
@@ -34,7 +37,7 @@
              <td>{{ qqObj.friend }}</td>
              <td>{{ qqObj.create }}</td>
              <td>{% if qqObj.delete %}{{ qqObj.delete }}{% endif %}</td>
-             <td>{{ qqObj.reason }}</td>
+{#             <td>{{ qqObj.reason }}</td>#}
             <td>
                 <button type="button" class="btn btn-sm btn-primary" id="qqFriendSerialButton" onclick="qqFriendSerial(this)"
                     data-id="{{ qqObj.id }}">好友趋势</button>
@@ -83,6 +86,7 @@
 </table>
 <nav class="navbar-right">
   <ul class="pagination">
+    <input type="hidden" value="{{ qqPage.number }}" id="page" />
     <li>
         {% if qqPage.has_previous %}
             <span aria-hidden="true" onclick="loadQqDiv('page={{ qqPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
