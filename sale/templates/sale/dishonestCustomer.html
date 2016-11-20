@@ -1,0 +1,92 @@
+{% extends 'base_full_noheader.html' %}
+
+{% block title %}不诚信客户{% endblock %}
+{% block content %}
+    <br/>
+    <h1>
+        <div class="alert alert-success" style="text-align:center">
+
+            {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                {{ request.user.userprofile.company }}公司不诚信客户
+            {% else %}
+                不诚信客户
+            {% endif %}
+        </div>
+    </h1>
+    <hr/>
+    <table class="table table-bordered">
+    <thead class="bg-info">
+        <th>序号</th>
+        <th>合作时间</th>
+        <th>开发专员</th>
+        <th>来源工具</th>
+        <th>客户姓名</th>
+        <th>电话</th>
+        <th>沟通方式</th>
+        <th>昵称</th>
+        <th>初始资金</th>
+        <th>GEM</th>
+        <th>情况说明</th>
+    </thead>
+    <tbody>
+        {% for customerObj in customerPage %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ customerObj.create }}</td>
+            <td>
+                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">
+                    {{ customerObj.sales.saleId }} {{ customerObj.sales.binduser.userprofile.nick }}
+                </span>
+            </td>
+            <script type="text/javascript">
+                $('.tooltips').tooltip();
+            </script>
+            <td>
+                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid  }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid  }}{% endif %}
+            </td>
+            <td>{{ customerObj.name }}</td>
+            <td>{{ customerObj.phone }}</td>
+            <td>
+                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid  }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid  }}{% endif %}
+            </td>
+            <td>
+                {% if customerObj.saleswx %} {{ customerObj.wxname  }}{% endif %}
+                {% if customerObj.salesqq %} {{ customerObj.qqname  }}{% endif %}
+            </td>
+            <td>{{ customerObj.startup }}</td>
+            <td>
+                {% if customerObj.gem %}
+                    <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+            </td>
+            <td>{{ customerObj.message }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if customerPage.has_previous %}
+            <span aria-hidden="true">
+                <a href="?page={{ customerPage.previous_page_number }}">&laquo;</a>
+            </span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ customerPage.number }}/{{ customerPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if customerPage.has_next %}
+            <span aria-hidden="true">
+                <a href="?page={{ customerPage.next_page_number }}">&raquo;</a>
+            </span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>
+{% endblock %}

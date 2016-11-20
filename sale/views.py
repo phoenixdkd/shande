@@ -397,6 +397,39 @@ def dishonestCustomerReport(request):
     return render(request, 'sale/dishonestCustomerReport.html', data)
 
 @login_required()
+def dishonestCustomer(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
+        return HttpResponseRedirect("/")
+    # endDate = request.POST.get('endDate', "")
+    # if endDate == '':
+    #     endDate = datetime.date.today()
+    # else:
+    #     endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    # startDate = request.POST.get('startDate', "")
+    # if startDate == "":
+    #     startDate = datetime.date.today() - datetime.timedelta(days=30)
+    # else:
+    #     startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    customers = Customer.objects.filter(status=98).order_by('sales__company')
+    if request.user.userprofile.title.role_name == 'saleboss':
+        customers = Customer.objects.filter(sales__company=request.user.userprofile.company)
+    p = Paginator(customers, 20)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        customerPage = p.page(page)
+    except (EmptyPage, InvalidPage):
+        customerPage = p.page(p.num_pages)
+    data = {
+        # "startDate": str(startDate),
+        # "endDate": str(endDate),
+        "customerPage": customerPage,
+    }
+    return render(request, 'sale/dishonestCustomer.html', data)
+
+@login_required()
 def saleKpiReportSerial(request):
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
         return HttpResponseRedirect("/")
@@ -418,7 +451,6 @@ def saleKpiReportSerial(request):
     while tmpDay <= endDate:
         days.append(tmpDay)
         tmpDay = tmpDay + datetime.timedelta(days=1)
-    print(days)
     data = {
         "startDate": str(startDate),
         "endDate": str(endDate),
