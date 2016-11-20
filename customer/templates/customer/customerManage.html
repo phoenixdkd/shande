@@ -363,16 +363,34 @@
         <div class="form-group">
             <label class="col-md-1 control-label" >客户状态</label>
             <div class="col-md-1 ">
-                 <select type="select" class="form-control" id="status" name="status">
+                <select type="select" class="form-control" id="status" name="status">
                      <option></option>
-{#                     <option value="0">新录入客户</option>#}
+                     {% if request.user.userprofile.title.role_name == 'saleboss' %}
+                     <option value="0">已提交老师</option>
+                     <option value="20">客户已添加专员</option>
+                     {% endif %}
 {#                     <option value="10">待跟进</option>#}
-{#                     <option value="20">老师已加微信或QQ</option>#}
+
 {#                     <option value="30">退回</option>#}
                      <option value="40">有效客户</option>
                      <option value="39">待跟进客户</option>
 {#                     <option value="99">标记删除</option>#}
-                 </select>
+                </select>
+            </div>
+            <label class="col-md-1 control-label">退回</label>
+            <div class="col-md-1 ">
+                <select type="select" class="form-control" id="message" name="message">
+                    <option></option>
+                    <option value="客户不回消息">客户不回消息</option>
+                    <option value="给票不买">给票不买</option>
+                    <option value="分成太高">分成太高</option>
+                    <option value="要看票">要看票</option>
+                    <option value="今天不买，下次再买">今天不买，下次再买</option>
+                    <option value="不发截图">不发截图</option>
+                    <option value="合作资金不足">合作资金不足</option>
+                    <option value="买错票">买错票</option>
+                    <option value="客户信息有误,需再核实">客户信息有误,需再核实</option>
+                </select>
             </div>
             <label class="col-md-1 control-label">沟通方式</label>
             <div class="col-md-1 ">
@@ -409,10 +427,7 @@
 {#        </div>#}
 {#        <div class="form-group">#}
 {##}
-{#            <label class="col-md-1 control-label">消息</label>#}
-{#            <div class="col-md-1 ">#}
-{#                 <input type="text" class="form-control" value="{{ message }}" name="message"/>#}
-{#            </div>#}
+
 {#            <label class="col-md-1 control-label">初始资金</label>#}
 {#            <div class="col-md-1">#}
 {#                 <input type="text" class="form-control" value="{{ minstartup }}" name="minstartup" placeholder="最小值"/>#}
@@ -448,7 +463,7 @@
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
             <div class="col-md-1">
-                    {% if request.user.userprofile.title.role_name in 'sale ops admin saleboss' %}
+                    {% if request.user.userprofile.title.role_name in 'sale ops admin' %}
                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addCustomerModal">新增客户</button>
                     {% endif %}
             </div>

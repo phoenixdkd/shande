@@ -71,3 +71,10 @@ def maskname(name):
     if name.__len__() < 5:
         return '***'
     return name[0:-4]+'****'
+
+@register.filter(name="mask8")
+@stringfilter
+def mask8(name):
+    if name.__len__() <= 8:
+        return name
+    return name[0:8]+'...'

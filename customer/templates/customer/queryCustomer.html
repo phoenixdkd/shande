@@ -1,10 +1,12 @@
+{% load customer_tags %}
 <table class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
 {#            <td>ID</td>#}
             <td>序号</td>
             <td>合作时间</td>
-            <td>开发专员</td>
+            <td>开发ID</td>
+            <td>对接老师</td>
             <td>来源工具</td>
 {#            <td>来源微信</td>#}
 {#            <td>来源QQ</td>#}
@@ -40,9 +42,10 @@
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
+            <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
             <td>
-                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid }}{% endif %}
-                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid }}{% endif %}
+                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid | mask8 }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid | mask8 }}{% endif %}
             </td>
 
 {#            <td>{% if customerObj.saleswx.delete %} <span title="已失效" class="glyphicon glyphicon-remove-sign"></span>{% endif %}{{ customerObj.saleswx.wxid }}</td>#}
@@ -50,12 +53,12 @@
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
             <td>
-                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid }}{% endif %}
-                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid }}{% endif %}
+                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid | mask8 }}{% endif %}
+                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid | mask8 }}{% endif %}
             </td>
             <td>
-                {% if customerObj.saleswx %} {{ customerObj.wxname }}{% endif %}
-                {% if customerObj.salesqq %} {{ customerObj.qqname }}{% endif %}
+                {% if customerObj.saleswx %} {{ customerObj.wxname | mask8 }}{% endif %}
+                {% if customerObj.salesqq %} {{ customerObj.qqname | mask8 }}{% endif %}
             </td>
 {#            <td>{{ customerObj.wxid }}</td>#}
 {#            <td>{{ customerObj.wxname }}</td>#}

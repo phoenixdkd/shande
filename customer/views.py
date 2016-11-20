@@ -78,7 +78,8 @@ def queryCustomer(request):
     else:
         customers = customers
     # 去掉不诚信和删除状态的客户
-    customers = customers.exclude(status=98)
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
+        customers = customers.exclude(status=98)
     customers = customers.exclude(status=99)
 
     #按条件查询
@@ -116,6 +117,10 @@ def queryCustomer(request):
         customers = customers.filter(create__lte=request.GET.get('endDate'))
     if(request.GET.get('status', '') != ''):
         if request.GET.get('status') == '40':
+            customers = customers.filter(status=request.GET.get('status'))
+        elif request.GET.get('status') == '20':
+            customers = customers.filter(status=request.GET.get('status'))
+        elif request.GET.get('status') == '0':
             customers = customers.filter(status=request.GET.get('status'))
         else:
             customers = customers.exclude(status=40)

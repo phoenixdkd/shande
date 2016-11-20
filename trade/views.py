@@ -60,6 +60,8 @@ def addTrade(request):
     firstTrade = False
     secondTrade = False
     try:
+        if float(request.POST.get('buycount')) == 0:
+            raise Exception("buycountzero")
         customer = Customer.objects.get(id=request.POST.get('customerid'))
         # 判断是否首笔交易
         existTrade = Trade.objects.filter(customer=customer)
@@ -118,9 +120,12 @@ def addTrade(request):
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
+        traceback.print_exc()
         print(e.__str__())
         if e.__str__() == 'stockerror':
             data['msg'] = "操作失败, 产品id或者产品名称不正确"
+        elif e.__str__() == 'buycountzero':
+            data['msg'] = "操作失败, 购买数量不能为零"
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
