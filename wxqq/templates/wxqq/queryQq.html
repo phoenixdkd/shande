@@ -44,7 +44,7 @@
                 {% if not qqObj.delete %}
 
                 <button type="button" class="btn btn-sm btn-primary" id="editQqFriendButton_{{ qqObj.id }}" onclick="editQqFriend(this)"
-                    data-id="{{ qqObj.id }}">好友数管理</button>
+                    data-id="{{ qqObj.id }}">好友管理</button>
                 <script type="text/javascript">
                     var today = new Date();
                     var year = today.getFullYear();
@@ -58,7 +58,7 @@
                     }
                 </script>
                 {% endif %}
-                {% if request.user.userprofile.title.role_name != 'sale'  and not qqObj.delete %}
+                {% if request.user.userprofile.title.role_name not in 'salemanager' and not qqObj.delete %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editQq(this)"
                     data-id="{{ qqObj.id }}"
                     data-company="{{ qqObj.company }}"

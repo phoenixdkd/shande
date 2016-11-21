@@ -68,9 +68,7 @@ def maskphone(phone):
 @register.filter(name="maskname")
 @stringfilter
 def maskname(name):
-    if name.__len__() < 5:
-        return '***'
-    return name[0:-4]+'****'
+    return name[0:1]+'**'
 
 @register.filter(name="mask8")
 @stringfilter

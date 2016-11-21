@@ -365,35 +365,33 @@
             <div class="col-md-1 ">
                 <select type="select" class="form-control" id="status" name="status">
                      <option></option>
-                     {% if request.user.userprofile.title.role_name in 'saleboss salemanager' %}
-                     <option value="0">已提交老师</option>
-                     <option value="20">客户已添加专员</option>
-                     {% endif %}
+{#                     {% if request.user.userprofile.title.role_name in 'saleboss salemanager' %}#}
+{#                     <option value="0">已提交老师</option>#}
+{#                     <option value="20">客户已添加专员</option>#}
+{#                     {% endif %}#}
 {#                     <option value="10">待跟进</option>#}
 
 {#                     <option value="30">退回</option>#}
                      <option value="40">有效客户</option>
-                    {% if not request.user.userprofile.title.role_name in 'saleboss salemanager' %}
                      <option value="39">待跟进客户</option>
-                    {% endif %}
 {#                     <option value="99">标记删除</option>#}
                 </select>
             </div>
-            <label class="col-md-1 control-label">退回</label>
-            <div class="col-md-1 ">
-                <select type="select" class="form-control" id="message" name="message">
-                    <option></option>
-                    <option value="客户不回消息">客户不回消息</option>
-                    <option value="给票不买">给票不买</option>
-                    <option value="分成太高">分成太高</option>
-                    <option value="要看票">要看票</option>
-                    <option value="今天不买，下次再买">今天不买，下次再买</option>
-                    <option value="不发截图">不发截图</option>
-                    <option value="合作资金不足">合作资金不足</option>
-                    <option value="买错票">买错票</option>
-                    <option value="客户信息有误,需再核实">客户信息有误,需再核实</option>
-                </select>
-            </div>
+{#            <label class="col-md-1 control-label">退回</label>#}
+{#            <div class="col-md-1 ">#}
+{#                <select type="select" class="form-control" id="message" name="message">#}
+{#                    <option></option>#}
+{#                    <option value="客户不回消息">客户不回消息</option>#}
+{#                    <option value="给票不买">给票不买</option>#}
+{#                    <option value="分成太高">分成太高</option>#}
+{#                    <option value="要看票">要看票</option>#}
+{#                    <option value="今天不买，下次再买">今天不买，下次再买</option>#}
+{#                    <option value="不发截图">不发截图</option>#}
+{#                    <option value="合作资金不足">合作资金不足</option>#}
+{#                    <option value="买错票">买错票</option>#}
+{#                    <option value="客户信息有误,需再核实">客户信息有误,需再核实</option>#}
+{#                </select>#}
+{#            </div>#}
             <label class="col-md-1 control-label">沟通方式</label>
             <div class="col-md-1 ">
                  <input type="text" class="form-control" value="{{ wxqq }}" name="wxqq"/>

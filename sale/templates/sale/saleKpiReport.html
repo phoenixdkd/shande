@@ -33,7 +33,7 @@
     </div>
 </form>
 <table class="table table-bordered">
-    <thead class="bg-info">
+    <thead class="bg-info" id="companyHeader">
         <th width="2%">名次</th>
         <th width="2%">公司</th>
         <th width="5%">有效客户</th>
@@ -71,6 +71,15 @@
     </tbody>
 </table>
 <script type="text/javascript">
+    {% if request.user.userprofile.title.role_name == 'salemanager' %}
+        $(function(){
+            var company = "{{ request.user.userprofile.company }}";
+            var companyRow = $('#company_row_'+company);
+            companyRow.dblclick();
+            companyRow.hide();
+            $('#companyHeader').hide();
+        });
+    {% endif %}
     function showCompanyDetail(obj){
         $('.company_detail_row').slideUp();
         $('.company_row').removeClass("bg-danger");

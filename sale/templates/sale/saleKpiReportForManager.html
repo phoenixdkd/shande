@@ -1,0 +1,85 @@
+{% extends 'base_full_noheader.html' %}
+{% load sale_tags %}
+{% block title %}有效客户增长趋势{% endblock %}
+{% block content %}
+    <br/>
+    <h1>
+        <div class="alert alert-success" style="text-align:center">
+                有效客户增长趋势表
+        </div>
+    </h1>
+    <hr/>
+    <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
+    <div class="form-group">
+        <label class="col-md-offset-2 col-md-1 control-label">时间范围</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
+             title="结束时间"/>
+        </div>
+{#        <label class="col-md-1 control-label"></label>#}
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
+<div id="main" style="width: 850px;height:400px;margin:0 auto;"></div>
+
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '有效客户增长趋势'
+        },
+        tooltip: {
+            trigger: 'item',
+
+        },
+        legend: {
+            data:[{% for sale in sales %} '{{ sale.saleId }}',{% endfor %}],
+            align: 'left',
+            left: 200,
+        },
+        grid: {
+            left: '3%',
+            right: '10%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {},
+                dataView: {},
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [{% for day in days %} '{{ day }}',{% endfor %}]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {% for sale in sales %}
+            {
+                name:'{{ sale.saleId }}',
+                type:'line',
+                data: [{% for day in days %} '{% getEffectCustomerBySaleAndDay sale.id day %}',{% endfor %}],
+            },
+            {% endfor %}
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+{% endblock %}

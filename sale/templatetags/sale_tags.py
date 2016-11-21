@@ -167,6 +167,17 @@ def getEffectCustomerByCompanyAndDay(company, day):
         return 0
 
 @register.simple_tag()
+def getEffectCustomerBySaleAndDay( sale, day ):
+    try:
+        y, m, d = str(day).split('-')
+        customers = Customer.objects.filter(first_trade__year=y, first_trade__month=m, first_trade__day=d,
+                                            status=40, sales_id=sale)
+        return customers.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0
+
+@register.simple_tag()
 def getNickBySaleId(saleid):
     try:
         sale = Sale.objects.get(id=saleid)

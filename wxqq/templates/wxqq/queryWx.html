@@ -62,7 +62,7 @@
                 <button type="button" class="btn btn-sm btn-primary" id="editWxFriendButton_{{ wxObj.id }}" onclick="editWxFriend(this)"
                     data-id="{{ wxObj.id }}"
                     data-page="{{ wxPage.number }}"
-                >好友数管理</button>
+                >好友管理</button>
                 <script type="text/javascript">
                     var today = new Date();
                     var year = today.getFullYear();
@@ -78,7 +78,7 @@
                     }
                 </script>
                 {% endif %}
-                {% if request.user.userprofile.title.role_name != 'sale' and not wxObj.delete %}
+                {% if  request.user.userprofile.title.role_name not in 'salemanager' and not wxObj.delete %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editWx(this)"
                     data-id="{{ wxObj.id }}"
                     data-page="{{ wxPage.number }}"
@@ -94,8 +94,6 @@
                     <button type="button" class="btn btn-sm btn-danger" onclick="delWx(this)"
                         data-page="{{ wxPage.number }}"
                         data-id="{{ wxObj.id }}">标记失效</button>
-                {% endif %}
-                {% if request.user.userprofile.title.role_name != 'sale' and wxObj.delete %}
                     <button type="button" class="btn btn-sm btn-danger" onclick="resetWx(this)"
                         data-page="{{ wxPage.number }}"
                         data-id="{{ wxObj.id }}">恢复使用</button>
