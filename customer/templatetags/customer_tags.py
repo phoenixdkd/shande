@@ -62,7 +62,7 @@ def getTotalBuycashByCustomerId( customerId ):
 def maskphone(phone):
     if phone.__len__() < 5:
         return '***'
-    return phone[0:-4]+'****'
+    return phone[0:-4]+'****'+phone[8:]
 
 
 @register.filter(name="maskname")
