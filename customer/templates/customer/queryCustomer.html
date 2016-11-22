@@ -46,7 +46,7 @@
             <script type="text/javascript">
                 $('.tooltips').tooltip();
             </script>
-            {% if request.user.userprofile.title.role_name == 'saleboss' %}
+            {% if request.user.userprofile.title.role_name == 'saleboss' or  request.user.userprofile.title.role_name in 'admin ops'%}
             <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
             {% endif %}
             <td>
