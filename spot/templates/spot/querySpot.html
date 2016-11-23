@@ -3,7 +3,8 @@
         <tr>
 {#            <td>ID</td>#}
             <td>交易时间</td>
-            <td>净入金</td>
+            <td>入金</td>
+            <td>出金</td>
             <td>盈亏</td>
             <td>手续费</td>
             <td>操作</td>
@@ -16,11 +17,11 @@
 {#            <td>{{ spotObj.id }}</td>#}
             <td>{{ spotObj.create }}</td>
 
-            <td style="color:
-                {% if spotObj.cash > 0 %}red {% endif %}
-                {% if spotObj.cash < 0 %}mediumseagreen {% endif %}
-                ">
-                {{ spotObj.cash}}
+            <td style="color:red">
+                {% if spotObj.cash > 0 %} {{ spotObj.cash}}{% else %} - {% endif %}
+            </td>
+            <td style="color:mediumseagreen">
+                {% if spotObj.cash < 0 %} {{ spotObj.cash}}{% else %} - {% endif %}
             </td>
             <td style="color:
                 {% if spotObj.profit > 0 %}red {% endif %}
@@ -48,11 +49,10 @@
     {% endif %}
         <tr>
             <td>合计</td>
-            <td style="color:
-                {% if cashTotal > 0 %} red{% endif %}
-                {% if cashTotal < 0 %} mediumseagreen{% endif %}
-                ">
-                {{ cashTotal }}</td>
+            <td style="color:red">
+                 {% if cashTotal > 0 %}{{ cashTotal }}{% else %} - {% endif %}</td>
+            <td style="color:mediumseagreen">
+                 {% if cashTotal < 0 %}{{ cashTotal }}{% else %} - {% endif %}</td>
             <td style="color:
                 {% if profitTotal > 0 %} red{% endif %}
                 {% if profitTotal < 0 %} mediumseagreen{% endif %}
@@ -62,6 +62,7 @@
             <td></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>剩余</td>

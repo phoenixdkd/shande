@@ -2,80 +2,100 @@
 {% load spot_tags %}
 <table class="table table-bordered">
     <thead class="bg-info">
+        <td>序号</td>
         <td>创建时间</td>
-        <td>对接老师ID</td>
-        <td>姓名</td>
+        <td>客户管理专员</td>
+        <td>现货老师</td>
+        <td>客户姓名</td>
         <td>电话</td>
-        <td>微信号</td>
-        <td>微信昵称</td>
-        <td>QQ号</td>
-        <td>QQ昵称</td>
-        <td>GEM</td>
-        <td>10W+</td>
-        <td>大客户</td>
-        <td>状态</td>
-        <td>开发周期(天)</td>
+        <td>沟通工具</td>
+        <td>昵称</td>
+{#        <td>微信号</td>#}
+{#        <td>微信昵称</td>#}
+{#        <td>QQ号</td>#}
+{#        <td>QQ昵称</td>#}
+{#        <td>GEM</td>#}
+{#        <td>10W+</td>#}
+{#        <td>大客户</td>#}
+{#        <td>状态</td>#}
+        <td>开发周期</td>
         <td>首次入金</td>
-        <td>净入金</td>
-        <td>加仓/次数</td>
+        <td>出金</td>
+        <td>入金</td>
+{#        <td>净入金</td>#}
+{#        <td>加仓/次数</td>#}
         <td>盈亏</td>
         <td>手续费</td>
+        <td>剩余</td>
     </thead>
     <tbody>
     {% for customer in customers %}
         <tr>
+            <td>{{ forloop.counter}}</td>
             <td>{{ customer.create }}</td>
             <td>{{ customer.teacher.teacherId }} {{ customer.teacher.binduser.userprofile.nick }}</td>
+            <td>{{ customer.spotTeacher.teacherId }} {{ customer.spotTeacher.binduser.userprofile.nick }}</td>
             <td>{{ customer.name }}</td>
             <td>{{ customer.phone }}</td>
-            <td>{{ customer.wxid }}</td>
-            <td>{{ customer.wxname }}</td>
-            <td>{{ customer.qqid }}</td>
-            <td>{{ customer.qqname }}</td>
             <td>
-                {% if customer.gem %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
+                {% if customer.saleswx %} 微信: {{ customer.wxid  }}{% endif %}
+                {% if customer.salesqq %} QQ: {{ customer.qqid }}{% endif %}
             </td>
             <td>
-                {% if customer.crude %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
+                {% if customer.saleswx %} {{ customer.wxname }}{% endif %}
+                {% if customer.salesqq %} {{ customer.qqname }}{% endif %}
             </td>
-            <td>
-                {% if customer.vip %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
-            </td>
-            <td>
-                {% if customer.status == 0 %}
-                    <span class="label label-success">&gt;</span> 新录入客户
-                {% elif customer.status == 10 %}
-                    <span class="label label-danger">&gt;</span> 待跟进
-                {% elif customer.status == 20 %}
-                    <span class="label label-success">&gt;</span> 老师已加微信或QQ
-                {% elif customer.status == 30 %}
-                    <span class="label label-danger">&gt;</span> 退回
-                {% elif customer.status == 40 %}
-                    <span class="label label-success">&gt;</span> 有效客户
-                {% elif customer.status == 98 %}
-                    <span class="label label-disable">&gt;</span> 不诚信客户
-                {% elif customer.status == 99 %}
-                    <span class="label label-disable">&gt;</span> 标记删除
-                {% endif %}
-            </td>
+{#            <td>{{ customer.wxid }}</td>#}
+{#            <td>{{ customer.wxname }}</td>#}
+{#            <td>{{ customer.qqid }}</td>#}
+{#            <td>{{ customer.qqname }}</td>#}
+{#            <td>#}
+{#                {% if customer.gem %}#}
+{#                    <span class="glyphicon glyphicon-ok"></span>#}
+{#                {% else %}#}
+{#                    <span class="glyphicon glyphicon-remove"></span>#}
+{#                {% endif %}#}
+{#            </td>#}
+{#            <td>#}
+{#                {% if customer.crude %}#}
+{#                    <span class="glyphicon glyphicon-ok"></span>#}
+{#                {% else %}#}
+{#                    <span class="glyphicon glyphicon-remove"></span>#}
+{#                {% endif %}#}
+{#            </td>#}
+{#            <td>#}
+{#                {% if customer.vip %}#}
+{#                    <span class="glyphicon glyphicon-ok"></span>#}
+{#                {% else %}#}
+{#                    <span class="glyphicon glyphicon-remove"></span>#}
+{#                {% endif %}#}
+{#            </td>#}
+{#            <td>#}
+{#                {% if customer.status == 0 %}#}
+{#                    <span class="label label-success">&gt;</span> 新录入客户#}
+{#                {% elif customer.status == 10 %}#}
+{#                    <span class="label label-danger">&gt;</span> 待跟进#}
+{#                {% elif customer.status == 20 %}#}
+{#                    <span class="label label-success">&gt;</span> 老师已加微信或QQ#}
+{#                {% elif customer.status == 30 %}#}
+{#                    <span class="label label-danger">&gt;</span> 退回#}
+{#                {% elif customer.status == 40 %}#}
+{#                    <span class="label label-success">&gt;</span> 有效客户#}
+{#                {% elif customer.status == 98 %}#}
+{#                    <span class="label label-disable">&gt;</span> 不诚信客户#}
+{#                {% elif customer.status == 99 %}#}
+{#                    <span class="label label-disable">&gt;</span> 标记删除#}
+{#                {% endif %}#}
+{#            </td>#}
             <td>{{ customer.spotDay }}</td>
-            <td>{{ customer.spotCash }}</td>
-            <td>{% getCashTotalByCustomerId customer.id %}</td>
-            <td>{% getAddCountByCustomerId customer.id %}</td>
-            <td>{% getProfitTotalByCustomerId customer.id %}</td>
-            <td>{% getTaxTotalByCustomerId customer.id %}</td>
+            <td style="color:red">{{ customer.spotCash }}</td>
+
+{#            <td>{% getAddCountByCustomerId customer.id %}</td>#}
+            <td style="color:greenyellow">{% getOutTotalByCustomerId customer.id %}</td>
+            <td style="color:red">{% getInTotalByCustomerId customer.id %}</td>
+            <td style="color:{% getProfitTotalColorByCustomerId customer.id %}">{% getProfitTotalByCustomerId customer.id %}</td>
+            <td style="color:greenyellow">{% getTaxTotalByCustomerId customer.id %}</td>
+            <td style="color:red">{% getCashTotalByCustomerId customer.id %}</td>
         </tr>
     {% empty %}
         <tr>

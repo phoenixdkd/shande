@@ -146,12 +146,25 @@ def delTeacher(request):
 def spotCustomer(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'spotteacher', 'spotmanager','teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
-    data = {}
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    data = {
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+    }
     return render(request, 'spot/spotCustomer.html', data)
 
 @login_required()
 def querySpotCustomer(request):
-    customers = Customer.objects.all().order_by('-modify')
+    customers = Customer.objects.filter(spotStatus='D').order_by('-spotTime')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['spotteacher', 'spotmanager']:
         spotTeacher = SpotTeacher.objects.get(binduser=request.user)
@@ -181,6 +194,14 @@ def querySpotCustomer(request):
     customers = customers.filter(teacher__teacherId__icontains=request.GET.get('teacherid', ''))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
     customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
+    if request.GET.get('wxqq', '') != '':
+        customers = customers.filter(Q(wxid="", qqid__icontains=request.GET.get('wxqq')) | Q(qqid="",
+                                                                                             wxid__icontains=request.GET.get(
+                                                                                                 'wxqq')))
+    if request.GET.get('wxqqname', '') != '':
+        customers = customers.filter(Q(wxid="", qqname__icontains=request.GET.get('wxqqname')) | Q(qqid="",
+                                                                                             wxname__icontains=request.GET.get(
+                                                                                                 'wxqqname')))
     if request.GET.get('wxid', '') != '':
         customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
     if request.GET.get('wxname', '') != '':
@@ -305,15 +326,30 @@ def handleSpot(request):
 
 @login_required()
 def spotReport(request):
+
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     spotTeachers = SpotTeacher.objects.all()
     data = {
         "spotTeachers": spotTeachers,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'spot/spotReport.html', data)
 
 @login_required()
 def getSpotTeacherDetail(request):
     spotTeacherId = request.POST.get('spotteacherid')
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
     customers = Customer.objects.filter(spotTeacher_id=spotTeacherId)
     data = {
         "customers": customers,

@@ -31,6 +31,18 @@
                             <input type="text" class="form-control" id="cash" name="cash"/>
                         </div>
                     </div>
+{#                    <div class="form-group">#}
+{#                        <label class="col-md-offset-2 col-md-2 control-label" for="outcash" >出金</label>#}
+{#                        <div class="col-md-5">#}
+{#                            <input type="text" class="form-control" id="outcash" name="outcash"/>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label class="col-md-offset-2 col-md-2 control-label" for="incash" >入金</label>#}
+{#                        <div class="col-md-5">#}
+{#                            <input type="text" class="form-control" id="incash" name="incash"/>#}
+{#                        </div>#}
+{#                    </div>#}
                     <div class="form-group">
                         <label class="col-md-offset-2 col-md-2 control-label" for="profit" >盈亏</label>
                         <div class="col-md-5">
@@ -171,6 +183,30 @@
                         }
                     }
                 },
+                outcash: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        lessThan:{
+                            value: 0,
+                            inclusive: true,
+                            message: '必须&le;0'
+                        }
+                    },
+                },
+                incash: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greaterThan:{
+                            value: 0,
+                            inclusive: true,
+                            message: '必须&ge;0'
+                        }
+                    },
+                },
                 profit: {
                     validators: {
                         notEmpty: {
@@ -304,7 +340,7 @@
     }
 </script>
 <div id="customerDiv"></div>
-{% if request.user.userprofile.title.role_name in 'spotteacher spotmanager' %}
+{% if request.user.userprofile.title.role_name == 'spotteacher' or request.user.userprofile.title.role_name in 'spotmanager ops admin' %}
 <div class="col-md-2">
     <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSpotModal">新增交易</button>
 </div>
