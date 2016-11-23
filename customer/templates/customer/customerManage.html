@@ -197,6 +197,10 @@
                         regexp: {
                             regexp: /^[0-9]{11}$/i,
                             message: '请输入正确的手机号码'
+                        },
+                        remote: {
+                            message: '该客户已存在',
+                            url: '{% url "customer:checkCustomerPhone" %}',
                         }
                     }
                 },

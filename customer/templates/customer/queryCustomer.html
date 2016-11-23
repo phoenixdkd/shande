@@ -6,7 +6,7 @@
             <td>序号</td>
             <td>合作时间</td>
             <td>开发ID</td>
-            {% if request.user.userprofile.title.role_name == 'saleboss' %}
+            {% if request.user.userprofile.title.role_name == 'saleboss' or  request.user.userprofile.title.role_name in 'admin ops' %}
             <td>对接老师</td>
             {% endif %}
             <td>来源工具</td>
@@ -133,8 +133,8 @@
                 >编辑</button>
                 {% endif %}
                 {% if request.user.userprofile.title.role_name in "admin ops" %}
-                <button type="button" class="btn btn-sm btn-danger" onclick="delCustomer(this)"
-                    data-id="{{ customerObj.id }}">删除</button>
+{#                <button type="button" class="btn btn-sm btn-danger" onclick="delCustomer(this)"#}
+{#                    data-id="{{ customerObj.id }}">删除</button>#}
                 <button type="button" class="btn btn-sm btn-danger" onclick="delRealCustomer(this)"
                     data-id="{{ customerObj.id }}">彻底删除</button>
                 {% endif %}

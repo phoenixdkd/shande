@@ -247,6 +247,24 @@ def delCustomer(request):
     return HttpResponse(json.dumps(data))
 
 @login_required()
+def checkCustomerPhone(request):
+    customerPhone = request.POST.get('customerPhone')
+    valid = False
+    try:
+        customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
+        for customer in customers:
+            print customer.id
+        if customers.__len__() == 0:
+            valid = True
+    except:
+        traceback.print_exc()
+
+    data = {
+        'valid': valid,
+    }
+    return HttpResponse(json.dumps(data))
+
+@login_required()
 def customerHandle(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
@@ -351,7 +369,7 @@ def handleCustomer(request):
         status = request.POST.get('status')
         customer.status = status
         customer.modify = timezone.now()
-        if status == 20:
+        if status == 10:
             customer.message = request.POST.get('message')
         customer.save()
         data['msg'] = "操作成功"
