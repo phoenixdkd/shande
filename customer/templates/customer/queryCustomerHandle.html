@@ -178,12 +178,16 @@
 {##}
 {#            <td>{{ customerObj.modify }}</td>#}
             <td>
-                {% if request.user.userprofile.title.role_name in "teacher"  and customerObj.status == 0 %}
+                {% if request.user.userprofile.title.role_name in "teacher ops admin"  and customerObj.status == 0 %}
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleCustomer(this)"
                         data-id="{{ customerObj.id }}">处理</button>
                 {% endif %}
                 {% if request.user.userprofile.title.role_name in "teacher ops admin" %}
-                    {% if customerObj.status == 40 or customerObj.status == 20 %}
+                    {% if customerObj.status == 20 %}
+                    <button type="button" class="btn btn-sm btn-primary" onclick="handleNewCustomer(this)"
+                        data-id="{{ customerObj.id }}">处理</button>
+                    {% endif %}
+                    {% if customerObj.status == 40 %}
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleValidCustomer(this)"
                         data-id="{{ customerObj.id }}">处理</button>
                     {% endif %}
