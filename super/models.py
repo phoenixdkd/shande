@@ -22,7 +22,7 @@ class UserProfile (models.Model):
     group = models.CharField('组', max_length=10, default="", blank=True, null=True)
     cid = models.CharField('身份证号', max_length=18, blank=True, null=True)
     nick = models.CharField('真实姓名', max_length=10, blank=True, null=True)
-    title = models.ForeignKey(Title)
+    title = models.ForeignKey(Title, null=True, on_delete=models.SET_NULL)
     failcount = models.IntegerField('失败次数', default=-1)
     faillocktime = models.DateTimeField('失败锁定时间', null=True)
 

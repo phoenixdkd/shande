@@ -12,7 +12,7 @@ class Trade(models.Model):
     # 0 未出货(新录入); 10 亏损; 11 已补亏;  20 盈利 提交财务收款; 30 已收款;
 
     status = models.IntegerField('交易状态', default=0)
-    stock = models.ForeignKey(Stock, null=True, blank=True)
+    stock = models.ForeignKey(Stock, null=True, blank=True, on_delete=models.SET_NULL)
     stockid = models.CharField('产品ID', max_length=30, null=True, blank=True)
     stockname = models.CharField('产品名称', max_length=30, null=True, blank=True)
     buyprice = models.DecimalField('购入价格', max_digits=10, decimal_places=2, default=0)

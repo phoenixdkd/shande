@@ -8,7 +8,7 @@ from customer.models import *
 # Create your models here.
 
 class Spot(models.Model):
-    customer = models.ForeignKey(Customer)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     create = models.DateTimeField('交易时间')
     # 0 首次入金; 10 加仓; 20 减仓;  30 盈; 40 亏; 99 其他
     type = models.IntegerField('交易动作', default=0)

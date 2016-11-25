@@ -12,7 +12,7 @@ class SpotTeacher(models.Model):
     company = models.CharField('公司', max_length=30, )
     department = models.CharField('部门', max_length=30, )
     group = models.CharField('组', max_length=30, null=True, blank=True)
-    binduser = models.ForeignKey(User, null=True, blank=True)
+    binduser = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def getTeacherList( self ):
         teachers = self.teacher_set.all()
@@ -23,9 +23,9 @@ class Teacher(models.Model):
     company = models.CharField('公司', max_length=30, )
     department = models.CharField('部门', max_length=30, )
     group = models.CharField('组', max_length=30, null=True, blank=True)
-    binduser = models.ForeignKey(User, null=True, blank=True)
-    bindbursar = models.ForeignKey(Bursar, null=True, blank=True)
-    bindspotteacher = models.ForeignKey(SpotTeacher, null=True, blank=True)
+    binduser = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    bindbursar = models.ForeignKey(Bursar, null=True, blank=True, on_delete=models.SET_NULL)
+    bindspotteacher = models.ForeignKey(SpotTeacher, null=True, blank=True, on_delete=models.SET_NULL)
 
     def getSaleList(self):
         sales = self.sale_set.all()
