@@ -94,17 +94,22 @@
                         </ul>
                     </li>
                 {% endif %}
-                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' %}
+                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' or user.userprofile.title.role_name == 'teachermanager' or user.userprofile.title.role_name == 'saleboss' %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">财务菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            {% if not user.userprofile.title.role_name == 'saleboss' %}
                             <li class=""><a href="{% url 'customer:customerPay' %}" target="_self">收款管理</a></li>
-                            <li class=""><a href="{% url 'bursar:payReport' %}" target="_self">收款汇总明细表</a></li>
-                            <li class=""><a href="{% url 'bursar:payTypeReport' %}" target="_self">支付方式收款汇总</a></li>
-                            <li class=""><a href="{% url 'bursar:payCompanyReport' %}" target="_self">公司盈利归属汇总</a></li>
+                            {% endif %}
+
+                            <li class=""><a href="{% url 'bursar:payReport' %}" target="_self">收款汇总表</a></li>
                             {% if user.userprofile.title.role_name in 'admin ops bursarmanager' %}
-                            <li class=""><a href="{% url 'bursar:payStockReport' %}" target="_self">产品盈利分析</a></li>
+                            <li class=""><a href="{% url 'bursar:payTypeReport' %}" target="_self">支付方式汇总表</a></li>
+{#                            <li class=""><a href="{% url 'bursar:payCompanyReport' %}" target="_self">公司盈利归属汇总</a></li>#}
+                            {% endif %}
+                            {% if user.userprofile.title.role_name in 'admin ops bursarmanager' or user.userprofile.title.role_name == 'teachermanager' %}
+                            <li class=""><a href="{% url 'bursar:payStockReport' %}" target="_self">产品盈利分析表</a></li>
                             <li class=""><a href="{% url 'bursar:payCompanySerialReport' %}" target="_self">盈利归属趋势图</a></li>
                             {% endif %}
                         </ul>

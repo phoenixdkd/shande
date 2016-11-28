@@ -69,7 +69,10 @@ def addTrade(request):
             firstTrade = True
         elif existTrade.__len__() == 1:
             secondTrade = True
-        stock, created = Stock.objects.get_or_create(stockid=request.POST.get('stockid'), stockname=request.POST.get('stockname'))
+
+        #判断是否存在该产品
+        stock = Stock.objects.get(stockid=request.POST.get('stockid'), stockname=request.POST.get('stockname'))
+        # stock, created = Stock.objects.get_or_create(stockid=request.POST.get('stockid'), stockname=request.POST.get('stockname'))
         if stock:
             newTrade = Trade.objects.create(customer=customer, stock=stock, create=timezone.now())
         else:
@@ -123,7 +126,13 @@ def addTrade(request):
         traceback.print_exc()
         print(e.__str__())
         if e.__str__() == 'stockerror':
-            data['msg'] = "操作失败, 产品id或者产品名称不正确"
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
+        elif str(e.__str__()).__contains__('stock_stock_stockid'):
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
+        elif str(e.__str__()).__contains__('Stock matching'):
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
+        elif str(e.__str__()).__contains__('stock_stock_stockname'):
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         elif e.__str__() == 'buycountzero':
             data['msg'] = "操作失败, 购买数量不能为零"
         else:
@@ -141,8 +150,10 @@ def handleTrade(request):
         if int(request.POST.get('htid')) == firstTrade.id:
             firstTrade = True
         newTrade = Trade.objects.get(id=request.POST.get("htid"))
-        stock, created = Stock.objects.get_or_create(stockid=request.POST.get('htstockid'),
-                                                     stockname=request.POST.get('htstockname'))
+        # 判断是否存在该产品
+        stock = Stock.objects.get(stockid=request.POST.get('htstockid'), stockname=request.POST.get('htstockname'))
+        # stock, created = Stock.objects.get_or_create(stockid=request.POST.get('htstockid'),
+        #                                              stockname=request.POST.get('htstockname'))
         if stock:
             newTrade.stock = stock
         else:
@@ -173,11 +184,13 @@ def handleTrade(request):
     except Exception as e:
         print(e.__str__())
         if e.__str__() == 'stockerror':
-            data['msg'] = "操作失败, 产品ID或者产品名称不正确"
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         elif str(e.__str__()).__contains__('stock_stock_stockid'):
-            data['msg'] = "操作失败, 产品ID或者产品名称不正确"
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         elif str(e.__str__()).__contains__('stock_stock_stockname'):
-            data['msg'] = "操作失败, 产品ID或者产品名称不正确"
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
+        elif str(e.__str__()).__contains__('Stock matching'):
+            data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
@@ -211,3 +224,12 @@ def payTrade(request):
         data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+def getNameByStockId(request):
+    stockid = request.POST.get("stockid")
+    try:
+        stock = Stock.objects.get(stockid=stockid)
+        return HttpResponse(stock.stockname)
+    except Exception as e:
+        traceback.print_exc()
+        return HttpResponse("无此代码，请联系管理员")

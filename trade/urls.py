@@ -3,6 +3,7 @@ from django.conf.urls import include, url
 from trade import views
 urlpatterns = [
     url(r'^queryTrade$', views.queryTrade, name='queryTrade'),
+    url(r'^getNameByStockId$', views.getNameByStockId, name='getNameByStockId'),
 
     # for teacher
     url(r'^tradeManage$', views.tradeManage, name='tradeManage'),
