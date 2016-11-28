@@ -17,8 +17,8 @@
             <td>{{ stock.stock__stockid }}</td>
             <td>{{ stock.stock__stockname }}</td>
             <td>{% getCustomerCountByStock  teacherid stock.stock %}</td>
-            <td>{% getMaxPriceByStock  teacherid stock.stock %}</td>
             <td>{% getMinPriceByStock  teacherid stock.stock %}</td>
+            <td>{% getMaxPriceByStock  teacherid stock.stock %}</td>
         </tr>
         <tr style="padding:0;"><td colspan="6" style="padding:0;">
             <div id="stock_detail_row_{{ teacherid }}_{{ stock.stock }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
