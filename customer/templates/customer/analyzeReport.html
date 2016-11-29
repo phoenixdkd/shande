@@ -11,6 +11,11 @@
     <hr/>
 <form id="searchAnalyzeForm" method="POST" class="form-horizontal ">
     <div class="form-group">
+        <label class="col-md-1 control-label">产品代码</label>
+        <div class="col-md-2 ">
+             <input type="text"  class="form-control" value="{{ stockid }}" name="stockid"
+             title="起始时间"/>
+        </div>
         <label class="col-md-1 control-label">时间范围</label>
         <div class="col-md-2 ">
              <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
@@ -41,7 +46,7 @@
         <th width="5%">浮盈金额</th>
     </thead>
     <tbody>
-        {% for stock in stocks %}
+        {% for stock in stockPage %}
         <tr data-stock="{{ stock.id }}" id="stock_row_{{ stock.id }}" ondblclick="showStockDetail(this)" class="stock_row">
             <td>{{ forloop.counter }}</td>
             <td>{{ stock.stockid }}</td>
@@ -61,6 +66,27 @@
         {% endfor %}
     </tbody>
 </table>
+<nav class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if stockPage.has_previous %}
+
+                <a href="?page={{ stockPage.previous_page_number }}"> <span aria-hidden="true">&laquo;</span></a>
+
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ stockPage.number }}/{{ stockPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if stockPage.has_next %}
+
+                <a href="?page={{ stockPage.next_page_number }}"><span aria-hidden="true">&raquo; </span></a>
+
+        {% endif %}
+    </li>
+  </ul>
+</nav>
 <script type="text/javascript">
     function showStockDetail(obj){
         $('.stock_detail_row_').slideUp();

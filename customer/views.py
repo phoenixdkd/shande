@@ -640,10 +640,22 @@ def analyzeReport(request):
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
+    stockid = request.POST.get('stockid', '')
+    stocks = stocks.filter(stockid__icontains=stockid)
     startDate = request.POST.get('startDate', datetime.date.today())
     endDate = request.POST.get('endDate', datetime.date.today()- datetime.timedelta(days=-7))
+    p = Paginator(stocks, 20)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        stockPage = p.page(page)
+    except (EmptyPage, InvalidPage):
+        stockPage = p.page(p.num_pages)
     data = {
-        "stocks": stocks,
+        "stockid": stockid,
+        "stockPage": stockPage,
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
