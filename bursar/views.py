@@ -130,7 +130,17 @@ def payReport(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
         return HttpResponseRedirect("/")
     trades = Trade.objects.filter(paytime__isnull=False)
-
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
     if request.user.userprofile.title.role_name == 'bursar':
         trades.filter(customer__bursar__binduser=request.user)
     tradePayCashSum = trades.aggregate(Sum('paycash'))
@@ -141,6 +151,8 @@ def payReport(request):
     data = {
         "trades": trades,
         "payCashTotal": payCashTotal,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'bursar/payReport.html', data)
 
@@ -149,6 +161,17 @@ def payTypeReport(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
         return HttpResponseRedirect("/")
     trades = Trade.objects.filter(paytime__isnull=False)
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
     if request.user.userprofile.title.role_name == 'bursar':
         trades.filter(customer__bursar__binduser=request.user)
     tradePayTypeSum = trades.values('paytype').annotate(dcount=Sum('paycash'))
@@ -156,6 +179,8 @@ def payTypeReport(request):
     data = {
         "tradePayTypeSum": tradePayTypeSum,
         "total": total,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'bursar/payTypeReport.html', data)
 
@@ -223,28 +248,53 @@ def queryPayCompany(request):
 
 @login_required()
 def payStockReport(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursarmanager']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
         return HttpResponseRedirect("/")
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = Trade.objects.filter(paytime__isnull=False)
+    trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
     tradeStockPaySum = trades.values('stock_id', 'stock__stockid', 'stock__stockname').annotate(Sum('paycash'))
     total = tradeStockPaySum.aggregate(Sum('paycash__sum'))
     data = {
         "tradeStockPaySum": tradeStockPaySum,
         "total": total,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'bursar/payStockReport.html', data)
 
 @login_required()
 def payCompanySerialReport(request):
-
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     companys = Sale.objects.values('company').distinct()
     companys = companys.filter(company=request.user.userprofile.company)
     days = []
-    for i in range(0,30):
-        day = datetime.date.today()-datetime.timedelta(days=i)
-        days.insert(0, day)
+    tmpDay = startDate
+    while tmpDay <= endDate:
+        days.append(tmpDay)
+        tmpDay = tmpDay + datetime.timedelta(days=1)
     data = {
         "companys": companys,
         "days": days,
+        "startDate": startDate,
+        "endDate": endDate,
     }
     return render(request, 'bursar/payCompanySerialReport.html', data)

@@ -3,9 +3,27 @@
 {% block title %}盈利归属趋势图{% endblock %}
 {% block content %}
 <br/>
+    <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
+    <div class="form-group">
+        <label class="col-md-offset-2 col-md-1 control-label">时间范围</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
+             title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
 <h1>
     <div class="alert alert-success" style="text-align:center">
-        过去三十天公司盈利归属趋势图
+       公司盈利归属趋势图
     </div>
 </h1>
 <hr/>

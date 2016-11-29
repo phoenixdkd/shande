@@ -387,7 +387,6 @@ def dishonestCustomerReport(request):
     while tmpDay <= endDate:
         days.append(tmpDay)
         tmpDay = tmpDay + datetime.timedelta(days=1)
-    print(days)
     data = {
         "startDate": str(startDate),
         "endDate": str(endDate),
