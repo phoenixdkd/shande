@@ -1,0 +1,226 @@
+{% extends 'base_full_noheader.html' %}
+
+{% block title %}收款管理{% endblock %}
+{% block content %}
+    <div class="modal fade" id="payTradeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">收款</h4>
+            </div>
+
+            <div class="modal-body">
+                <!-- The form is placed inside the body of modal -->
+                <form id="payTradeForm" method="post" class="form-horizontal">
+                    <input type="hidden" value="" class="" id="ptid" name="ptid"/>
+                    <div class="form-group">
+                        <label class="col-md-offset-2 col-md-2 control-label" for="ptpaytype" >收款方式</label>
+                        <div class="col-md-5">
+                            <select type="select" class="form-control" id="ptpaytype" name="ptpaytype">
+                                <option value="支付宝">支付宝</option>
+                                <option value="微信">微信</option>
+                                <option value="中国银行">中国银行</option>
+                                <option value="农业银行">农业银行</option>
+                                <option value="交通银行">交通银行</option>
+                                <option value="建设银行">建设银行</option>
+                                <option value="工商银行">工商银行</option>
+                                <option value="招商银行">招商银行</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="ptpaycash">收款金额</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="ptpaycash" name="ptpaycash"/>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group">
+                            <div class="col-md-5 col-md-offset-3">
+                                <button id="payTradeBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadTradePayManageDiv();
+        $('#payTradeModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+    });
+    function resetFormValidator(){
+        $('#searchTradePayManageForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+    function loadTradePayManageDiv(data){
+        searchData = $('#searchTradePayManageForm').serialize();
+        data = searchData;
+        $('#tradePayManageDiv').load("{% url 'customer:queryTradePayManage' %}", data);
+    }
+    function formValidator(){
+        $('#searchTradePayManageForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadTradePayManageDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
+        $('#payTradeForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                ptpaytype: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项',
+                        },
+                    }
+                },
+                ptpaycash: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项',
+                        }
+                    }
+                },
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#payTradeModal').modal('hide');
+                $.post(
+                    "{% url 'trade:payTrade' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadTradePayManageDiv();
+                    },
+                    'json'
+                );
+            }
+        });
+    }
+    function payTrade(obj){
+        $('#ptid').val($(obj).data("id"));
+        $('#ptpaycash').val($(obj).data("paycash"));
+        $('#payTradeModal').modal("show");
+    }
+    </script>
+    <br/>
+    <br/>
+
+    <form id="searchTradePayManageForm" method="POST" class="form-horizontal ">
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ teacherid }}" name="teacherid"/>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="form-group">
+{#            <label class="col-md-1 control-label">姓名</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ name }}" name="name"/>#}
+{#            </div>#}
+{#            <label class="col-md-1 control-label">电话</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ phone }}" name="phone"/>#}
+{#            </div>#}
+
+            <label class="col-md-1 control-label">提交时间</label>
+            <div class="col-md-2 ">
+                 <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
+                 title="起始时间" />
+            </div>
+            <div class="col-md-2 ">
+                 <input type="date" class="form-control datetime" value="{{ endDate }}" name="endDate"
+                 title="结束时间"/>
+            </div>
+        </div>
+{#        <div class="form-group">#}
+{#            <label class="col-md-1 control-label">来源微信</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ saleswx }}" name="saleswx"/>#}
+{#            </div>#}
+{#            <label class="col-md-1 control-label">微信号</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ wxid }}" name="wxid"/>#}
+{#            </div>#}
+{#            <label class="col-md-1 control-label">微信昵称</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="form-group">#}
+{#            <label class="col-md-1 control-label">来源QQ</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ salesqq }}" name="salesqq"/>#}
+{#            </div>#}
+{#            <label class="col-md-1 control-label">QQ号</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ qqid }}" name="qqid"/>#}
+{#            </div>#}
+{#            <label class="col-md-1 control-label">QQ昵称</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ qqname }}" name="qqname"/>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="form-group">#}
+{#            <label class="col-md-1 control-label" >客户状态</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <select type="select" class="form-control" id="status" name="status" >#}
+{#                     <option></option>#}
+{#                     <option value="0">新录入客户</option>#}
+{#                     <option value="10">待跟进</option>#}
+{#                     <option value="20">老师已加微信或QQ</option>#}
+{#                     <option value="30">退回</option>#}
+{#                     <option value="40">有效客户</option>#}
+{#                     <option value="99">标记删除</option>#}
+{#                 </select>#}
+{#            </div>#}
+{#            <label class="col-md-1 control-label">消息</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <input type="text" class="form-control" value="{{ message }}" name="message"/>#}
+{#            </div>#}
+{#           <label class="col-md-1 control-label">初始资金</label>#}
+{#            <div class="col-md-1">#}
+{#                 <input type="text" class="form-control" value="{{ minstartup }}" name="minstartup" placeholder="最小值"/>#}
+{#            </div>#}
+{#            <div class="col-md-1">#}
+{#                 <input type="text" class="form-control" value="{{ maxstartup }}" name="maxstartup" placeholder="最大值"/>#}
+{##}
+{#            </div>#}
+{#            <label class="col-md-1 control-label" style="width:50px">gem</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <select type="select" class="form-control" id="gem" name="gem">#}
+{#                     <option></option>#}
+{#                     <option value="1">是</option>#}
+{#                     <option value="0">否</option>#}
+{#                 </select>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="form-group">
+            <label class="col-md-1 control-label"></label>
+            <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+        </div>
+    </form>
+    <div id="tradePayManageDiv"></div>
+{% endblock %}

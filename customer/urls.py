@@ -21,6 +21,8 @@ urlpatterns = [
     #for bursar
     url(r'^customerPay$', views.customerPay, name='customerPay'),
     url(r'^queryCustomerPay$', views.queryCustomerPay, name='queryCustomerPay'),
+    url(r'^tradePayManage$', views.tradePayManage, name='tradePayManage'),
+    url(r'^queryTradePayManage$', views.queryTradePayManage, name='queryTradePayManage'),
 
     #for trade
     url(r'^getCustomerById$', views.getCustomerById, name='getCustomerById'),

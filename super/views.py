@@ -67,7 +67,7 @@ def login_view(request):
                     elif userauth.userprofile.title.role_name in ['spotteacher', 'spotmanager']:
                         redirect_to = '/spot/spotCustomer'
                     elif userauth.userprofile.title.role_name in ['bursar', 'bursarmanager']:
-                        redirect_to = '/customer/customerPay'
+                        redirect_to = '/customer/tradePayManage'
                     elif userauth.userprofile.title.role_name in ['admin', 'ops']:
                         redirect_to = '/ops/userManage'
                     else:

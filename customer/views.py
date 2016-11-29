@@ -724,3 +724,43 @@ def calcProfitByStockId(request):
         "earnCash": earnCash,
     }
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def tradePayManage(request):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teachermanager']):
+        return HttpResponseRedirect("/")
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    data = {
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+    }
+    return render(request, 'customer/tradePayManage.html', data)
+
+def queryTradePayManage(request):
+    trades = Trade.objects.filter(status=20).order_by('-dealtime')
+    if request.user.userprofile.title.role_name == 'bursar':
+        trades = trades.filter(customer__bursar__binduser=request.user)
+    endDate = request.GET.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.GET.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    trades = trades.filter(dealtime__lte=endDate, dealtime__gte=startDate)
+    data = {
+        "trades": trades,
+    }
+    return render(request, 'customer/queryTradePayManage.html', data)

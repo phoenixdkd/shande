@@ -1,0 +1,58 @@
+{% load customer_tags %}
+<table class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+            <td>序号</td>
+            <td>客户专员</td>
+            <td>客户姓名</td>
+            <td>电话</td>
+            <td>沟通方式</td>
+            <td>昵称</td>
+            <td>产品</td>
+            <td>应收金额</td>
+            <td>状态</td>
+            <td>提交时间</td>
+            <td>财务专员</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if trades %}
+    {% for trade in trades %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <span class="tooltips" data-toggle="tooltip" title="公司:{{ trade.customer.sales.company }}-部门:{{ trade.customer.sales.department }}">
+                    {{ trade.customer.sales.saleId }} {{ trade.customer.sales.binduser.userprofile.nick }}
+                </span>
+            </td>
+            <td>{{ trade.customer.name }}</td>
+            <td>{{ trade.customer.phone }}</td>
+            <td>
+                {% if trade.customer.saleswx %} 微信: {{ trade.customer.wxid | mask8  }}{% endif %}
+                {% if trade.customer.salesqq %} QQ: {{ trade.customer.qqid | mask8 }}{% endif %}
+            </td>
+            <td>
+                {% if trade.customer.saleswx %} {{ trade.customer.wxname| mask8  }}{% endif %}
+                {% if trade.customer.salesqq %} {{ trade.customer.qqname| mask8  }}{% endif %}
+            </td>
+            <td>{{ trade.stock.stockid }} {{ trade.stock.stockname }}</td>
+            <td>{{ trade.commission }}</td>
+            <td>待收款</td>
+            <td>{{ trade.dealtime}}</td>
+            <td>{{ trade.customer.bursar.bursarId }} {{ trade.customer.bursar.binduser.userprofile.nick }}</td>
+            <td>
+                {% if request.user.userprofile.title.role_name in "bursar" %}
+                    <button type="button" class="btn btn-sm btn-primary" onclick="payTrade(this)"
+                        data-id="{{ trade.id }}"
+                        data-paycash="{{ trade.commission }}"
+                    >收款</button>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="19">无待收款信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>

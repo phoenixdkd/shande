@@ -25,6 +25,7 @@ class Trade(models.Model):
     # 支付宝
     paytype = models.CharField('收款类型', max_length=30, default="")
     create = models.DateTimeField('交易时间')
+    dealtime = models.DateTimeField('提交交易时间', default=None, null=True)
     paytime = models.DateTimeField('收款时间', default=None, null=True)
     paycash = models.DecimalField('收款金额', max_digits=10, decimal_places=2, default=0)
 

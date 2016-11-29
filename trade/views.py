@@ -160,7 +160,10 @@ def handleTrade(request):
             raise Exception("stockerror")
         newTrade.stockid = request.POST.get('htstockid')
         newTrade.stockname = request.POST.get('htstockname')
-        newTrade.status = request.POST.get('htstatus')
+        tradeStatus = request.POST.get('htstatus')
+        newTrade.status = tradeStatus
+        if tradeStatus == '20':
+            newTrade.dealtime = timezone.now()
         buyprice = float(request.POST.get('htbuyprice'))
         buycount = int(request.POST.get('htbuycount'))
         newTrade.buyprice = buyprice
