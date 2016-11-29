@@ -12,6 +12,7 @@
             <td>应收金额</td>
             <td>状态</td>
             <td>提交时间</td>
+            <td>客户管理专员</td>
             <td>财务专员</td>
             <td>操作</td>
         </tr>
@@ -40,6 +41,7 @@
             <td>{{ trade.commission }}</td>
             <td>待收款</td>
             <td>{{ trade.dealtime}}</td>
+            <td>{{ trade.customer.teacher.teacherId }} {{ trade.customer.teacher.binduser.userprofile.nick }}</td>
             <td>{{ trade.customer.bursar.bursarId }} {{ trade.customer.bursar.binduser.userprofile.nick }}</td>
             <td>
                 {% if request.user.userprofile.title.role_name in "bursar" %}
