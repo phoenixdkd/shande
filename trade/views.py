@@ -228,6 +228,22 @@ def payTrade(request):
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
 
+@login_required()
+def backTrade(request):
+    data = {}
+    try:
+        trade = Trade.objects.get(id=request.POST.get("btid"))
+        trade.status = 1
+        trade.message = request.POST.get('btmessage')
+        trade.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        traceback.print_exc()
+        data['msg'] = "操作失败, %s" % e.__str__()
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
 def getNameByStockId(request):
     stockid = request.POST.get("stockid")
     try:

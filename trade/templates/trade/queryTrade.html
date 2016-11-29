@@ -27,6 +27,8 @@
             <td>
                 {% if tradeObj.status == 0 %}
                     未出货
+                {% elif tradeObj.status == 1 %}
+                    退回，{{ tradeObj.message }}
                 {% elif tradeObj.status == 10 %}
                     下次补亏
                 {% elif tradeObj.status == 11 %}

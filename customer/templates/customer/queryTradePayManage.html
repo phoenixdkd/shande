@@ -48,6 +48,12 @@
                         data-paycash="{{ trade.commission }}"
                     >收款</button>
                 {% endif %}
+                {% if request.user.userprofile.title.role_name in "bursar" %}
+                    <button type="button" class="btn btn-sm btn-primary" onclick="backTrade(this)"
+                        data-id="{{ trade.id }}"
+                        data-paycash="{{ trade.commission }}"
+                    >退回</button>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

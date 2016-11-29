@@ -9,7 +9,7 @@ from stock.models import *
 # Create your models here.
 class Trade(models.Model):
     customer = models.ForeignKey(Customer)
-    # 0 未出货(新录入); 10 亏损; 11 已补亏;  20 盈利 提交财务收款; 30 已收款;
+    # 0 未出货(新录入); 1 退回; 10 亏损; 11 已补亏;  20 盈利 提交财务收款; 30 已收款;
 
     status = models.IntegerField('交易状态', default=0)
     stock = models.ForeignKey(Stock, null=True, blank=True, on_delete=models.SET_NULL)
@@ -22,6 +22,7 @@ class Trade(models.Model):
     sellprice = models.DecimalField('卖出价格',  max_digits=10, decimal_places=2, default=0)
     income = models.DecimalField('盈利', max_digits=10, decimal_places=2, default=0)
     commission = models.DecimalField('手续费', max_digits=10, decimal_places=2, default=0)
+    message = models.CharField('退回原因', default='', max_length=30, null=True, blank=True)
     # 支付宝
     paytype = models.CharField('收款类型', max_length=30, default="")
     create = models.DateTimeField('交易时间')
