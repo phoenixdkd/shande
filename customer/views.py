@@ -643,7 +643,7 @@ def analyzeReport(request):
     stockid = request.POST.get('stockid', '')
     stocks = stocks.filter(stockid__icontains=stockid)
     startDate = request.POST.get('startDate', datetime.date.today())
-    endDate = request.POST.get('endDate', datetime.date.today()- datetime.timedelta(days=-7))
+    endDate = request.POST.get('endDate', datetime.date.today()- datetime.timedelta(days=7))
     p = Paginator(stocks, 20)
     try:
         page = int(request.GET.get('page', '1'))
