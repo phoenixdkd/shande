@@ -574,6 +574,7 @@ def tradeTypeReport(request):
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     teachers = Teacher.objects.all()
+    teachers = teachers.exclude(binduser__isnull=True)
     if request.user.userprofile.title.role_name == 'teachermanager':
         teachers = teachers.filter(company=request.user.userprofile.company, department=request.user.userprofile.department)
     elif request.user.userprofile.title.role_name == 'teacherboss':

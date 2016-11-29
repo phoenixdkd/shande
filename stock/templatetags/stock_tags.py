@@ -4,6 +4,7 @@ from django.template.defaultfilters import stringfilter
 from django.db.models import Sum
 from customer.models import *
 from trade.models import *
+import traceback
 register = template.Library()
 
 @register.simple_tag
@@ -21,7 +22,7 @@ def getLowBuypriceByStockAndUser(stockid, userid, startDate, endDate):
         trade = trades.earliest('buyprice')
         return trade.buyprice
     except Exception as e:
-        print(e.__str__())
+        traceback.print_exc()
         return 0
 
 @register.simple_tag
