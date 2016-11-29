@@ -369,7 +369,7 @@ def handleCustomer(request):
         status = request.POST.get('status')
         customer.status = status
         customer.modify = timezone.now()
-        if status == 10:
+        if status == '10':
             customer.message = request.POST.get('message')
         customer.save()
         data['msg'] = "操作成功"
