@@ -63,6 +63,8 @@
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="stock_detail_row_{{ stock.id }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
         </td></tr>
+        {% empty %}
+            <tr><td colspan="10">无盈利产品</td></tr>
         {% endfor %}
     </tbody>
 </table>

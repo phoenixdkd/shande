@@ -641,9 +641,15 @@ def analyzeReport(request):
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
     stockid = request.POST.get('stockid', '')
-    stocks = stocks.filter(stockid__icontains=stockid)
     startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
     endDate = request.POST.get('endDate', datetime.date.today()+ datetime.timedelta(days=1))
+    stocks = stocks.filter(stockid__icontains=stockid, trade__create__lte=endDate, trade__create__gte=startDate,
+                           trade__status=0).distinct()
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        stocks = stocks.filter(trade__customer__teacher__company=user.userprofile.company,
+                               trade__customer__teacher__department=user.userprofile.department).distinct()
+    elif request.user.userprofile.title.role_name == 'teacherboss':
+        stocks = stocks.filter(trade__customer__teacher__company=user.userprofile.company).distinct()
     p = Paginator(stocks, 20)
     try:
         page = int(request.GET.get('page', '1'))

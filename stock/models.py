@@ -11,3 +11,6 @@ class Stock(models.Model):
 
     def __str__(self):
         return self.stockid.__str__()+'_'+self.stockname.__str__()
+
+    def getTradeCount(self, startDate, endDate):
+        return self.trade_set.filter(create__lte=endDate, create__gte=startDate).count()

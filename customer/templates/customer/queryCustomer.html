@@ -37,7 +37,13 @@
         <tr>
 {#            <td>{{ customerObj.id }}</td>#}
             <td>{{ forloop.counter }}</td>
-            <td>{{ customerObj.create }}</td>
+            <td>
+                {% if customerObj.first_trade %}
+                    {{ customerObj.first_trade }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
             <td>
                 <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">
                     {{ customerObj.sales.saleId }} {{ customerObj.sales.binduser.userprofile.nick }}

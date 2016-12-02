@@ -141,8 +141,12 @@ def payReport(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
+
     if request.user.userprofile.title.role_name == 'bursar':
-        trades.filter(customer__bursar__binduser=request.user)
+        trades = trades.filter(customer__bursar__binduser=request.user)
+
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
     tradePayCashSum = trades.aggregate(Sum('paycash'))
     if tradePayCashSum['paycash__sum']:
         payCashTotal = tradePayCashSum['paycash__sum']
