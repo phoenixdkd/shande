@@ -127,9 +127,9 @@ def delBursar(request):
 
 @login_required()
 def payReport(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher']):
         return HttpResponseRedirect("/")
-    trades = Trade.objects.filter(paytime__isnull=False)
+    trades = Trade.objects.filter(paytime__isnull=False).order_by('-paytime')
     endDate = request.POST.get('endDate', "")
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -137,13 +137,18 @@ def payReport(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=30)
+        if request.user.userprofile.title.role_name == 'teacher':
+            startDate = datetime.date.today()
+        else:
+            startDate = datetime.date.today() - datetime.timedelta(days=30)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
 
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
+    if request.user.userprofile.title.role_name == 'teacher':
+        trades = trades.filter(customer__teacher__binduser=request.user)
 
     if request.user.userprofile.title.role_name == 'teachermanager':
         trades = trades.filter(customer__teacher__company=request.user.userprofile.company)

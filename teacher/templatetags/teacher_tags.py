@@ -40,25 +40,26 @@ def getTeacherDepartmentByUserId(uid):
         return "未找到绑定的老师ID"
 
 @register.simple_tag()
-def getCustomerCountByTeacher(teacherid):
+def getCustomerCountByTeacher(teacherid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(teacher_id=teacherid)
+        customers = Customer.objects.filter(teacher_id=teacherid, trade__create__lte=endDate, trade__create__gte=startDate)
         return customers.__len__()
     except:
         return 0
 
 @register.simple_tag()
-def getNoSellTradeCountByTeacher(teacherid):
+def getNoSellTradeCountByTeacher(teacherid, startDate, endDate):
     try:
-        trades = Trade.objects.filter(customer__teacher_id=teacherid, status=0)
+        trades = Trade.objects.filter(customer__teacher_id=teacherid, status=0,
+                                      create__lte=endDate, create__gte=startDate)
         return trades.__len__()
     except:
         return 0
 
 @register.simple_tag()
-def getBuyCashTotalByTeacher(teacherid):
+def getBuyCashTotalByTeacher(teacherid, startDate, endDate):
     try:
-        trades = Trade.objects.filter(customer__teacher_id=teacherid)
+        trades = Trade.objects.filter(customer__teacher_id=teacherid, create__lte=endDate, create__gte=startDate)
         buycash = trades.aggregate(Sum('buycash'))
         if buycash['buycash__sum']:
             return buycash['buycash__sum']
@@ -68,9 +69,9 @@ def getBuyCashTotalByTeacher(teacherid):
         return 0
 
 @register.simple_tag()
-def getPayCashTotalByTeacher(teacherid):
+def getPayCashTotalByTeacher(teacherid, startDate, endDate):
     try:
-        trades = Trade.objects.filter(customer__teacher_id=teacherid)
+        trades = Trade.objects.filter(customer__teacher_id=teacherid, create__lte=endDate, create__gte=startDate)
         paycash = trades.aggregate(Sum('paycash'))
         if paycash['paycash__sum']:
             return paycash['paycash__sum']
@@ -80,9 +81,19 @@ def getPayCashTotalByTeacher(teacherid):
         return 0
 
 @register.simple_tag()
-def getDCustomerCountByTeacher(teacherid):
+def getSpotCustomerCountByTeacher(spotStatus, teacherid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus='D')
+        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus, spotTime__lte=endDate,
+                                            spotTime__gte=startDate)
+        return customers.__len__()
+    except:
+        return 0
+
+@register.simple_tag()
+def getDCustomerCountByTeacher(teacherid, startDate, endDate):
+    try:
+        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus='D', spotTime__lte=endDate,
+                                            spotTime__gte=startDate)
         return customers.__len__()
     except:
         return 0

@@ -6,10 +6,10 @@
         <th width="2%">客户姓名</th>
         <th width="2%">电话</th>
         <th width="5%">买入价格</th>
-        <th width="5%">买入数量</th>
+{#        <th width="5%">买入数量</th>#}
         <th width="5%">买入资金</th>
         <th width="5%">盈亏</th>
-        <th width="5%">佣金比例</th>
+        <th width="5%">佣金</th>
         <th width="5%">应收</th>
         <th width="5%">跟进</th>
     </thead>
@@ -21,7 +21,7 @@
                 <td>{{ trade.customer.name }}</td>
                 <td>{{ trade.customer.phone }}</td>
                 <td>{{ trade.buyprice }}</td>
-                <td>{{ trade.buycount }}</td>
+{#                <td>{{ trade.buycount }}</td>#}
                 <td>{{ trade.buycash }}</td>
                 <td style="background-color:
                 {% if trade.income > 0 %}

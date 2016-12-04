@@ -39,7 +39,7 @@
         <th width="5%">产品名称</th>
         <th width="5%">最低买入价</th>
         <th width="5%">最高买入价</th>
-        <th width="5%">总买入资金</th>
+{#        <th width="5%">总买入资金</th>#}
         <th width="5%">客户数</th>
         <th width="5%">现价</th>
         <th width="5%">浮盈个数</th>
@@ -53,7 +53,7 @@
             <td>{{ stock.stockname }}</td>
             <td>{% getLowBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
             <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
-            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>
+{#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
             <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
             <td><input type="text" id="current_price_{{ stock.id }}" class="current_price"
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}"/></td>

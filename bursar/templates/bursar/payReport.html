@@ -39,7 +39,11 @@
         <th width="5%">金额</th>
         <th width="5%">支付方式</th>
         <th width="5%">客户管理专员</th>
+        {% if request.user.userprofile.title.role_name == 'teacher' %}
+        <th width="5%">收款专员</th>
+        {% else %}
         <th width="5%">客户开发专员</th>
+        {% endif %}
     </thead>
     <tbody>
         {% for trade in trades %}
@@ -54,10 +58,14 @@
             <td>{{ trade.paycash }} </td>
             <td>{{ trade.paytype }} </td>
             <td>{{ trade.customer.teacher.teacherId }} {{ trade.customer.teacher.binduser.userprofile.nick }}</td>
-            <td>{{ trade.customer.sales.saleId }} {{ trade.customer.sales.binduser.userprofile.nick }}</td>
+            {% if request.user.userprofile.title.role_name == 'teacher' %}
+                <td>{{ trade.customer.bursar.bursarId }} {{ trade.customer.bursar.binduser.userprofile.nick }}</td>
+            {% else %}
+                <td>{{ trade.customer.sales.saleId }} {{ trade.customer.sales.binduser.userprofile.nick }}</td>
+            {% endif %}
         </tr>
         {% empty %}
-        <tr><td colspan="9">无交易信息</td></tr>
+        <tr><td colspan="9">无收款信息</td></tr>
         {% endfor %}
         <tr style="color:red">
             <td></td>

@@ -130,7 +130,7 @@
                                     <select type="select" class="form-control" id="redoMessage" name="redoMessage">
                                         <option value="客户不回消息">客户不回消息</option>
                                         <option value="给票不买">给票不买</option>
-                                        <option value="分成太高">分成太高</option>
+{#                                        <option value="分成太高">分成太高</option>#}
                                         <option value="要看票">要看票</option>
                                         <option value="今天不买，下次再买">今天不买，下次再买</option>
                                         <option value="不发截图">不发截图</option>
@@ -143,9 +143,10 @@
                         </div>
                         <div id="delMessageDiv" style="display:none">
                              <div class="form-group">
-                                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="delMessage">退回理由</label>
+                                <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="delMessage">删除理由</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="delMessage" name="delMessage">
+                                        <option value="亏损客户不再合作">亏损客户不再合作</option>
                                         <option value="亏损客户不再合作">亏损客户不再合作</option>
                                         <option value="客户不回复消息">客户不回复消息</option>
                                         <option value="不诚信客户">不诚信客户</option>
@@ -218,7 +219,7 @@
                                     <select type="select" class="form-control" id="newDishonestMessage" name="dishonestMessage">
                                         <option value="私自出货">私自出货</option>
                                         <option value="删除老师">删除老师</option>
-                                        <option value="持票时间过长">持票时间过长</option>
+                                        <option value="多次未回信息">多次未回信息</option>
                                         <option value="不回款">不回款</option>
                                     </select>
                                 </div>
@@ -351,12 +352,18 @@
         formValidator();
     }
     function loadCustomerHandleDiv(data){
-        var startDate = $('#startDate').val();
-        var endDate = $('#endDate').val();
-        if(data){
-            data = data +'&startDate='+startDate+'&endDate='+endDate;
+        var searchData = $('#searchCustomerHandleForm').serialize();
+        var page =  "page="+$('#page').val();
+        if(data && data.indexOf('page') >= 0){
+            var arr = new Array(2);
+            arr[0] = searchData;
+            arr[1] = data;
+            data = arr.join("&");
         }else{
-            data = 'startDate='+startDate+'&endDate='+endDate;
+            var arr = new Array(2);
+            arr[0] = searchData;
+            arr[1] = page;
+            data = arr.join("&");
         }
         $('#customerHandleDiv').load("{% url 'customer:queryCustomerHandle' %}", data);
     }
@@ -589,38 +596,55 @@
 {#            </div>#}
 {#        </div>#}
 {#        <div class="form-group">#}
-{#            <label class="col-md-1 control-label">姓名</label>#}
-{#            <div class="col-md-1 ">#}
-{#                 <input type="text" class="form-control" value="{{ name }}" name="name"/>#}
-{#            </div>#}
-{#            <label class="col-md-1 control-label">电话</label>#}
-{#            <div class="col-md-1 ">#}
-{#                 <input type="text" class="form-control" value="{{ phone }}" name="phone"/>#}
-{#            </div>#}
-            <label class="col-md-1 control-label" >客户状态</label>
+
+            <label class="col-md-1 control-label">客户电话</label>
             <div class="col-md-1 ">
-                 <select type="select" class="form-control" id="status" name="status">
+                 <input type="text" class="form-control" value="{{ phone }}" name="phone"/>
+            </div>
+            <label class="col-md-1 control-label">沟通方式</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ wxqq }}" name="wxqq"/>
+            </div>
+            <label class="col-md-1 control-label">产品名称</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ stockname }}" name="stockname"/>
+            </div>
+            <label class="col-md-1 control-label" style="width:50px">10W+</label>
+            <div class="col-md-1 ">
+                 <select type="select" class="form-control" id="vip" name="vip">
                      <option></option>
+                     <option value="1">是</option>
+                     <option value="0">否</option>
+                 </select>
+            </div>
+{#            <label class="col-md-1 control-label" >客户状态</label>#}
+{#            <div class="col-md-1 ">#}
+{#                 <select type="select" class="form-control" id="status" name="status">#}
+{#                     <option></option>#}
 {#                     <option value="0">新录入客户</option>#}
 {#                     <option value="10">待跟进</option>#}
 {#                     <option value="20">老师已加微信或QQ</option>#}
 {#                     <option value="30">退回</option>#}
-                     <option value="40">有效客户</option>
-                     <option value="39">待跟进客户</option>
+{#                     <option value="40">有效客户</option>#}
+{#                     <option value="39">待跟进客户</option>#}
 {#                     <option value="99">标记删除</option>#}
+{#                 </select>#}
+{#            </div>#}
+
+        </div>
+        <div class="form-group">
+            <label class="col-md-1 control-label">现货评级</label>
+            <div class="col-md-1 ">
+                 <select type="select" class="form-control" id="spot" name="spot">
+                     <option></option>
+                     <option value="未开发">未开发</option>
+                     <option value="A">A</option>
+                     <option value="B">B</option>
+                     <option value="C">D</option>
+                     <option value="D">D</option>
+
                  </select>
             </div>
-            <label class="col-md-1 control-label">修改时间</label>
-            <div class="col-md-2 ">
-                 <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
-                 title="起始时间"/>
-            </div>
-            <div class="col-md-2 ">
-                 <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
-                 title="结束时间"/>
-            </div>
-        </div>
-{#        <div class="form-group">#}
 {#            <label class="col-md-1 control-label">来源微信</label>#}
 {#            <div class="col-md-1 ">#}
 {#                 <input type="text" class="form-control" value="{{ saleswx }}" name="saleswx"/>#}
@@ -633,7 +657,23 @@
 {#            <div class="col-md-1 ">#}
 {#                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>#}
 {#            </div>#}
-{#        </div>#}
+            <label class="col-md-1 control-label">合作时间</label>
+            <div class="col-md-2 ">
+                 <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
+                 title="起始时间"/>
+            </div>
+{#            <label class="col-md-1 control-label"></label>#}
+            <div class="col-md-2 ">
+                 <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
+                 title="结束时间"/>
+            </div>
+            <div class="form-group">
+{#            <label class="col-md-1 control-label"></label>#}
+            <div class="col-md-1">
+                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+            </div>
+        </div>
+        </div>
 {#        <div class="form-group">#}
 {#            <label class="col-md-1 control-label">来源QQ</label>#}
 {#            <div class="col-md-1 ">#}
@@ -693,12 +733,7 @@
 {#                 <input type="text" class="form-control" value="{{ stockname }}" name="stockname"/>#}
 {#            </div>#}
 {#        </div>#}
-        <div class="form-group">
-            <label class="col-md-1 control-label"></label>
-            <div class="col-md-1">
-                    <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
-            </div>
-        </div>
+
     </form>
     <div id="customerHandleDiv"></div>
 {% endblock %}

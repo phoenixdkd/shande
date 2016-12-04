@@ -91,9 +91,7 @@ def queryCustomer(request):
     if request.GET.get('salesqq', '') != '':
         customers = customers.filter(salesqq__qqid__icontains=request.GET.get('salesqq', ''))
     if request.GET.get('wxqq', '') != '':
-        print(customers)
         customers = customers.filter(Q(wxid="", qqid__icontains=request.GET.get('wxqq'))|Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
-        print(customers)
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
     customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
     if request.GET.get('wxid', '') != '':
@@ -148,10 +146,10 @@ def addCustomer(request):
     try:
         if request.POST['id'] == "":
             sale = Sale.objects.get(binduser=request.user)
-            newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
+            newCustomer = Customer.objects.create(sales=sale, create=timezone.now().date(), modify=timezone.now())
             newCustomer.teacher = sale.bindteacher
             newCustomer.bursar = sale.bindteacher.bindbursar
-            newCustomer.create = timezone.now()
+            newCustomer.create = timezone.now().date()
         else:
             newCustomer = Customer.objects.get(id=int(request.POST['id']))
             if request.user.userprofile.title.role_name == 'sale' and newCustomer.status == 0:
@@ -275,7 +273,7 @@ def customerHandle(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today()
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
@@ -288,7 +286,7 @@ def customerHandle(request):
 
 @login_required()
 def queryCustomerHandle(request):
-    customers = Customer.objects.all().order_by('status', '-create')
+    customers = Customer.objects.all().order_by( '-create','status')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -318,6 +316,9 @@ def queryCustomerHandle(request):
         customers = customers.filter(saleswx__wxid__icontains=request.GET.get('saleswx', ''))
     if request.GET.get('salesqq', '') != '':
         customers = customers.filter(salesqq__qqid__icontains=request.GET.get('salesqq', ''))
+    if request.GET.get('wxqq', '') != '':
+        customers = customers.filter(
+            Q(wxid="", qqid__icontains=request.GET.get('wxqq')) | Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
     customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
     if request.GET.get('wxid', '') != '':
@@ -335,6 +336,10 @@ def queryCustomerHandle(request):
         customers = customers.filter(startup__lte=request.GET.get('maxstartup'))
     if request.GET.get('gem', '') != '':
         customers = customers.filter(gem=request.GET.get('gem'))
+    if request.GET.get('vip', '') != '':
+        customers = customers.filter(vip=request.GET.get('vip'))
+    if request.GET.get('spot', '') != '':
+        customers = customers.filter(spotStatus=request.GET.get('spot'))
     if request.GET.get('startDate', '') != '':
         customers = customers.filter(create__gte=request.GET.get('startDate'))
     if request.GET.get('endDate', '') != '':
@@ -344,7 +349,8 @@ def queryCustomerHandle(request):
     if (request.GET.get('stockid', '') != ''):
         customers = customers.filter(trade__stock__stockid=request.GET.get('stockid'), trade__status=0)
     if (request.GET.get('stockiname', '') != ''):
-        customers = customers.filter(trade__stock__stockname=request.GET.get('stockiname'), trade__status=0)
+        customers = customers.filter(Q(trade__stock__stockname__icontains=request.GET.get('stockiname'))
+                                     |Q(trade__stock__stockid__icontains=request.GET.get('stockiname')))
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -571,28 +577,43 @@ def noTradeCustomerReport(request):
 
 @login_required()
 def tradeTypeReport(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     teachers = Teacher.objects.all()
     teachers = teachers.exclude(binduser__isnull=True)
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=5)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     if request.user.userprofile.title.role_name == 'teachermanager':
         teachers = teachers.filter(company=request.user.userprofile.company, department=request.user.userprofile.department)
     elif request.user.userprofile.title.role_name == 'teacherboss':
         teachers = teachers.filter(company=request.user.userprofile.company)
+    elif request.user.userprofile.title.role_name == 'teacher':
+        teachers = teachers.filter(binduser=request.user)
     else:
         teachers = teachers
 
     data = {
         "teachers": teachers,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
     return render(request, 'customer/tradeTypeReport.html', data)
 
 @login_required()
 def getTeacherDetail(request):
     teacherid = request.POST.get('teacher')
-    trades = Trade.objects.filter(customer__teacher_id=teacherid)
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
+    trades = Trade.objects.filter(customer__teacher_id=teacherid, create__gte=startDate, create__lte=endDate)
     stocks = trades.values('stock', 'stock__stockname', 'stock__stockid').distinct()
-
     data = {
         "stocks": stocks,
         "teacherid": teacherid,
@@ -603,11 +624,18 @@ def getTeacherDetail(request):
 def getStockDetail(request):
     teacherid = request.POST.get('teacherid')
     stockid = request.POST.get('stockid')
-    trades = Trade.objects.filter(customer__teacher_id=teacherid, stock_id=stockid)
+    startDate = request.POST.get('startDate')
+    endDate = request.POST.get('endDate')
+    trades = Trade.objects.filter(customer__teacher_id=teacherid, stock_id=stockid, create__gte=startDate,
+                                  create__lte=endDate)
+    customers = Customer.objects.filter(teacher_id=teacherid, trade__stock_id=stockid, trade__create__lte=endDate,
+                                        trade__create__gte=startDate).distinct()
     highTrade = trades.latest('buyprice')
     lowTrade = trades.earliest('buyprice')
 
     data = {
+        "trades": trades,
+        "customers": customers,
         "highTrade": highTrade,
         "lowTrade": lowTrade,
     }
@@ -637,7 +665,7 @@ def dCustomerReport(request):
 
 @login_required()
 def analyzeReport(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teachermanager', 'teacherboss']:
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
     stockid = request.POST.get('stockid', '')
@@ -650,6 +678,8 @@ def analyzeReport(request):
                                trade__customer__teacher__department=user.userprofile.department).distinct()
     elif request.user.userprofile.title.role_name == 'teacherboss':
         stocks = stocks.filter(trade__customer__teacher__company=user.userprofile.company).distinct()
+    elif request.user.userprofile.title.role_name == 'teacher':
+        stocks = stocks.filter(trade__customer__teacher__binduser=request.user).distinct()
     p = Paginator(stocks, 20)
     try:
         page = int(request.GET.get('page', '1'))

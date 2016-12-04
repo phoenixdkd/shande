@@ -2,44 +2,52 @@
  <table class="table table-bordered">
     <thead>
         <tr>
-            <td>开发ID</td>
-            <td>来源微信</td>
-            <td>来源QQ</td>
-            <td>姓名</td>
+{#            <td>序号</td>#}
+            <td>创建时间</td>
+            <td>客户姓名</td>
             <td>电话</td>
-            <td>微信号</td>
-            <td>微信昵称</td>
-            <td>QQ号</td>
-            <td>QQ昵称</td>
+            <td>沟通方式</td>
+            <td>昵称</td>
             <td>初始资金</td>
             <td>GEM</td>
-            <td>10W+</td>
-            <td>大客户</td>
-            <td>交易情况</td>
-            <td>状态</td>
-            <td>消息</td>
-            <td>创建时间</td>
-            <td>修改时间</td>
+            <td>最近买入</td>
+            <td>现货评级</td>
+            <td>跟进状态</td>
+{#            <td>操作</td>#}
         </tr>
     </thead>
     <tbody>
         <tr>
+{#            <td>{{ forloop.counter }}</td>#}
+            <td>{{ customer.create.date }}</td>
             <td>
-                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customer.sales.company }}-部门:{{ customer.sales.department }}">
-                    {{ customer.sales.saleId }}
-                </span>
+                {{ customer.name }}
             </td>
-            <script type="text/javascript">
-                $('.tooltips').tooltip();
-            </script>
-            <td>{{ customer.saleswx.wxid }}</td>
-            <td>{{ customer.salesqq.qqid }}</td>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.phone }}</td>
-            <td>{{ customer.wxid }}</td>
-            <td>{{ customer.wxname }}</td>
-            <td>{{ customer.qqid }}</td>
-            <td>{{ customer.qqname }}</td>
+            <td>
+                {% if customer.status == 40 %}
+                    {{ customer.phone  }}
+                {% else %}
+                    {{ customer.phone }}
+                {% endif %}
+            </td>
+            <td>
+                {% if customer.status == 40 %}
+                    {% if customer.saleswx %} 微信: {{ customer.wxid | mask8  }}{% endif %}
+                    {% if customer.salesqq %} QQ: {{ customer.qqid | mask8 }}{% endif %}
+                {% else %}
+                    {% if customer.saleswx %} 微信: {{ customer.wxid| mask8 }}{% endif %}
+                    {% if customer.salesqq %} QQ: {{ customer.qqid| mask8 }}{% endif %}
+                {% endif %}
+            </td>
+            <td>
+                {% if customer.status == 40 %}
+                    {% if customer.saleswx %} {{ customer.wxname| mask8  }}{% endif %}
+                    {% if customer.salesqq %} {{ customer.qqname | mask8 }}{% endif %}
+                {% else %}
+                    {% if customer.saleswx %} {{ customer.wxname| mask8  }}{% endif %}
+                    {% if customer.salesqq %} {{ customer.qqname | mask8 }}{% endif %}
+                {% endif %}
+            </td>
             <td>{{ customer.startup }}</td>
             <td>
                 {% if customer.gem %}
@@ -48,30 +56,46 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
             </td>
-            <td>
-                {% if customer.crude %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
-            </td>
-            <td>
-                {% if customer.vip %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
-            </td>
-            <td>
-                <span class="badge-info" title="待收款交易数">{% getNoPayTradeCountByCustomerId customer.id %}</span>
+            <td>{% getLatestStockByCustomerId customer.id %}</td>
+            <td class="spotTd">
+                {{ customer.spotStatus }}
+{#                <select class="spotSelect"#}
+{#                        value="{{ customer.spotStatus }}"#}
+{#                data-id="{{ customer.id }}">#}
+{#                    {% if customer.spotStatus  == "未开发" %}#}
+{#                        <option value="未开发" {% if customer.spotStatus == "未开发" %}selected{% endif %}>未开发</option>#}
+{#                        <option value="A" {% if customer.spotStatus  == "A" %}selected{% endif %}>A</option>#}
+{#                        <option value="B" {% if customer.spotStatus  == "B" %}selected{% endif %}>B</option>#}
+{#                        <option value="C" {% if customer.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customer.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customer.spotStatus  == "A" %}#}
+{#                        <option value="A" {% if customer.spotStatus  == "A" %}selected{% endif %}>A</option>#}
+{#                        <option value="B" {% if customer.spotStatus  == "B" %}selected{% endif %}>B</option>#}
+{#                        <option value="C" {% if customer.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customer.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customer.spotStatus  == "B" %}#}
+{#                        <option value="B" {% if customer.spotStatus  == "B" %}selected{% endif %}>B</option>#}
+{#                        <option value="C" {% if customer.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customer.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customer.spotStatus  == "C" %}#}
+{#                        <option value="C" {% if customer.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customer.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customer.spotStatus  == "D" %}#}
+{#                        <option value="D" {% if customer.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                </select>#}
             </td>
             <td>
                 {% if customer.status == 0 %}
-                    <span class="label label-success">&gt;</span> 新录入客户
+                    <span class="label label-success">&gt;</span> 新客户待确认
                 {% elif customer.status == 10 %}
                     <span class="label label-danger">&gt;</span> 待跟进
                 {% elif customer.status == 20 %}
-                    <span class="label label-success">&gt;</span> 老师已加微信或QQ
+                    <span class="label label-success">&gt;</span> 已添加老师
                 {% elif customer.status == 30 %}
                     <span class="label label-danger">&gt;</span> 退回
                 {% elif customer.status == 40 %}
@@ -82,9 +106,28 @@
                     <span class="label label-disable">&gt;</span> 标记删除
                 {% endif %}
             </td>
-            <td>{{ customer.message }}</td>
-            <td>{{ customer.create }}</td>
-            <td>{{ customer.modify }}</td>
+{#            <td>#}
+{#                {% if request.user.userprofile.title.role_name in "teacher ops admin"  and customer.status == 0 %}#}
+{#                    <button type="button" class="btn btn-sm btn-primary" onclick="handleCustomer(this)"#}
+{#                        data-id="{{ customer.id }}">处理</button>#}
+{#                {% endif %}#}
+{#                {% if request.user.userprofile.title.role_name in "teacher ops admin" %}#}
+{#                    {% if customer.status == 20 %}#}
+{#                    <button type="button" class="btn btn-sm btn-primary" onclick="handleNewCustomer(this)"#}
+{#                        data-id="{{ customer.id }}">处理</button>#}
+{#                    {% endif %}#}
+{#                    {% if customer.status == 40 %}#}
+{#                    <button type="button" class="btn btn-sm btn-primary" onclick="handleValidCustomer(this)"#}
+{#                        data-id="{{ customer.id }}">处理</button>#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{#                {% if request.user.userprofile.title.role_name in "teacher teachermanager teacherboss admin" %}#}
+{#                    {% if customer.status == 20 or customer.status == 40 %}#}
+{#                    <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"#}
+{#                        data-id="{{ customer.id }}">交易管理</button>#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{#            </td>#}
         </tr>
     </tbody>
 </table>

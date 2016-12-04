@@ -19,7 +19,7 @@ def getNoPayTradeCountByCustomerId(customerId):
 def getLatestStockByCustomerId(customerId):
     try:
         trade = Trade.objects.filter(customer=Customer.objects.get(id=customerId)).order_by('-create')
-        return "%s-%s" % (trade[0].stock.stockid , trade[0].stock.stockname)
+        return "%s %s" % (trade[0].stock.stockid , trade[0].stock.stockname)
     except Exception as e:
         print(e.__str__())
         return ""

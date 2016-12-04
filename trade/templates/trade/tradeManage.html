@@ -193,7 +193,7 @@
                             <label class="col-md-offset-2 col-md-2 control-label" for="htstatus" >状态</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="htstatus" name="htstatus">
-                                    <option value="0">未出货</option>
+{#                                    <option value="0">未出货</option>#}
                                     <option value="10">下次补亏</option>
                                     <option value="11">已补亏</option>
                                     <option value="20">提交财务收款</option>
@@ -213,7 +213,12 @@
         </div>
     </div>
 <script type="text/javascript">
+    $('#addTradeModal').modal({backdrop: 'static'});
+    $('#handleTradeModal').modal({backdrop: 'static'});
+    $('#addTradeModal').modal('hide');
+    $('#handleTradeModal').modal('hide');
     $(function () {
+
         formValidator();
         loadTradeDiv();
         loadCustomerDiv();
@@ -321,6 +326,7 @@
             }
         });
         $('#handleTradeForm').bootstrapValidator({
+            backdrop: 'static',
             excluded: [':disabled'],
             message: 'This value is not valid',
             feedbackIcons: {

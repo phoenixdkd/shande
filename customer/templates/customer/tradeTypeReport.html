@@ -2,12 +2,31 @@
 {% load teacher_tags %}
 {% block title %}交易分类汇总表{% endblock %}
 {% block content %}
+
     <br/>
     <h1>
         <div class="alert alert-success" style="text-align:center">
             交易分类汇总表
         </div>
     </h1>
+    <form id="searchAnalyzeForm" method="POST" class="form-horizontal ">
+    <div class="form-group">
+        <label class="col-md-offset-2 col-md-1 control-label">买入时间</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label">至</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
+             title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
     <hr/>
 
 <table class="table table-bordered">
@@ -16,20 +35,46 @@
         <th width="2%">姓名</th>
         <th width="5%">客户数</th>
         <th width="5%">未出货</th>
-        <th width="5%">合计买入资金</th>
-        <th width="5%">合计已收款</th>
-        <th width="5%">D类客户数</th>
+        <th width="5%">买入资金</th>
+        <th width="5%">已收款</th>
+        <th style="width:5%;padding:0">
+            <table style="width:100%;">
+                <tr>
+                    <td colspan="5">
+                         现货客户评级
+                    </td>
+                </tr>
+                <tr >
+                    <td style="border:solid 1px #ddd;width:20%">未开发</td>
+                    <td style="border:solid 1px #ddd;width:20%">A</td>
+                    <td style="border:solid 1px #ddd;width:20%">B</td>
+                    <td style="border:solid 1px #ddd;width:20%">C</td>
+                    <td style="border:solid 1px #ddd;width:20%">D</td>
+                </tr>
+            </table>
+        </th>
     </thead>
     <tbody>
         {% for teacher in teachers %}
         <tr data-teacher="{{ teacher.id }}" id="teacher_row_{{ teacher.id }}" ondblclick="showTeacherDetail(this)" class="teacher_row">
             <td>{{ forloop.counter }}</td>
             <td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</td>
-            <td>{% getCustomerCountByTeacher teacher.id %}</td>
-            <td>{% getNoSellTradeCountByTeacher teacher.id %}</td>
-            <td>{% getBuyCashTotalByTeacher teacher.id %}</td>
-            <td>{% getPayCashTotalByTeacher teacher.id %}</td>
-            <td>{% getDCustomerCountByTeacher teacher.id %}</td>
+            <td>{% getCustomerCountByTeacher teacher.id startDate endDate %}</td>
+            <td>{% getNoSellTradeCountByTeacher teacher.id startDate endDate %}</td>
+            <td>{% getBuyCashTotalByTeacher teacher.id startDate endDate %}</td>
+            <td>{% getPayCashTotalByTeacher teacher.id startDate endDate %}</td>
+            <td style="width:5%;padding: 8px;">
+                <table style="width:100%;">
+                    <tr>
+                        <td style="border:solid 1px #ddd;width:20%">{% getSpotCustomerCountByTeacher '未开发' teacher.id startDate endDate %}</td>
+                        <td style="border:solid 1px #ddd;width:20%">{% getSpotCustomerCountByTeacher 'A' teacher.id startDate endDate %}</td>
+                        <td style="border:solid 1px #ddd;width:20%">{% getSpotCustomerCountByTeacher 'B' teacher.id startDate endDate %}</td>
+                        <td style="border:solid 1px #ddd;width:20%">{% getSpotCustomerCountByTeacher 'C' teacher.id startDate endDate %}</td>
+                        <td style="border:solid 1px #ddd;width:20%">{% getSpotCustomerCountByTeacher 'D' teacher.id startDate endDate %}</td>
+                    </tr>
+                </table>
+
+            </td>
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="teacher_detail_row_{{ teacher.id }}" class="teacher_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
@@ -51,11 +96,14 @@
     }
     function loadTeacherDetail(teacher){
         teacherDetailRowSelector = $('#teacher_detail_row_'+teacher);
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+
         $.ajax({
             url: "{% url 'customer:getTeacherDetail' %}",
             type: 'POST',
             async: true,
-            data: { "teacher": teacher },
+            data: { "teacher": teacher, "startDate": startDate, "endDate": endDate },
             beforeSend:  function(){
                 teacherDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },
@@ -78,11 +126,13 @@
     }
     function loadStockDetail(teacherid, stockid) {
         stockDetailRowSelector = $('#stock_detail_row_'+teacherid+'_'+stockid);
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
         $.ajax({
             url: "{% url 'customer:getStockDetail' %}",
             type: 'POST',
             async: true,
-            data: { "teacherid": teacherid, "stockid": stockid },
+            data: { "teacherid": teacherid, "stockid": stockid, "startDate": startDate, "endDate": endDate  },
             beforeSend:  function(){
                 stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
             },
