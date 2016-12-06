@@ -349,7 +349,7 @@ def queryCustomerHandle(request):
         customers = customers.filter(status=request.GET.get('status'))
     if (request.GET.get('stockid', '') != ''):
         customers = customers.filter(trade__stock__stockid=request.GET.get('stockid'), trade__status=0)
-    if (request.GET.get('stockiname', '') != ''):
+    if (request.GET.get('stockname', '') != ''):
         customers = customers.filter(Q(trade__stock__stockname__icontains=request.GET.get('stockiname'))
                                      |Q(trade__stock__stockid__icontains=request.GET.get('stockiname')))
     p = Paginator(customers, 20)
@@ -593,7 +593,8 @@ def tradeTypeReport(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     if request.user.userprofile.title.role_name == 'teachermanager':
-        teachers = teachers.filter(company=request.user.userprofile.company, department=request.user.userprofile.department)
+        teachers = teachers.filter(company=request.user.userprofile.company, department=request.user.userprofile.department,
+                                   group=request.user.userprofile.group)
     elif request.user.userprofile.title.role_name == 'teacherboss':
         teachers = teachers.filter(company=request.user.userprofile.company)
     elif request.user.userprofile.title.role_name == 'teacher':
@@ -703,7 +704,6 @@ def getStockDetailForAnalyze(request):
     stockid = request.POST.get('stock')
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
-    print(startDate)
     trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
     if request.user.userprofile.title.role_name == 'teachermanager':
         trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
