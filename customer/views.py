@@ -246,12 +246,10 @@ def delCustomer(request):
 
 @login_required()
 def checkCustomerPhone(request):
-    customerPhone = request.POST.get('customerPhone')
+    customerPhone = request.POST.get('phone')
     valid = False
     try:
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
-        for customer in customers:
-            print customer.id
         if customers.__len__() == 0:
             valid = True
     except:
