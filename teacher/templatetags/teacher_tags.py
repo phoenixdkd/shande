@@ -84,11 +84,11 @@ def getPayCashTotalByTeacher(teacherid, startDate, endDate):
 @register.simple_tag()
 def getSpotCustomerCountByTeacher(spotStatus, teacherid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus).distinct()
+        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus)
         if spotStatus != '未开发':
             customers = customers.filter(spotTime__lte=endDate, spotTime__gte=startDate).distinct()
         else:
-            customers = customers.filter(create__lte=endDate, create_gte=startDate).distinct()
+            customers = customers.filter(first_trade__lte=endDate, first_trade__gte=startDate).distinct()
         return customers.__len__()
     except:
         traceback.print_exc()
