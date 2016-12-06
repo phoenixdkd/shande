@@ -147,11 +147,159 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">客户管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="editCustomerForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="esaletool" >来源</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="esaletool" name="saletool">
+                                    <option value="wx">微信</option>
+                                    <option value="qq">qq</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="eqqDiv" style="display:none">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="eqqid" >QQ号</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="eqqid" name="qqid"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="eqqname" >昵称</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="eqqname" name="qqname"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="esalesqq" >工具</label>
+                                <div class="col-md-5">
+                                    <select type="select" class="form-control" id="esalesqq" name="salesqq">
+                                        <option>请选择QQ来源</option>
+                                        {% if qqList %}
+                                            {% for qq in qqList %}
+                                                <option value="{{ qq.id }}">{{ qq.qqid }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option>无</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ewxDiv">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="ewxid" >微信号</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="ewxid" name="wxid"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="ewxname" >昵称</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="ewxname" name="wxname"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="esaleswx" >工具</label>
+                                <div class="col-md-5">
+                                    <select type="select" class="form-control" id="esaleswx" name="saleswx">
+                                        <option>请选择微信来源</option>
+                                        {% if wxList %}
+                                            {% for wx in wxList %}
+                                                <option value="{{ wx.id }}">{{ wx.wxid }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option>无</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $('#esaletool').on('change', function(){
+
+                                if($(this).val() == 'qq'){
+                                    $('#eqqDiv').show();
+                                    $('#ewxDiv').hide();
+
+                                }else {
+                                    $('#eqqDiv').hide();
+                                    $('#ewxDiv').show();
+                                }
+                                $('#editCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
+                            });
+                        </script>
+                        <hr/>
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="eid" name="id"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="ename">姓名</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="ename" name="name"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="ephone" >电话</label>
+                            <div class="col-md-5">
+                                    <input type="text" class="form-control" id="ephone" name="phone"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="estartup" >资金</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="estartup" name="startup"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="egem" >GEM</label>
+                            <div class="checkbox col-md-5">
+                                <label>
+                                    <input type="checkbox" name="gem" value="gem" id="egem"/>
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div id="managerPasswordDiv" style="display:none">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="emanagerPassword" >部门密钥</label>
+                                <div class="col-md-5">
+                                    <input type="password" class="form-control" id="emanagerPassword" name="managerPassword"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="editCustomerBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
     $(function () {
         formValidator();
         loadCustomerDiv();
         $('#addCustomerModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+        $('#editCustomerModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
     });
@@ -258,6 +406,90 @@
                 );
             }
         });
+        $('#editCustomerForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                ename: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                ephone: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]{11}$/i,
+                            message: '请输入正确的手机号码'
+                        },
+                        remote: {
+                            message: '该客户已存在',
+                            url: '{% url "customer:checkCustomerPhoneForEdit" %}',
+                        }
+                    }
+                },
+                estartup: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greaterThan: {
+                            value: 20000,
+                            inclusive: true,
+                            message: '&ge;20000'
+                        }
+                    }
+                },
+                ewxid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                ewxname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                eqqid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                eqqname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                }
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#editCustomerModal').modal('hide');
+                $.post(
+                    "{% url 'customer:addCustomer' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadCustomerDiv();
+                    },
+                    'json'
+                );
+            }
+        });
         $('#searchCustomerForm').bootstrapValidator({
             excluded: [':disabled'],
             message: 'This value is not valid',
@@ -278,29 +510,29 @@
         var customerStatus = $(obj).data("status");
         var loginUserTitle = "{{ request.user.userprofile.title.role_name }}";
         if(loginUserTitle == 'sale' && customerStatus == 0 ){
-            $('#managerPasswordDiv').show();
+            $('#emanagerPasswordDiv').show();
         }
-        $('#id').val($(obj).data("id"));
-        $('#name').val($(obj).data("name"));
-        $('#phone').val($(obj).data("phone"));
-        $('#startup').val($(obj).data("startup"));
-        $('#gem').val($(obj).data("gem"));
+        $('#eid').val($(obj).data("id"));
+        $('#ename').val($(obj).data("name"));
+        $('#ephone').val($(obj).data("phone"));
+        $('#estartup').val($(obj).data("startup"));
+        $('#egem').val($(obj).data("gem"));
         if($(obj).data('wxid') != ''){
-            $('#saletool').val('wx');
-            $('#wxid').val($(obj).data("wxid"));
-            $('#wxname').val($(obj).data("wxname"));
-            $('#saleswx').val($(obj).data("saleswx"));
-            $('#wxDiv').show();
-            $('#qqDiv').hide();
+            $('#esaletool').val('wx');
+            $('#ewxid').val($(obj).data("wxid"));
+            $('#ewxname').val($(obj).data("wxname"));
+            $('#esaleswx').val($(obj).data("saleswx"));
+            $('#ewxDiv').show();
+            $('#eqqDiv').hide();
         }else{
-            $('#saletool').val('qq');
-            $('#qqid').val($(obj).data("qqid"));
-            $('#qqname').val($(obj).data("qqname"));
-            $('#salesqq').val($(obj).data("salesqq"));
-            $('#wxDiv').hide();
-            $('#qqDiv').show();
+            $('#esaletool').val('qq');
+            $('#eqqid').val($(obj).data("qqid"));
+            $('#eqqname').val($(obj).data("qqname"));
+            $('#esalesqq').val($(obj).data("salesqq"));
+            $('#ewxDiv').hide();
+            $('#eqqDiv').show();
         }
-        $('#addCustomerModal').modal("show");
+        $('#editCustomerModal').modal("show");
     }
     function delCustomer(obj){
         if(confirm("删除确认")){

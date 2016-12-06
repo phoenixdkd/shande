@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^addCustomer$', views.addCustomer, name='addCustomer'),
     url(r'^delCustomer$', views.delCustomer, name='delCustomer'),
     url(r'^checkCustomerPhone$', views.checkCustomerPhone, name='checkCustomerPhone'),
+    url(r'^checkCustomerPhoneForEdit$', views.checkCustomerPhoneForEdit, name='checkCustomerPhoneForEdit'),
 
     #for teacher
     url(r'^customerHandle$', views.customerHandle, name='customerHandle'),

@@ -260,6 +260,21 @@ def checkCustomerPhone(request):
     }
     return HttpResponse(json.dumps(data))
 
+def checkCustomerPhoneForEdit(request):
+    customerPhone = request.POST.get('phone')
+    valid = False
+    try:
+        customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
+        if customers.__len__() <= 1:
+            valid = True
+    except:
+        traceback.print_exc()
+
+    data = {
+        'valid': valid,
+    }
+    return HttpResponse(json.dumps(data))
+
 @login_required()
 def customerHandle(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
