@@ -5,6 +5,7 @@ from django.db.models import Sum
 from teacher.models import *
 from customer.models import *
 from trade.models import *
+import traceback
 register = template.Library()
 
 #
@@ -83,10 +84,12 @@ def getPayCashTotalByTeacher(teacherid, startDate, endDate):
 @register.simple_tag()
 def getSpotCustomerCountByTeacher(spotStatus, teacherid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus, spotTime__lte=endDate,
-                                            spotTime__gte=startDate)
+        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus)
+        if spotStatus != '未开发':
+            customers = Customer.objects.filter(spotTime__lte=endDate, spotTime__gte=startDate)
         return customers.__len__()
     except:
+        traceback.print_exc()
         return 0
 
 @register.simple_tag()

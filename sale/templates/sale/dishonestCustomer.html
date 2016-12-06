@@ -1,6 +1,6 @@
 {% extends 'base_full_noheader.html' %}
 
-{% block title %}不诚信客户{% endblock %}
+{% block title %}不诚信客户汇总表{% endblock %}
 {% block content %}
     <br/>
     <h1>
@@ -9,42 +9,73 @@
             {% if request.user.userprofile.title.role_name == 'saleboss' %}
                 {{ request.user.userprofile.company }}公司不诚信客户
             {% else %}
-                不诚信客户
+                不诚信客户汇总表
             {% endif %}
         </div>
     </h1>
+    <form id="searchAnalyzeForm" method="POST" class="form-horizontal ">
+    <div class="form-group">
+        <label class="col-md-1 control-label">客户电话</label>
+        <div class="col-md-1 ">
+             <input type="text"  class="form-control" value="{{ phone }}" name="phone"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label">沟通方式</label>
+        <div class="col-md-1 ">
+             <input type="text"  class="form-control" value="{{ wxqq }}" name="wxqq"
+             title="起始时间"/>
+        </div>
+        <label class="col-md-1 control-label">标记时间</label>
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
+             title="起始时间"/>
+        </div>
+{#        <label class="col-md-1 control-label"></label>#}
+        <div class="col-md-2 ">
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate"
+             title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label"></label>
+        <div class="col-md-2">
+                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+        </div>
+    </div>
+</form>
+
     <hr/>
     <table class="table table-bordered">
     <thead class="bg-info">
         <th>序号</th>
-        <th>合作时间</th>
-        <th>开发专员</th>
-        <th>来源工具</th>
+        <th>标记时间</th>
+{#        <th>开发专员</th>#}
+{#        <th>来源工具</th>#}
         <th>客户姓名</th>
         <th>电话</th>
         <th>沟通方式</th>
-        <th>昵称</th>
-        <th>初始资金</th>
-        <th>GEM</th>
-        <th>情况说明</th>
+        <th>客户开发专员</th>
+        <th>客户管理专员</th>
+{#        <th>昵称</th>#}
+{#        <th>初始资金</th>#}
+{#        <th>GEM</th>#}
+        <th>原因</th>
     </thead>
     <tbody>
         {% for customerObj in customerPage %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ customerObj.create }}</td>
-            <td>
-                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">
-                    {{ customerObj.sales.saleId }} {{ customerObj.sales.binduser.userprofile.nick }}
-                </span>
-            </td>
-            <script type="text/javascript">
-                $('.tooltips').tooltip();
-            </script>
-            <td>
-                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid  }}{% endif %}
-                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid  }}{% endif %}
-            </td>
+            <td>{{ customerObj.modify }}</td>
+{#            <td>#}
+{#                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">#}
+{#                    {{ customerObj.sales.saleId }} {{ customerObj.sales.binduser.userprofile.nick }}#}
+{#                </span>#}
+{#            </td>#}
+{#            <script type="text/javascript">#}
+{#                $('.tooltips').tooltip();#}
+{#            </script>#}
+{#            <td>#}
+{#                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid  }}{% endif %}#}
+{#                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid  }}{% endif %}#}
+{#            </td>#}
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
             <td>
@@ -52,19 +83,33 @@
                 {% if customerObj.salesqq %} QQ: {{ customerObj.qqid  }}{% endif %}
             </td>
             <td>
-                {% if customerObj.saleswx %} {{ customerObj.wxname  }}{% endif %}
-                {% if customerObj.salesqq %} {{ customerObj.qqname  }}{% endif %}
+                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">
+                    {{ customerObj.sales.saleId }} {{ customerObj.sales.binduser.userprofile.nick }}
+                </span>
             </td>
-            <td>{{ customerObj.startup }}</td>
             <td>
-                {% if customerObj.gem %}
-                    <span class="glyphicon glyphicon-ok"></span>
-                {% else %}
-                    <span class="glyphicon glyphicon-remove"></span>
-                {% endif %}
+                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.teacher.company }}-部门:{{ customerObj.teacher.department }}">
+                    {{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}
+                </span>
             </td>
+{#            <td>#}
+{#                {% if customerObj.saleswx %} {{ customerObj.wxname  }}{% endif %}#}
+{#                {% if customerObj.salesqq %} {{ customerObj.qqname  }}{% endif %}#}
+{#            </td>#}
+{#            <td>{{ customerObj.startup }}</td>#}
+{#            <td>#}
+{#                {% if customerObj.gem %}#}
+{#                    <span class="glyphicon glyphicon-ok"></span>#}
+{#                {% else %}#}
+{#                    <span class="glyphicon glyphicon-remove"></span>#}
+{#                {% endif %}#}
+{#            </td>#}
             <td>{{ customerObj.message }}</td>
         </tr>
+        {% empty %}
+            <tr>
+                <td colspan="8">无不诚信客户信息</td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
@@ -73,7 +118,7 @@
     <li>
         {% if customerPage.has_previous %}
             <span aria-hidden="true">
-                <a href="?page={{ customerPage.previous_page_number }}">&laquo;</a>
+                <a href="?page={{ customerPage.previous_page_number }}&{{ requestArgs }}">&laquo;</a>
             </span>
         {% endif %}
     </li>
@@ -83,7 +128,7 @@
     <li>
         {% if customerPage.has_next %}
             <span aria-hidden="true">
-                <a href="?page={{ customerPage.next_page_number }}">&raquo;</a>
+                <a href="?page={{ customerPage.next_page_number }}&{{ requestArgs }}">&raquo;</a>
             </span>
         {% endif %}
     </li>

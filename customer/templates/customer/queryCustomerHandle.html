@@ -14,6 +14,7 @@
             <td>GEM</td>
             <td>最近买入</td>
             <td>现货评级</td>
+            <td>客户管理专员</td>
             <td>跟进状态</td>
 {#            <td>开发ID</td>#}
 {#            <td>来源微信</td>#}
@@ -121,6 +122,7 @@
                     {% endif %}
                 </select>
             </td>
+            <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
             <td>
                 {% if customerObj.status == 0 %}
                     <span class="label label-success">&gt;</span> 新客户待确认

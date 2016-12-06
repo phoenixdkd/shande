@@ -399,22 +399,30 @@ def dishonestCustomerReport(request):
 def dishonestCustomer(request):
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager']:
         return HttpResponseRedirect("/")
-    # endDate = request.POST.get('endDate', "")
-    # if endDate == '':
-    #     endDate = datetime.date.today()
-    # else:
-    #     endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
-    # startDate = request.POST.get('startDate', "")
-    # if startDate == "":
-    #     startDate = datetime.date.today() - datetime.timedelta(days=30)
-    # else:
-    #     startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
-    customers = Customer.objects.filter(status=98).order_by('sales__company')
+    endDate = request.POST.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    startDate = request.POST.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.date.today() - datetime.timedelta(days=30)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    customers = Customer.objects.filter(status=98, modify__lte=endDate, modify__gte=startDate).order_by('sales__company')
     if request.user.userprofile.title.role_name == 'saleboss':
         customers = customers.filter(sales__company=request.user.userprofile.company)
     if request.user.userprofile.title.role_name == 'salemanager':
         customers = customers.filter(sales__company=request.user.userprofile.company,
                                             sales__department=request.user.userprofile.department)
+    if request.user.userprofile.title.role_name == 'teacher':
+        customers = customers.filter(teacher__binduser=request.user)
+
+    if request.POST.get('phone', '') != '':
+        customers = customers.filter(phone__icontains=request.POST.get('phone'))
+    if request.POST.get('wxqq', '') != '':
+        customers = customers.filter( Q(wxid__icontains=request.POST.get('wxqq'))|
+                                                       Q(qqid__icontains=request.POST.get('wxqq')))
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -425,9 +433,12 @@ def dishonestCustomer(request):
     except (EmptyPage, InvalidPage):
         customerPage = p.page(p.num_pages)
     data = {
-        # "startDate": str(startDate),
-        # "endDate": str(endDate),
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+        "phone": request.POST.get('phone', ''),
+        "wxqq": request.POST.get('wxqq', ''),
         "customerPage": customerPage,
+        "requestArgs": getArgsExcludePage(request),
     }
     return render(request, 'sale/dishonestCustomer.html', data)
 

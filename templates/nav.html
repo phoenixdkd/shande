@@ -83,10 +83,10 @@
                         </ul>
                     </li>
                 {% endif %}
-                {% if user.userprofile.title.role_name in 'admin ops spotteacher spotmanager teacher' %}
+                {% if user.userprofile.title.role_name in 'admin ops spotteacher spotmanager' %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">现货客户管理菜单<span class="caret"></span></a>
+                           aria-haspopup="true" aria-expanded="false">现货客户管理<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'spot:spotCustomer' %}" target="_self">现货管理</a></li>
                             {% if user.userprofile.title.role_name in 'admin ops spotmanager' %}

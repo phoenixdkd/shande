@@ -291,7 +291,8 @@ def queryCustomerHandle(request):
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
         department = request.user.userprofile.department
-        customers = customers.filter(teacher__company=company, teacher__department=department)
+        group = request.user.userprofile.group
+        customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
         customers = customers.filter(~Q(status=99))
     elif request.user.userprofile.title.role_name in ['teacherboss']:
         company = request.user.userprofile.company
