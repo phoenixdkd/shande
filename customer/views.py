@@ -350,8 +350,8 @@ def queryCustomerHandle(request):
     if (request.GET.get('stockid', '') != ''):
         customers = customers.filter(trade__stock__stockid=request.GET.get('stockid'), trade__status=0)
     if (request.GET.get('stockname', '') != ''):
-        customers = customers.filter(Q(trade__stock__stockname__icontains=request.GET.get('stockiname'))
-                                     |Q(trade__stock__stockid__icontains=request.GET.get('stockiname')))
+        customers = customers.filter(Q(trade__stock__stockname__icontains=request.GET.get('stockname'))
+                                     |Q(trade__stock__stockid__icontains=request.GET.get('stockname')))
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
