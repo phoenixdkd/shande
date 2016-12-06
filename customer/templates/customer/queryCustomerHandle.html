@@ -125,7 +125,7 @@
             <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
             <td>
                 {% if customerObj.status == 0 %}
-                    <span class="label label-success">&gt;</span> 新客户待确认
+                    <span class="label label-success">&gt;</span> 待客户加客户专员
                 {% elif customerObj.status == 10 %}
                     <span class="label label-danger">&gt;</span> 待跟进
                 {% elif customerObj.status == 20 %}

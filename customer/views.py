@@ -676,10 +676,10 @@ def analyzeReport(request):
     stocks = stocks.filter(stockid__icontains=stockid, trade__create__lte=endDate, trade__create__gte=startDate,
                            trade__status=0).distinct()
     if request.user.userprofile.title.role_name == 'teachermanager':
-        stocks = stocks.filter(trade__customer__teacher__company=user.userprofile.company,
-                               trade__customer__teacher__department=user.userprofile.department).distinct()
+        stocks = stocks.filter(trade__customer__teacher__company=request.user.userprofile.company,
+                               trade__customer__teacher__department=request.user.userprofile.department).distinct()
     elif request.user.userprofile.title.role_name == 'teacherboss':
-        stocks = stocks.filter(trade__customer__teacher__company=user.userprofile.company).distinct()
+        stocks = stocks.filter(trade__customer__teacher__company=request.user.userprofile.company).distinct()
     elif request.user.userprofile.title.role_name == 'teacher':
         stocks = stocks.filter(trade__customer__teacher__binduser=request.user).distinct()
     p = Paginator(stocks, 20)

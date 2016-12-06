@@ -43,7 +43,7 @@ def getTeacherDepartmentByUserId(uid):
 @register.simple_tag()
 def getCustomerCountByTeacher(teacherid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(teacher_id=teacherid, trade__create__lte=endDate, trade__create__gte=startDate)
+        customers = Customer.objects.filter(teacher_id=teacherid, trade__create__lte=endDate, trade__create__gte=startDate).distinct()
         return customers.__len__()
     except:
         return 0
@@ -84,9 +84,11 @@ def getPayCashTotalByTeacher(teacherid, startDate, endDate):
 @register.simple_tag()
 def getSpotCustomerCountByTeacher(spotStatus, teacherid, startDate, endDate):
     try:
-        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus)
+        customers = Customer.objects.filter(teacher_id=teacherid, spotStatus=spotStatus).distinct()
         if spotStatus != '未开发':
-            customers = Customer.objects.filter(spotTime__lte=endDate, spotTime__gte=startDate)
+            customers = customers.filter(spotTime__lte=endDate, spotTime__gte=startDate).distinct()
+        else:
+            customers = customers.filter(create__lte=endDate, create_gte=startDate).distinct()
         return customers.__len__()
     except:
         traceback.print_exc()
