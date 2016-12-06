@@ -397,7 +397,7 @@ def dishonestCustomerReport(request):
 
 @login_required()
 def dishonestCustomer(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager']:
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager', 'teacher']:
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
     if endDate == '':
