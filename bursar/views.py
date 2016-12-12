@@ -127,7 +127,7 @@ def delBursar(request):
 
 @login_required()
 def payReport(request):
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher', 'teachermanager', 'saleboss']):
         return HttpResponseRedirect("/")
     trades = Trade.objects.filter(paytime__isnull=False).order_by('-paytime')
     endDate = request.POST.get('endDate', "")
@@ -151,7 +151,11 @@ def payReport(request):
         trades = trades.filter(customer__teacher__binduser=request.user)
 
     if request.user.userprofile.title.role_name == 'teachermanager':
-        trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
+        trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+                               customer__teacher__department=request.user.userprofile.department,
+                               customer__teacher__group=request.user.userprofile.group)
+    if request.user.userprofile.title.role_name == 'saleboss':
+        trades = trades.filter(customer__sales__company=request.user.userprofile.company)
     tradePayCashSum = trades.aggregate(Sum('paycash'))
     if tradePayCashSum['paycash__sum']:
         payCashTotal = tradePayCashSum['paycash__sum']
