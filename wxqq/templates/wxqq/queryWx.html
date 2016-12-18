@@ -94,6 +94,8 @@
                     <button type="button" class="btn btn-sm btn-danger" onclick="delWx(this)"
                         data-page="{{ wxPage.number }}"
                         data-id="{{ wxObj.id }}">标记失效</button>
+                {% endif %}
+                {% if  request.user.userprofile.title.role_name not in 'salemanager' and wxObj.delete %}
                     <button type="button" class="btn btn-sm btn-danger" onclick="resetWx(this)"
                         data-page="{{ wxPage.number }}"
                         data-id="{{ wxObj.id }}">恢复使用</button>
