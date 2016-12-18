@@ -20,6 +20,15 @@ def getVipCountByCompany( company, startDate, endDate ):
         return 0
 
 @register.simple_tag()
+def getCrudeCountByCompany( company, startDate, endDate ):
+    try:
+        companys = Customer.objects.filter(status=40, crude=True, sales__company=company, first_trade__lte=endDate, first_trade__gte=startDate)
+        return companys.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0
+
+@register.simple_tag()
 def getTotalBuyCashByCompany( company, startDate, endDate ):
     try:
         trades = Trade.objects.filter(customer__status=40, customer__first_trade__lte=endDate, customer__first_trade__gte=startDate,

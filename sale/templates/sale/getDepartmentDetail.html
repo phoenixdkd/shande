@@ -21,7 +21,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ group.group }}</td>
             <td>{{ group.dcount }}</td>
-            <td>{% getVipCountByGroup company department group.group %}</td>
+            <td>{% getCrudeCountByGroup company department group.group %}</td>
             <td>{% getTotalBuyCashByGroup  company department group.group %}</td>
             <td>{% getWxFriendDeltaByGroup  company department group.group %}</td>
             <td>{% getWxFriendTotalByGroup  company department group.group %}</td>

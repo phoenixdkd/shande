@@ -9,7 +9,7 @@
     </thead>
     <tbody>
     {% for customer in customers %}
-        <tr>
+        <tr style="background-color:{% getCrudeColorByCustomerId customer.id %}">
             <td>{{ forloop.counter }}</td>
             <td>{{ customer.first_trade.date }}</td>
             <td>{{ customer.name }}</td>

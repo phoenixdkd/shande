@@ -22,7 +22,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ sale.sale }} {% getNickBySaleId sale.id %}</td>
             <td>{{ sale.dcount }}</td>
-            <td>{% getVipCountBySale sale.id startDate endDate %}</td>
+            <td>{% getCrudeCountBySale sale.id startDate endDate %}</td>
             <td>{% getTotalBuyCashBySale sale.id startDate endDate %}</td>
             <td>{% getWxFriendDeltaBySale sale.id startDate endDate %}</td>
 {#            <td>{% getWxFriendTotalBySale sale.id %}</td>#}

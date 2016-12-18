@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^queryCustomer$', views.queryCustomer, name='queryCustomer'),
     url(r'^addCustomer$', views.addCustomer, name='addCustomer'),
     url(r'^delCustomer$', views.delCustomer, name='delCustomer'),
+    url(r'^delCustomerBySale$', views.delCustomerBySale, name='delCustomerBySale'),
     url(r'^checkCustomerPhone$', views.checkCustomerPhone, name='checkCustomerPhone'),
     url(r'^checkCustomerPhoneForEdit$', views.checkCustomerPhoneForEdit, name='checkCustomerPhoneForEdit'),
 

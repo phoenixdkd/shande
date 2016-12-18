@@ -22,7 +22,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ department.department }}</td>
             <td>{{ department.dcount }}</td>
-            <td>{% getVipCountByDepartment  company department.department startDate endDate%}</td>
+            <td>{% getCrudeCountByDepartment  company department.department startDate endDate%}</td>
             <td>{% getTotalBuyCashByDepartment  company department.department startDate endDate %}</td>
             <td>{% getWxFriendDeltaByDepartment  company department.department startDate endDate %}</td>
 {#            <td>{% getWxFriendTotalByDepartment  company department.department %}</td>#}

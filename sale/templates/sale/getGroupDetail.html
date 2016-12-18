@@ -21,7 +21,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ sale.sale }}</td>
             <td>{{ sale.dcount }}</td>
-            <td>{% getVipCountBySale sale.id %}</td>
+            <td>{% getCrudeCountBySale sale.id %}</td>
             <td>{% getTotalBuyCashBySale sale.id %}</td>
             <td>{% getWxFriendDeltaBySale sale.id %}</td>
             <td>{% getWxFriendTotalBySale sale.id %}</td>

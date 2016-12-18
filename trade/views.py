@@ -59,6 +59,9 @@ def addTrade(request):
     data = {}
     firstTrade = False
     secondTrade = False
+    buyprice = float(request.POST.get('buyprice'))
+    buycount = int(request.POST.get('buycount'))
+    buycash = buyprice * buycount
     try:
         if float(request.POST.get('buycount')) == 0:
             raise Exception("buycountzero")
@@ -67,6 +70,8 @@ def addTrade(request):
         existTrade = Trade.objects.filter(customer=customer)
         if existTrade.__len__() == 0:
             firstTrade = True
+            if buycash < 20000:
+                raise Exception("buycashlow")
         elif existTrade.__len__() == 1:
             secondTrade = True
 
@@ -80,20 +85,20 @@ def addTrade(request):
         newTrade.status = 0
         newTrade.stockid = request.POST.get('stockid')
         newTrade.stockname = request.POST.get('stockname')
-        buyprice = float(request.POST.get('buyprice'))
-        buycount = int(request.POST.get('buycount'))
+
         newTrade.buyprice = buyprice
         newTrade.buycount = buycount
-        buycash = buyprice * buycount
+
         newTrade.buycash = buycash
         customer.modify = timezone.now()
         # 判断是否VIP和10W+
         if buycash >= 100000:
             customer.vip = True
-            customer.crude = True
+
 
         #如果是首笔交易标记客户状态为有效客户
         if firstTrade:
+
             customer.status = 40
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
@@ -110,6 +115,9 @@ def addTrade(request):
             userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
             userCommitHis.total = customer.sales.binduser.userprofile.commit
             userCommitHis.save()
+            if buycash >= 100000:
+                customer.crude = True
+
         elif secondTrade:
             customer.vip = True
 
@@ -135,6 +143,8 @@ def addTrade(request):
             data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         elif e.__str__() == 'buycountzero':
             data['msg'] = "操作失败, 购买数量不能为零"
+        elif e.__str__() == 'buycashlow':
+            data['msg'] = "客户买入资金不足，无法提交"
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"

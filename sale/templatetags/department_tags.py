@@ -24,6 +24,18 @@ def getVipCountByDepartment( company, department, startDate, endDate ):
         return 0
 
 @register.simple_tag()
+def getCrudeCountByDepartment( company, department, startDate, endDate ):
+    try:
+        departments = Customer.objects.filter(status=40, crude=True, first_trade__gte=startDate,
+                                              first_trade__lte=endDate,
+                                              sales__company=company, sales__department=department)
+        return departments.__len__()
+    except Exception as e:
+        traceback.print_exc()
+        print(e.__str__())
+        return 0
+
+@register.simple_tag()
 def getTotalBuyCashByDepartment( company, department, startDate, endDate ):
     try:
         trades = Trade.objects.filter(customer__status=40, customer__first_trade__lte=endDate, customer__first_trade__gte=startDate,

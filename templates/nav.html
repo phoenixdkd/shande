@@ -1,3 +1,4 @@
+{% load sale_tags %}
 <header class="navbar navbar-inverse navbar-static-top" role="banner" style="margin-bottom: 0">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -54,7 +55,7 @@
                             {% if user.userprofile.title.role_name == 'salemanager' %}
                                 <li class=""><a href="{% url 'sale:saleKpiReportForManager' %}" target="_self">有效客户增长趋势</a></li>
                             {% endif %}
-                            {% if user.userprofile.title.role_name in 'saleboss admin ops' %}
+                            {% if user.userprofile.title.role_name in ' admin ops' or user.userprofile.title.role_name == 'saleboss' %}
                                 <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
                                 <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReportSerial' %}" target="_self">有效客户增长趋势</a></li>
@@ -72,7 +73,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">客户管理专员菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            {% if user.userprofile.title.role_name in 'admin ops teacher' %}
+                            {% if user.userprofile.title.role_name in 'admin ops teacher teachermanager teacherboss' %}
                             <li class=""><a href="{% url 'customer:customerHandle' %}" target="_self">交易管理</a></li>
                             {% endif %}
                             {% if user.userprofile.title.role_name in 'admin ops teacherboss teachermanager' %}
@@ -122,73 +123,93 @@
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-haspopup="true" aria-expanded="false">用户菜单 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        {% if request.user.is_authenticated %}
-                            <li class=""><a href="{% url 'super:userInfo' %}" target="_self">{{ request.user.userprofile.nick }}</a></li>
-                            <li class=""><a href="{% url 'super:logout' %}" target="_self">注销</a></li>
-                        {% else %}
-                            <li class=""><a href="{% url 'super:login' %}" target="_self">登陆</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
-             </ul>
+                    {% if request.user.is_authenticated %}
+                        <li class=""><a href="{% url 'super:logout' %}" target="_self">退出</a></li>
+                    {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                    {% if request.user.is_authenticated %}
+                        <li class="">
+                            <a href="{% url 'super:userInfo' %}" target="_self">
+                            {% if request.user.userprofile.title.role_name == 'sale' %}
+                                {% getSaleIdByUserId request.user.id %}
+
+                                {{ request.user.userprofile.nick }}
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endif %}
+            </ul>
+
+{#            <ul class="nav navbar-nav navbar-right">#}
+{#                <li class="dropdown">#}
+{#                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"#}
+{#                               aria-haspopup="true" aria-expanded="false">用户菜单 <span class="caret"></span></a>#}
+{#                    <ul class="dropdown-menu">#}
+{#                        {% if request.user.is_authenticated %}#}
+{#                            <li class=""><a href="{% url 'super:userInfo' %}" target="_self">{{ request.user.userprofile.nick }}</a></li>#}
+{#                            <li class=""><a href="{% url 'super:logout' %}" target="_self">注销</a></li>#}
+{#                        {% else %}#}
+{#                            <li class=""><a href="{% url 'super:login' %}" target="_self">登陆</a></li>#}
+{#                        {% endif %}#}
+{#                    </ul>#}
+{#                </li>#}
+{#             </ul>#}
+
         </div><!-- /.navbar-collapse -->
     </div>
 </header>
 {% load sale_tags %}
 {% load teacher_tags %}
-{% if request.user.is_authenticated  %}
-<div id="leftSidebar" class="left-sidebar" >
-<button id="leftSidebarToggle" style="width: 100%"><span class="glyphicon glyphicon-align-justify"></span></button>
-<div id="leftSidebarTable">
-<table class="table table-bordered"  style="margin-bottom: 0">
-    <tr>
-        <td>用户名</td>
-        <td>{{ request.user.username }}</td>
-    </tr>
-    <tr>
-        <td>职位</td>
-        <td>{{ request.user.userprofile.title.role_desc }}</td>
-    </tr>
-    {% if request.user.userprofile.title.role_name == 'sale' %}
-        <tr>
-            <td>ID</td>
-            <td>{% getSaleIdByUserId request.user.id %}</td>
-        </tr>
-        <tr>
-            <td>公司</td>
-            <td>{% getSaleCompanyByUserId request.user.id %}</td>
-        </tr>
-        <tr>
-            <td>部门</td>
-            <td>{% getSaleDepartmentByUserId request.user.id %}</td>
-        </tr>
-        <tr>
-            <td>退单率</td>
-            <td>{% getChargebackByUserId request.user.id %}</td>
-        </tr>
-    {% endif %}
-    {% if request.user.userprofile.title.role_name == 'teacher' %}
-        <tr>
-            <td>ID</td>
-            <td>{% getTeacherIdByUserId request.user.id %}</td>
-        </tr>
-        <tr>
-            <td>公司</td>
-            <td>{% getTeacherCompanyByUserId request.user.id %}</td>
-        </tr>
-        <tr>
-            <td>部门</td>
-            <td>{% getTeacherDepartmentByUserId request.user.id %}</td>
-        </tr>
-    {% endif %}
-</table>
-</div>
-</div>
-{% endif %}
+{#{% if request.user.is_authenticated  %}#}
+{#<div id="leftSidebar" class="left-sidebar" >#}
+{#<button id="leftSidebarToggle" style="width: 100%"><span class="glyphicon glyphicon-align-justify"></span></button>#}
+{#<div id="leftSidebarTable">#}
+{#<table class="table table-bordered"  style="margin-bottom: 0">#}
+{#    <tr>#}
+{#        <td>用户名</td>#}
+{#        <td>{{ request.user.username }}</td>#}
+{#    </tr>#}
+{#    <tr>#}
+{#        <td>职位</td>#}
+{#        <td>{{ request.user.userprofile.title.role_desc }}</td>#}
+{#    </tr>#}
+{#    {% if request.user.userprofile.title.role_name == 'sale' %}#}
+{#        <tr>#}
+{#            <td>ID</td>#}
+{#            <td>{% getSaleIdByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>公司</td>#}
+{#            <td>{% getSaleCompanyByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>部门</td>#}
+{#            <td>{% getSaleDepartmentByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>退单率</td>#}
+{#            <td>{% getChargebackByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#    {% endif %}#}
+{#    {% if request.user.userprofile.title.role_name == 'teacher' %}#}
+{#        <tr>#}
+{#            <td>ID</td>#}
+{#            <td>{% getTeacherIdByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>公司</td>#}
+{#            <td>{% getTeacherCompanyByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#        <tr>#}
+{#            <td>部门</td>#}
+{#            <td>{% getTeacherDepartmentByUserId request.user.id %}</td>#}
+{#        </tr>#}
+{#    {% endif %}#}
+{#</table>#}
+{#</div>#}
+{#</div>#}
+{#{% endif %}#}
 <script type="text/javascript">
     $(function(){
         $('#leftSidebarToggle').click(function(){

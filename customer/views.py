@@ -146,12 +146,13 @@ def addCustomer(request):
     try:
         if request.POST['id'] == "":
             sale = Sale.objects.get(binduser=request.user)
-            newCustomer = Customer.objects.create(sales=sale, create=timezone.now().date(), modify=timezone.now())
+            newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
             newCustomer.teacher = sale.bindteacher
             newCustomer.bursar = sale.bindteacher.bindbursar
-            newCustomer.create = timezone.now().date()
+            newCustomer.create = timezone.now()
         else:
             newCustomer = Customer.objects.get(id=int(request.POST['id']))
+            newCustomer.create = timezone.now()
             if request.user.userprofile.title.role_name == 'sale' and newCustomer.status == 0:
                 sale = Sale.objects.get(binduser=request.user)
                 saleManagerPwList = SaleManagerPassword.objects.filter(company=sale.company, department=sale.department)
@@ -245,6 +246,40 @@ def delCustomer(request):
     return HttpResponse(json.dumps(data))
 
 @login_required()
+def delCustomerBySale(request):
+    data = {}
+    try:
+        tmpCustomer = Customer.objects.get(id=request.POST['id'])
+        sale = Sale.objects.get(binduser=request.user)
+        saleManagerPwList = SaleManagerPassword.objects.filter(company=sale.company, department=sale.department)
+        match = False
+        for pw in saleManagerPwList:
+            if pw.password == request.POST.get('emanagerPassword', '错误的密钥'):
+                match = True
+                break
+        if (not match):
+            raise Exception("manager password incorrect")
+        tmpCustomer.delete()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        traceback.print_exc()
+        if str(e.__str__()).__contains__('saleId'):
+            data['msg'] = "操作失败,开发ID已存在"
+        elif str(e.__str__()).__contains__('binduser'):
+            data['msg'] = "操作失败,用户已绑定开发，请刷新页面重试"
+        elif str(e.__str__()).__contains__('bursar'):
+            data['msg'] = "操作失败,无绑定财务信息"
+        elif str(e.__str__()).__contains__('manager password'):
+            data['msg'] = "部门密钥错误"
+        elif str(e.__str__()).__contains__('SaleManagerPassword'):
+            data['msg'] = "部门密钥错误"
+        else:
+            data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
 def checkCustomerPhone(request):
     customerPhone = request.POST.get('phone')
     valid = False
@@ -286,7 +321,7 @@ def customerHandle(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=30)
+        startDate = datetime.date.today()
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
@@ -299,7 +334,7 @@ def customerHandle(request):
 
 @login_required()
 def queryCustomerHandle(request):
-    customers = Customer.objects.all().order_by( '-create','status')
+    customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -326,6 +361,8 @@ def queryCustomerHandle(request):
     # customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
     # customers = customers.filter(sales__department__icontains=request.GET.get('department', ''))
     customers = customers.filter(sales__saleId__icontains=request.GET.get('saleid', ''))
+    if request.GET.get('teacherid', '') != '':
+        customers = customers.filter(teacher__teacherId__icontains=request.GET.get('teacherid', ''))
     if request.GET.get('saleswx', '') != '':
         customers = customers.filter(saleswx__wxid__icontains=request.GET.get('saleswx', ''))
     if request.GET.get('salesqq', '') != '':
@@ -365,6 +402,14 @@ def queryCustomerHandle(request):
     if (request.GET.get('stockname', '') != ''):
         customers = customers.filter(Q(trade__stock__stockname__icontains=request.GET.get('stockname'))
                                      |Q(trade__stock__stockid__icontains=request.GET.get('stockname')))
+    if request.GET.get('crude', '') == '1':
+        customers = customers.filter(trade__buycash__gte=100000)
+        tmpCustomers = customers
+        if request.GET.get('crude') :
+            for customer in customers:
+                if customer.getLatestTradeBuycash() == '' or customer.getLatestTradeBuycash() < 100000:
+                    tmpCustomers = tmpCustomers.exclude(id=customer.id)
+        customers = tmpCustomers
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))

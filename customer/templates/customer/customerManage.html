@@ -272,7 +272,7 @@
                         </div>
 
 
-                        <div id="managerPasswordDiv" style="display:none">
+                        <div id="emanagerPasswordDiv" style="display:none">
                             <div class="form-group" >
                                 <label class="col-md-offset-2 col-md-2 control-label" for="emanagerPassword" >部门密钥</label>
                                 <div class="col-md-5">
@@ -281,8 +281,13 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+
                             <div class="form-group">
                                 <div class="col-md-5 col-md-offset-3">
+                                    <lable id="delCustomerBtn" style="display: none" class="btn btn-sm btn-danger"
+                                    onclick="delCustomerBySale(this)">删除</lable>
+                                </div>
+                                <div class="col-md-1">
                                     <button id="editCustomerBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
                                 </div>
                             </div>
@@ -305,6 +310,8 @@
     });
     function resetFormValidator(){
         $('#managerPasswordDiv').hide();
+        $('#emanagerPasswordDiv').hide();
+        $('#delCustomerBtn').hide();
         var customerFormSelector = $('#addCustomerForm');
         customerFormSelector.find(':input').val("");
         customerFormSelector.data('bootstrapValidator').destroy();
@@ -508,10 +515,24 @@
     }
     function editCustomer(obj){
         var customerStatus = $(obj).data("status");
+
         var loginUserTitle = "{{ request.user.userprofile.title.role_name }}";
-        if(loginUserTitle == 'sale' && customerStatus == 0 ){
-            $('#emanagerPasswordDiv').show();
+        if(loginUserTitle == 'sale'){
+            if(customerStatus == '0' ) {
+                console.log(customerStatus);
+                $('#emanagerPasswordDiv').val("");
+                $('#emanagerPasswordDiv').show();
+            }
+
+            if(customerStatus == '10' || customerStatus == '30' ){
+                console.log(customerStatus);
+                $('#emanagerPasswordDiv').val("");
+                $('#emanagerPasswordDiv').show();
+                $('#delCustomerBtn').data("customerId", $(obj).data("id"));
+                $('#delCustomerBtn').show();
+            }
         }
+
         $('#eid').val($(obj).data("id"));
         $('#ename').val($(obj).data("name"));
         $('#ephone').val($(obj).data("phone"));
@@ -554,6 +575,22 @@
             $.post(
                 "{% url 'customer:delCustomer' %}",
                 {id:id, real:true},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadCustomerDiv();
+                },
+                'json'
+            );
+        }
+    }
+    function delCustomerBySale(obj){
+        if(confirm("删除确认")){
+            $('#editCustomerModal').modal("hide");
+            var id = $(obj).data("customerId");
+            var emanagerPassword = $('#emanagerPassword').val();
+            $.post(
+                "{% url 'customer:delCustomerBySale' %}",
+                {id:id, emanagerPassword:emanagerPassword},
                 function(result) {
                     showMsgModal(result.msg, result.msgLevel);
                     loadCustomerDiv();

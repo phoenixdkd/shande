@@ -1,6 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
-
+import traceback
 from django.db import models
 from sale.models import *
 from teacher.models import *
@@ -52,3 +52,17 @@ class Customer(models.Model):
     first_trade = models.DateTimeField('首单时间', null=True)
     create = models.DateTimeField('创建时间')
     modify = models.DateTimeField('更新时间')
+
+    def getLatestTradeDate( self ):
+        try:
+            latestTrade = self.trade_set.latest('create')
+            return  latestTrade.create
+        except Exception as e:
+            return ""
+
+    def getLatestTradeBuycash( self ):
+        try:
+            latestTrade = self.trade_set.latest('create')
+            return latestTrade.buycash
+        except Exception as e:
+            return ""

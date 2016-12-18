@@ -9,7 +9,16 @@ from stock.models import *
 # Create your models here.
 class Trade(models.Model):
     customer = models.ForeignKey(Customer)
-    # 0 未出货(新录入); 1 退回; 10 亏损; 11 已补亏;  20 盈利 提交财务收款; 30 已收款;
+    # 0 未出货(新录入); 1 退回; 10 下次补亏; 09 已补亏;  20 盈利 提交财务收款; 30 已收款;
+    # 11 非正常盈收｜客户自抛
+    # 12 非正常盈收｜客户拉黑
+    # 13 非正常盈收｜止损做现货
+    # 14 非正常盈收｜超出合作周期
+    # 15 非正常盈收｜业务员虚假承诺
+    # 16 非正常盈收｜少量盈利转做现货
+    # 17 非正常盈收｜少量盈利下次结算
+    # 18 非正常盈收｜客户亏损不再合作
+    # 19 非正常盈收｜客户急需资金提前出货
 
     status = models.IntegerField('交易状态', default=0)
     stock = models.ForeignKey(Stock, null=True, blank=True, on_delete=models.SET_NULL)

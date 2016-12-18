@@ -57,6 +57,19 @@ def getTotalBuycashByCustomerId( customerId ):
         print(e.__str__())
         return 0
 
+@register.simple_tag()
+def getCrudeColorByCustomerId( customerId ):
+    try:
+        customer = Customer.objects.get(id=customerId)
+        if customer.crude:
+            return "red"
+        else:
+            return "default"
+    except Exception as e:
+        print(e.__str__())
+        return "red"
+
+
 @register.filter(name="maskphone")
 @stringfilter
 def maskphone(phone):

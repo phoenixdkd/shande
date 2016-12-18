@@ -54,7 +54,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ company.company }}</td>
             <td>{{ company.dcount }}</td>
-            <td>{% getVipCountByCompany company.company startDate endDate %}</td>
+            <td>{% getCrudeCountByCompany company.company startDate endDate %}</td>
             <td>{% getTotalBuyCashByCompany company.company startDate endDate %}</td>
             <td>{% getWxFriendDeltaByCompany company.company startDate endDate %}</td>
 {#            <td>{% getWxFriendTotalByCompany company.company %}</td>#}

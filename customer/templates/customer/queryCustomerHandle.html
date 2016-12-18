@@ -4,13 +4,13 @@
         <tr>
 {#            <td>ID</td>#}
             <td>序号</td>
-            <td>创建时间</td>
+            <td>时间</td>
 {#            <td>来源工具</td>#}
             <td>客户姓名</td>
             <td>电话</td>
             <td>沟通方式</td>
             <td>昵称</td>
-            <td>初始资金</td>
+            <td>买入资金</td>
             <td>GEM</td>
             <td>最近买入</td>
             <td>现货评级</td>
@@ -47,7 +47,10 @@
         <tr>
 {#            <td>{{ customerObj.id }}</td>#}
             <td>{{ forloop.counter }}</td>
-            <td>{{ customerObj.create.date }}</td>
+            <td>
+                提交时间:{{ customerObj.create }}<br>
+                最近合作:{{ customerObj.getLatestTradeDate }}
+            </td>
 {#            <td>#}
 {#                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid }}{% endif %}#}
 {#                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid }}{% endif %}#}
@@ -80,7 +83,7 @@
                     {% if customerObj.salesqq %} {{ customerObj.qqname | mask8 }}{% endif %}
                 {% endif %}
             </td>
-            <td>{{ customerObj.startup }}</td>
+            <td>{{ customerObj.getLatestTradeBuycash }}</td>
             <td>
                 {% if customerObj.gem %}
                     <span class="glyphicon glyphicon-ok"></span>

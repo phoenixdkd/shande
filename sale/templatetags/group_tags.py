@@ -20,6 +20,15 @@ def getVipCountByGroup( company, department, group ):
         return 0
 
 @register.simple_tag()
+def getCrudeCountByGroup( company, department, group ):
+    try:
+        groups = Customer.objects.filter(status=40, crude=True, sales__company=company, sales__department=department, sales__group=group)
+        return groups.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0
+
+@register.simple_tag()
 def getTotalBuyCashByGroup( company, department, group ):
     try:
         trades = Trade.objects.filter(customer__status=40, customer__sales__company=company, customer__sales__department=department,

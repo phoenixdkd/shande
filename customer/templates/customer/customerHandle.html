@@ -39,7 +39,7 @@
                                 <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="message">退回原因</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="message" name="message">
-                                        <option value="客户不回消息">客户不回消息</option>
+                                        <option value="不发交割单">不发交割单</option>
                                         <option value="给票不买">给票不买</option>
                                         <option value="分成太高">分成太高</option>
                                         <option value="要看票">要看票</option>
@@ -81,7 +81,7 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="validCustomerChange">状态变更</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="validCustomerChange" name="validCustomerChange">
-                                    <option value="100000">标记10W+客户</option>
+{#                                    <option value="100000">标记10W+客户</option>#}
 {#                                    <option value="99">删除客户</option>#}
                                     <option value="98">标记不诚信客户</option>
 {#                                    <option value="30">退回</option>#}
@@ -128,9 +128,9 @@
                                 <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="redoMessage">退回理由</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="redoMessage" name="redoMessage">
-                                        <option value="客户不回消息">客户不回消息</option>
+                                        <option value="不发交割单">不发交割单</option>
                                         <option value="给票不买">给票不买</option>
-{#                                        <option value="分成太高">分成太高</option>#}
+                                        <option value="分成太高">分成太高</option>
                                         <option value="要看票">要看票</option>
                                         <option value="今天不买，下次再买">今天不买，下次再买</option>
                                         <option value="不发截图">不发截图</option>
@@ -183,7 +183,7 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="newCustomerChange">状态变更</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="newCustomerChange" name="validCustomerChange">
-                                    <option value="100000">标记10W+客户</option>
+{#                                    <option value="100000">标记10W+客户</option>#}
 {#                                    <option value="99">删除客户</option>#}
                                     <option value="98">标记不诚信客户</option>
                                     <option value="30">退回</option>
@@ -230,7 +230,7 @@
                                 <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="newRedoMessage">退回理由</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="newRedoMessage" name="redoMessage">
-                                        <option value="客户不回消息">客户不回消息</option>
+                                        <option value="不发交割单">不发交割单</option>
                                         <option value="给票不买">给票不买</option>
                                         <option value="分成太高">分成太高</option>
                                         <option value="要看票">要看票</option>
@@ -611,11 +611,14 @@
             </div>
             <label class="col-md-1 control-label" style="width:50px">10W+</label>
             <div class="col-md-1 ">
-                 <select type="select" class="form-control" id="vip" name="vip">
-                     <option></option>
-                     <option value="1">是</option>
+                 <select type="select" class="form-control" id="crude" name="crude">
                      <option value="0">否</option>
+                     <option value="1">是</option>
                  </select>
+            </div>
+            <label class="col-md-1 control-label">客户管理专员</label>
+            <div class="col-md-1 ">
+                 <input type="text" class="form-control" value="{{ teacherid }}" name="teacherid"/>
             </div>
 {#            <label class="col-md-1 control-label" >客户状态</label>#}
 {#            <div class="col-md-1 ">#}

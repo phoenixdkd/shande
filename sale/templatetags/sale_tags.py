@@ -21,6 +21,7 @@ register = template.Library()
 def getSaleIdByUserId(uid):
     try:
         sale = Sale.objects.get(binduser__id=uid)
+        print sale.saleId
         return sale.saleId
     except:
         return "未找到绑定的开发ID"
@@ -58,6 +59,16 @@ def getChargebackByUserId(uid):
 def getVipCountBySale(saleid, startDate, endDate):
     try:
         customers = Customer.objects.filter(status=40, vip=True, sales__id=saleid,
+                                            first_trade__lte = endDate, first_trade__gte = startDate)
+        return customers.__len__()
+    except Exception as e:
+        print(e.__str__())
+        return 0
+
+@register.simple_tag()
+def getCrudeCountBySale(saleid, startDate, endDate):
+    try:
+        customers = Customer.objects.filter(status=40, crude=True, sales__id=saleid,
                                             first_trade__lte = endDate, first_trade__gte = startDate)
         return customers.__len__()
     except Exception as e:
