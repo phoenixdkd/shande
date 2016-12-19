@@ -66,3 +66,9 @@ class Customer(models.Model):
             return latestTrade.buycash
         except Exception as e:
             return ""
+
+    def getTradeCount( self ):
+        try:
+            return self.trade_set.count()
+        except Exception as e:
+            return 0

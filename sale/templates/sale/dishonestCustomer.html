@@ -58,10 +58,13 @@
 {#        <th>初始资金</th>#}
 {#        <th>GEM</th>#}
         <th>原因</th>
+        {% if request.user.userprofile.title.role_name == 'teachermanager' or request.user.userprofile.title.role_name == 'teacherboss' or request.user.userprofile.title.role_name in 'admin ops' %}
+            <th>操作</th>
+        {% endif %}
     </thead>
     <tbody>
         {% for customerObj in customerPage %}
-        <tr>
+        <tr id="customerRow_{{ customerObj.id }}">
             <td>{{ forloop.counter }}</td>
             <td>{{ customerObj.modify }}</td>
 {#            <td>#}
@@ -105,10 +108,16 @@
 {#                {% endif %}#}
 {#            </td>#}
             <td>{{ customerObj.message }}</td>
+            {% if request.user.userprofile.title.role_name == 'teachermanager' or request.user.userprofile.title.role_name == 'teacherboss' or request.user.userprofile.title.role_name in 'admin ops' %}
+                <td>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="resumeDishonestCustomer(this)"
+                    data-id="{{ customerObj.id }}">恢复</button>
+                </td>
+            {% endif %}
         </tr>
         {% empty %}
             <tr>
-                <td colspan="8">无不诚信客户信息</td>
+                <td colspan="10">无不诚信客户信息</td>
             </tr>
         {% endfor %}
     </tbody>
@@ -134,4 +143,19 @@
     </li>
   </ul>
 </nav>
+<script type="text/javascript">
+    function resumeDishonestCustomer(obj){
+        id = $(obj).data('id');
+        $.post(
+            "{% url 'customer:resumeDishonestCustomer' %}",
+            {id:id},
+            function(result) {
+                $('#customerRow_'+id).remove();
+                showMsgModal(result.msg, result.msgLevel);
+            },
+            'json'
+        );
+    }
+</script>
+
 {% endblock %}

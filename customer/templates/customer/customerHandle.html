@@ -81,6 +81,7 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="validCustomerChange">状态变更</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="validCustomerChange" name="validCustomerChange">
+                                    <option></option>
 {#                                    <option value="100000">标记10W+客户</option>#}
 {#                                    <option value="99">删除客户</option>#}
                                     <option value="98">标记不诚信客户</option>
@@ -91,6 +92,7 @@
                         <script type="text/javascript">
                             $('#validCustomerChange').on('change', function(){
                                 if($(this).val() == '98'){
+                                    alert("请耐心与客户反复沟通，谨慎操作");
                                     $('#dishonestMessageDiv').show();
                                     $('#redoMessageDiv').hide();
                                     $('#delMessageDiv').hide();
@@ -183,6 +185,7 @@
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="newCustomerChange">状态变更</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="newCustomerChange" name="validCustomerChange">
+                                    <option value=""></option>
 {#                                    <option value="100000">标记10W+客户</option>#}
 {#                                    <option value="99">删除客户</option>#}
                                     <option value="98">标记不诚信客户</option>
@@ -193,6 +196,7 @@
                         <script type="text/javascript">
                             $('#newCustomerChange').on('change', function(){
                                 if($(this).val() == '98'){
+                                    alert("请耐心与客户反复沟通，谨慎操作");
                                     $('#newDishonestMessageDiv').show();
                                     $('#newRedoMessageDiv').hide();
                                     $('#newDelMessageDiv').hide();

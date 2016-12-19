@@ -859,3 +859,23 @@ def queryTradePayManage(request):
         "trades": trades,
     }
     return render(request, 'customer/queryTradePayManage.html', data)
+
+@login_required()
+def resumeDishonestCustomer(request):
+    data = {}
+    try:
+        id = request.POST.get('id')
+        customer = Customer.objects.get(id=id)
+        customer.honest = True
+        if customer.getTradeCount() == 0:
+            customer.status = 20
+        else:
+            customer.status = 40
+        customer.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        traceback.print_exc()
+        data['msg'] = "操作失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))

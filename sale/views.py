@@ -397,7 +397,8 @@ def dishonestCustomerReport(request):
 
 @login_required()
 def dishonestCustomer(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager', 'teacher']:
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager', 'teacher', 'teachermanager',
+                                                        'teacherboss']:
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
     if endDate == '':
@@ -417,6 +418,11 @@ def dishonestCustomer(request):
                                             sales__department=request.user.userprofile.department)
     if request.user.userprofile.title.role_name == 'teacher':
         customers = customers.filter(teacher__binduser=request.user)
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        customers = customers.filter(teacher__company=request.user.userprofile.company, teacher__department=request.user.userprofile.department,
+                                     teacher__group=request.user.userprofile.group)
+    if request.user.userprofile.title.role_name == 'teacherboss':
+        customers = customers.filter(teacher__company=request.user.userprofile.company)
 
     if request.POST.get('phone', '') != '':
         customers = customers.filter(phone__icontains=request.POST.get('phone'))
