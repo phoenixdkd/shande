@@ -1,4 +1,5 @@
 {% load sale_tags %}
+{% load teacher_tags %}
 <header class="navbar navbar-inverse navbar-static-top" role="banner" style="margin-bottom: 0">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -132,10 +133,12 @@
                         <li class="">
                             <a href="{% url 'super:userInfo' %}" target="_self">
                             {% if request.user.userprofile.title.role_name == 'sale' %}
-                                {% getSaleIdByUserId request.user.id %}
-
+                                {% getSaleIdByUserId request.user.id %} {{ request.user.userprofile.nick }}
+                            {% elif request.user.userprofile.title.role_name == 'teacher' %}
+                                {% getTeacherIdByUserId request.user.id %} {{ request.user.userprofile.nick }}
+                            {% else %}
                                 {{ request.user.userprofile.nick }}
-                                {% endif %}
+                            {% endif %}
                             </a>
                         </li>
                     {% endif %}
