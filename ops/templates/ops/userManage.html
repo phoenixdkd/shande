@@ -70,9 +70,28 @@
                             <label class="col-md-offset-2 col-md-2 control-label" for="title" >职位</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="title" name="title">
-                                    {% for title in titles %}
-                                        <option value="{{ title.id }}"> {{ title.role_desc }}</option>
-                                    {% endfor %}
+                                    {% if request.user.userprofile.title.role_name == 'admin' %}
+                                        <option value="1"> 超级管理员</option>
+                                    {% endif %}
+                                    {% if request.user.userprofile.title.role_name in 'salemanager saleboss admin ops' %}
+                                        <option value="3"> 客户开发经理</option>
+                                        <option value="4"> 客户开发专员</option>
+                                        <option value="5"> 客户开发总经理</option>
+                                    {% endif %}
+                                    {% if request.user.userprofile.title.role_name in 'teachermanager teacherboss admin ops' %}
+                                        <option value="6"> 客户管理专员</option>
+                                        <option value="7"> 客户管理经理</option>
+                                        <option value="8"> 客户管理总经理</option>
+                                    {% endif %}
+                                    {% if request.user.userprofile.title.role_name in 'bursarmanager admin ops' %}
+                                        <option value="9"> 财务专员</option>
+                                        <option value="10"> 财务经理</option>
+                                    {% endif %}
+                                    {% if request.user.userprofile.title.role_name in 'admin ops' %}
+                                        <option value="11"> 管理员</option>
+                                        <option value="12"> 现货老师</option>
+                                        <option value="13"> 现货经理</option>
+                                    {% endif %}
                                 </select>
 
                             </div>

@@ -159,6 +159,7 @@ def handleTrade(request):
         firstTrade = Trade.objects.filter(customer=customer).earliest('create')
         if int(request.POST.get('htid')) == firstTrade.id:
             firstTrade = True
+
         newTrade = Trade.objects.get(id=request.POST.get("htid"))
         # 判断是否存在该产品
         stock = Stock.objects.get(stockid=request.POST.get('htstockid'), stockname=request.POST.get('htstockname'))
@@ -179,6 +180,9 @@ def handleTrade(request):
         newTrade.buyprice = buyprice
         newTrade.buycount = buycount
         buycash = buyprice * buycount
+        if firstTrade:
+            customer.first_trade = buycash
+
         newTrade.buycash = buycash
         customer.modify = timezone.now()
         #判断是否VIP

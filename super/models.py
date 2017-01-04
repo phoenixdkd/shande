@@ -23,6 +23,19 @@ class UserProfile (models.Model):
     cid = models.CharField('身份证号', max_length=18, blank=True, null=True)
     nick = models.CharField('真实姓名', max_length=10, blank=True, null=True)
     title = models.ForeignKey(Title, null=True, on_delete=models.SET_NULL)
+    # "id","role_name","role_desc"
+    # "1","admin","超级管理员"
+    # "3","salemanager","客户开发经理"
+    # "4","sale","客户开发专员"
+    # "5","saleboss","客户开发总经理"
+    # "6","teacher","客户管理专员"
+    # "7","teachermanager","客户管理经理"
+    # "8","teacherboss","客户管理总经理"
+    # "9","bursar","财务专员"
+    # "10","bursarmanager","财务经理"
+    # "11","ops","管理员"
+    # "12","spotteacher","现货老师"
+    # "13","spotmanager","现货经理"
     failcount = models.IntegerField('失败次数', default=-1)
     faillocktime = models.DateTimeField('失败锁定时间', null=True)
 
