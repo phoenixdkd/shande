@@ -181,6 +181,8 @@ def handleTrade(request):
         newTrade.buycount = buycount
         buycash = buyprice * buycount
         if firstTrade:
+            if buycash < 20000:
+                raise Exception("buycashlow")
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
 
@@ -209,6 +211,8 @@ def handleTrade(request):
             data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         elif str(e.__str__()).__contains__('Stock matching'):
             data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
+        elif e.__str__() == 'buycashlow':
+            data['msg'] = "客户买入资金不足，无法提交"
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
         traceback.print_exc()

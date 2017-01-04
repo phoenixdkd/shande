@@ -268,7 +268,7 @@
             var tradeId = $(obj).data("dtid");
             $.post(
                 "{% url 'trade:deleteTrade' %}",
-                {id,tradeId},
+                {"id":tradeId},
                 function(result) {
                     showMsgModal(result.msg, result.msgLevel);
                     loadTradeDiv();
