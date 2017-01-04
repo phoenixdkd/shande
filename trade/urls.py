@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^tradeManage$', views.tradeManage, name='tradeManage'),
     url(r'^addTrade$', views.addTrade, name='addTrade'),
     url(r'^handleTrade$', views.handleTrade, name='handleTrade'),
+    url(r'^deleteTrade$', views.deleteTrade, name='deleteTrade'),
 
     # for bursar
     url(r'^payManage$', views.payManage, name='payManage'),

@@ -82,6 +82,11 @@
                     data-htcommission="{{ tradeObj.commission }}"
                 >处理</button>
                 {% endif %}
+                {% if request.user.userprofile.title.role_name in "admin teacher ops" or request.user.userprofile.title.role_name == "teachermanager" or request.user.userprofile.title.role_name == "teacherboss" %}
+                <button type="button" class="btn btn-sm btn-primary" onclick="deleteTrade(this)"
+                    data-dtid="{{ tradeObj.id }}"
+                >删除</button>
+                {% endif %}
                 {% if request.user.userprofile.title.role_name in "bursar" and tradeObj.status == 20 %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="payTrade(this)"
                     data-ptid="{{ tradeObj.id }}"

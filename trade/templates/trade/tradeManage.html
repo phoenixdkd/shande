@@ -263,6 +263,23 @@
         $('#htcommission').val($(obj).data("htcommission"));
         $('#handleTradeModal').modal("show");
     }
+    function deleteTrade(obj){
+        if(confirm("确定要删除该交易？")){
+            var tradeId = $(obj).data("dtid");
+            $.post(
+                "{% url 'trade:deleteTrade' %}",
+                {id,tradeId},
+                function(result) {
+                    showMsgModal(result.msg, result.msgLevel);
+                    loadTradeDiv();
+                    loadCustomerDiv();
+                    updateParentWindow();
+                },
+                'json'
+            );
+
+        }
+    }
     function formValidator(){
         $('#addTradeForm').bootstrapValidator({
             excluded: [':disabled'],

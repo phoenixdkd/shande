@@ -181,7 +181,8 @@ def handleTrade(request):
         newTrade.buycount = buycount
         buycash = buyprice * buycount
         if firstTrade:
-            customer.first_trade = buycash
+            customer.first_trade_cash = buycash
+            customer.first_trade = timezone.now()
 
         newTrade.buycash = buycash
         customer.modify = timezone.now()
@@ -210,6 +211,7 @@ def handleTrade(request):
             data['msg'] = "操作失败, 输入错误，或产品库中无此产品，请联系管理员"
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
+        traceback.print_exc()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
 
@@ -240,6 +242,46 @@ def payTrade(request):
         print(e.__str__())
         data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def deleteTrade(request):
+    data = {}
+    try:
+        trade = Trade.objects.get(id=request.POST.get("id"))
+        customer = trade.customer
+        trade.delete()
+        trades = Trade.objects.filter(customer=customer)
+        if trades.__len__() == 0:  #如果是首笔交易
+            #历史有效客户数-1
+            firstTradeDate = customer.first_trade
+            userGradeHis = customer.sales.binduser.usergradehis_set.get(user=customer.sales.binduser,
+                                                                                           day=firstTradeDate)
+            userGradeHis.delta -= 1
+            userGradeHis.save()
+            #有效客户总数-1
+            customer.sales.binduser.userprofile.grade -= 1
+            customer.sales.binduser.userprofile.save()
+            #客户状态改变
+            customer.status = 20
+            customer.crude = 0
+            customer.vip = 0
+            customer.modify = timezone.now()
+            customer.first_trade_cash = 0
+            customer.first_trade = None
+            customer.save()
+        else:#如果非首笔交易，但其他交易金额都小于100000，则去掉客户的10W+标记
+            crudeTrades = trades.filter(buycash__gte=100000)
+            if crudeTrades.__len__() == 0:
+                customer.crude = 0
+                customer.save()
+
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        data['msg'] = "操作失败, %s" % e.__str__()
+        data['msgLevel'] = "error"
+        traceback.print_exc()
     return HttpResponse(json.dumps(data))
 
 @login_required()
