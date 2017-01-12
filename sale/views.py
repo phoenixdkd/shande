@@ -92,6 +92,11 @@ def addSale(request):
             newSale.bindteacher = teacher
         else:
             newSale.bindteacher = None
+        #更换开发绑定的老师，将该开发所有的未提交的客户对应的老师都修改为新的老师
+        customers = newSale.customer_set.filter(Q(status=0)|Q(status=30)|Q(status=10))
+        for customer in customers:
+            customer.teacher = newSale.bindteacher
+            customer.save()
         newSale.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"

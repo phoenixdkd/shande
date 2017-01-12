@@ -83,11 +83,19 @@ def addTeacher(request):
             newTeacher.binduser = User.objects.get(id=binduserid)
         else:
             newTeacher.binduser = None
+
+
         bindbursarid = request.POST.get('bindbursar', '无')
         if bindbursarid.isdigit():
             newTeacher.bindbursar = Bursar.objects.get(id=bindbursarid)
         else:
             newTeacher.bindbursar = None
+
+        # 如果绑定的财务变化，需要将该老师所有未收款的客户都切换对应的财务
+        customers = newTeacher.customer_set.filter(~Q(status=40) & ~Q(status=98))
+        for customer in customers:
+            customer.bursar = newTeacher.bindbursar
+            customer.save()
         bindspotteacherid = request.POST.get('bindspotteacher', '无')
         if bindspotteacherid.isdigit():
             newTeacher.bindspotteacher = SpotTeacher.objects.get(id=bindspotteacherid)
