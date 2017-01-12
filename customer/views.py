@@ -93,7 +93,7 @@ def queryCustomer(request):
     if request.GET.get('wxqq', '') != '':
         customers = customers.filter(Q(wxid="", qqid__icontains=request.GET.get('wxqq'))|Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
-    customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
+    customers = customers.filter(phone__icontains=str(request.GET.get('phone', '')).strip())
     if request.GET.get('wxid', '') != '':
         customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
     if request.GET.get('wxname', '') != '':
@@ -144,25 +144,32 @@ def queryCustomer(request):
 def addCustomer(request):
     data = {}
     try:
-        if request.POST['id'] == "":
+        if request.POST['id'] == "":  #新增客户
             sale = Sale.objects.get(binduser=request.user)
             newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
+            newCustomer.realuser = sale.binduser
             newCustomer.teacher = sale.bindteacher
             newCustomer.bursar = sale.bindteacher.bindbursar
             newCustomer.create = timezone.now()
-        else:
+            newCustomer.status = 0
+        else:  #修改客户
             newCustomer = Customer.objects.get(id=int(request.POST['id']))
             newCustomer.create = timezone.now()
-            if request.user.userprofile.title.role_name == 'sale' and newCustomer.status == 0:
-                sale = Sale.objects.get(binduser=request.user)
-                saleManagerPwList = SaleManagerPassword.objects.filter(company=sale.company, department=sale.department)
-                match = False
-                for pw in saleManagerPwList:
-                    if pw.password == request.POST.get('managerPassword', '错误的密钥'):
-                        match = True
-                        break
-                if(not match):
-                    raise Exception("manager password incorrect")
+            newCustomer.modify = timezone.now()
+            newCustomer.realuser = sale.binduser
+            newCustomer.teacher = sale.bindteacher
+            newCustomer.bursar = sale.bindteacher.bindbursar
+            ## 新录入的客户不允许修改，该段代码废弃
+            # if request.user.userprofile.title.role_name == 'sale' and newCustomer.status == 0:
+            #     sale = Sale.objects.get(binduser=request.user)
+            #     saleManagerPwList = SaleManagerPassword.objects.filter(company=sale.company, department=sale.department)
+            #     match = False
+            #     for pw in saleManagerPwList:
+            #         if pw.password == request.POST.get('managerPassword', '错误的密钥'):
+            #             match = True
+            #             break
+            #     if(not match):
+            #         raise Exception("manager password incorrect")
             if newCustomer.status == 0:
                 newCustomer.status = 0
             elif newCustomer.status == 10:
@@ -185,8 +192,9 @@ def addCustomer(request):
             newCustomer.qqid = request.POST.get('qqid', '')
             newCustomer.qqname = request.POST.get('qqname', '')
             newCustomer.salesqq = Qq.objects.get(id=int(request.POST.get('salesqq')))
-        newCustomer.modify = timezone.now()
         newCustomer.save()
+
+        #开发绩效管理
         # 提交数加1
         request.user.userprofile.commit += 1
         request.user.userprofile.save()

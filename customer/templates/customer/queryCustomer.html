@@ -4,7 +4,7 @@
         <tr>
 {#            <td>ID</td>#}
             <td>序号</td>
-            <td>合作时间</td>
+            <td>合作时间</td><!-- 首次交易时间 -->
             <td>开发ID</td>
             {% if request.user.userprofile.title.role_name == 'saleboss' or  request.user.userprofile.title.role_name in 'admin ops' %}
             <td>对接老师</td>
@@ -119,9 +119,8 @@
 {#            <td>{{ customerObj.message }}</td>#}
 
 {#            <td>{{ customerObj.modify }}</td>#}
-            {% if not request.user.userprofile.title.role_name == 'saleboss' %}
             <td>
-                {% if customerObj.status == 0 or customerObj.status == 10 or customerObj.status == 30 %}
+                {% if customerObj.status == 10 or customerObj.status == 30 %}
                 <button type="button" class="btn btn-sm btn-primary" onclick="editCustomer(this)"
                     data-id="{{ customerObj.id }}"
                     data-saleid="{{ customerObj.sales.saleId }}"
@@ -139,13 +138,14 @@
                 >编辑</button>
                 {% endif %}
                 {% if request.user.userprofile.title.role_name in "admin ops" %}
+                {% if customerObj.status == 0 or customerObj.status == 10 or customerObj.status == 30 %}
 {#                <button type="button" class="btn btn-sm btn-danger" onclick="delCustomer(this)"#}
 {#                    data-id="{{ customerObj.id }}">删除</button>#}
                 <button type="button" class="btn btn-sm btn-danger" onclick="delRealCustomer(this)"
                     data-id="{{ customerObj.id }}">彻底删除</button>
                 {% endif %}
+                {% endif %}
             </td>
-            {% endif %}
         </tr>
     {% endfor %}
     {% else %}

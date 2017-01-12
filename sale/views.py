@@ -64,9 +64,9 @@ def querySale(request):
 def addSale(request):
     data = {}
     try:
-        if request.POST['id'] == "":
+        if request.POST['id'] == "":#新建开发ID
             newSale = Sale.objects.create(saleId=request.POST['saleid'])
-        else:
+        else:#修改开发ID信息
             newSale = Sale.objects.get(id=request.POST['id'])
             newSale.saleId = request.POST['saleid']
 
