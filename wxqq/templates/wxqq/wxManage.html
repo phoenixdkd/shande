@@ -28,10 +28,6 @@
                             <label class="col-md-offset-2 col-md-2 control-label" for="company" >所属公司</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="company" name="company"
-                                {% if request.user.userprofile.title.role_name in 'saleboss salemanager' %}
-                                    value="{{ request.user.userprofile.company }}" readonly
-                                {% endif %}
-
                                 />
                             </div>
                         </div>
