@@ -123,6 +123,7 @@ def addTrade(request):
 
         # newTrade.income = request.POST.get('income', 0)
         newTrade.share = request.POST.get('share')
+        customer.latest = timezone.now()
         # newTrade.sellprice = request.POST.get('sellprice', '0')
         # newTrade.commission = request.get('commission', 0)
         newTrade.save()
@@ -256,6 +257,8 @@ def deleteTrade(request):
         customer = trade.customer
         trade.delete()
         trades = Trade.objects.filter(customer=customer)
+        #删除交易时，更新客户的最近合作时间
+        customer.latest = customer.getLatestTradeDate()
         if trades.__len__() == 0:  #如果是首笔交易
             #历史有效客户数-1
             firstTradeDate = customer.first_trade

@@ -83,6 +83,11 @@ def addSale(request):
             newSale.binduser = User.objects.get(id=binduserid)
         else:
             newSale.binduser = None
+        #开发ID修改了绑定的真实用户 ，则更新所有相关的未提交客户真实开发用户信息
+        customers = newSale.customer_set.filter(Q(status=0)|Q(status=10)|Q(status=30))
+        for customer in customers:
+            customer.realuser = newSale.binduser
+            customer.save()
         #newSale.bindteacher = getTeacherBySaleId(request.POST['saleid'])
         # newSale.company = request.POST['company']
         # newSale.department = request.POST['department']
