@@ -279,9 +279,9 @@ def delCustomerBySale(request):
         elif str(e.__str__()).__contains__('bursar'):
             data['msg'] = "操作失败,无绑定财务信息"
         elif str(e.__str__()).__contains__('manager password'):
-            data['msg'] = "部门密钥错误"
+            data['msg'] = "经理授权错误，请核实后再次输入。"
         elif str(e.__str__()).__contains__('SaleManagerPassword'):
-            data['msg'] = "部门密钥错误"
+            data['msg'] = "经理授权错误，请核实后再次输入。"
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
