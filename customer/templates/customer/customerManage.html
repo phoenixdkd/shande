@@ -519,15 +519,13 @@
         var loginUserTitle = "{{ request.user.userprofile.title.role_name }}";
         if(loginUserTitle == 'sale'){
             if(customerStatus == '0' ) {
-                console.log(customerStatus);
                 $('#emanagerPasswordDiv').val("");
                 $('#emanagerPasswordDiv').show();
             }
 
             if(customerStatus == '10' || customerStatus == '30' ){
-                console.log(customerStatus);
                 $('#emanagerPasswordDiv').val("");
-                $('#emanagerPasswordDiv').hide();
+                $('#emanagerPasswordDiv').show();
                 $('#delCustomerBtn').data("customerId", $(obj).data("id"));
                 $('#delCustomerBtn').show();
             }
