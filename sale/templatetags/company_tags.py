@@ -91,15 +91,19 @@ def getQqFriendTotalByCompany( company ):
         return 0
 
 @register.simple_tag()
-def getChargebackByCompany( company ):
+def getChargebackByCompany( company, startDate, endDate  ):
     try:
-        userCommits = UserProfile.objects.filter(user__sale__company=company, title__role_name='sale').aggregate(Sum('commit'))
-        userGrade = UserProfile.objects.filter(user__sale__company=company, title__role_name='sale').aggregate(Sum('grade'))
-        chargeback = 100- float(userGrade['grade__sum']) / float(userCommits['commit__sum'])  *100
-        return "%s / %s (%.2f"%(userGrade['grade__sum'], userCommits['commit__sum'], chargeback)+'%)'
+        # userCommits = UserProfile.objects.filter(user__sale__company=company, title__role_name='sale').aggregate(Sum('commit'))
+        userCommitsToday = UserCommitHis.objects.filter(user__sale__company=company, user__userprofile__title__role_name='sale', day__lte=endDate, day__gte=startDate ).aggregate(Sum('delta'))
+        # userGrade = UserProfile.objects.filter(user__sale__company=company, title__role_name='sale').aggregate(Sum('grade'))
+        userGradeToday = UserGradeHis.objects.filter(user__sale__company=company, user__userprofile__title__role_name='sale', day__lte=endDate, day__gte=startDate).aggregate(Sum('delta'))
+        # chargeback = 100- float(userGrade['grade__sum']) / float(userCommits['commit__sum'])  *100
+
+        chargeback = 100- float(userGradeToday['delta__sum']) / float(userCommitsToday['delta__sum'])  *100
+        return "%s / %s (%.2f"%(userGradeToday['delta__sum'], userCommitsToday['delta__sum'], chargeback)+'%)'
     except Exception as e:
         print(e.__str__())
-        return 0
+        return '0/0 (0%)'
 
 @register.simple_tag()
 def getDishonestByCompany( company, startDate, endDate ):

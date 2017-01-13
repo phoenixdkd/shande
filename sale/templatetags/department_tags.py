@@ -101,15 +101,23 @@ def getQqFriendTotalByDepartment( company, department ):
         return 0
 
 @register.simple_tag()
-def getChargebackByDepartment( company, department ):
+def getChargebackByDepartment( company, department, startDate, endDate ):
     try:
-        userCommits = UserProfile.objects.filter(user__sale__company=company, user__sale__department=department, title__role_name='sale').aggregate(Sum('commit'))
-        userGrade = UserProfile.objects.filter(user__sale__company=company, user__sale__department=department, title__role_name='sale').aggregate(Sum('grade'))
-        chargeback = 100 -float(userGrade['grade__sum']) / float(userCommits['commit__sum'])  *100
-        return "%s / %s (%.2f"%(userGrade['grade__sum'], userCommits['commit__sum'], chargeback)+'%)'
+        # userCommits = UserProfile.objects.filter(user__sale__company=company, user__sale__department=department, title__role_name='sale').aggregate(Sum('commit'))
+        # userGrade = UserProfile.objects.filter(user__sale__company=company, user__sale__department=department, title__role_name='sale').aggregate(Sum('grade'))
+        userCommitsToday = UserCommitHis.objects.filter(user__sale__company=company,
+                                                        user__sale__department=department,
+                                                        user__userprofile__title__role_name='sale', day__lte=endDate,
+                                                        day__gte=startDate).aggregate(Sum('delta'))
+        userGradeToday = UserGradeHis.objects.filter(user__sale__company=company,
+                                                     user__sale__department=department,
+                                                     user__userprofile__title__role_name='sale', day__lte=endDate,
+                                                     day__gte=startDate).aggregate(Sum('delta'))
+        chargeback = 100 -float(userGradeToday['delta__sum']) / float(userCommitsToday['delta__sum'])  *100
+        return "%s / %s (%.2f"%(userGradeToday['delta__sum'], userCommitsToday['delta__sum'], chargeback)+'%)'
     except Exception as e:
         traceback.print_exc()
-        return 0
+        return '0/0 (0%)'
 
 @register.simple_tag()
 def getDishonestByDepartment( company, department ):

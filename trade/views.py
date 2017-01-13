@@ -259,7 +259,7 @@ def deleteTrade(request):
         trades = Trade.objects.filter(customer=customer)
         #删除交易时，更新客户的最近合作时间
         customer.latest = customer.getLatestTradeDate()
-        if trades.__len__() == 0:  #如果是首笔交易
+        if trades.__len__() == 0:  #如果是唯一一笔交易
             #历史有效客户数-1
             firstTradeDate = customer.first_trade
             userGradeHis = customer.sales.binduser.usergradehis_set.get(user=customer.sales.binduser,
