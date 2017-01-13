@@ -144,8 +144,8 @@ def queryCustomer(request):
 def addCustomer(request):
     data = {}
     try:
+        sale = Sale.objects.get(binduser=request.user)
         if request.POST['id'] == "":  #新增客户
-            sale = Sale.objects.get(binduser=request.user)
             newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
             newCustomer.realuser = sale.binduser
             newCustomer.teacher = sale.bindteacher

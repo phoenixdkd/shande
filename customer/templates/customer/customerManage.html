@@ -129,7 +129,7 @@
 
                         <div id="managerPasswordDiv" style="display:none">
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="managerPassword" >部门密钥</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="managerPassword" >经理授权</label>
                                 <div class="col-md-5">
                                     <input type="password" class="form-control" id="managerPassword" name="managerPassword"/>
                                 </div>
@@ -274,7 +274,7 @@
 
                         <div id="emanagerPasswordDiv" style="display:none">
                             <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="emanagerPassword" >部门密钥</label>
+                                <label class="col-md-offset-2 col-md-2 control-label" for="emanagerPassword" >经理授权</label>
                                 <div class="col-md-5">
                                     <input type="password" class="form-control" id="emanagerPassword" name="managerPassword"/>
                                 </div>
@@ -527,7 +527,7 @@
             if(customerStatus == '10' || customerStatus == '30' ){
                 console.log(customerStatus);
                 $('#emanagerPasswordDiv').val("");
-                $('#emanagerPasswordDiv').show();
+                $('#emanagerPasswordDiv').hide();
                 $('#delCustomerBtn').data("customerId", $(obj).data("id"));
                 $('#delCustomerBtn').show();
             }
