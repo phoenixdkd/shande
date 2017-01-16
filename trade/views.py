@@ -98,7 +98,6 @@ def addTrade(request):
 
         #如果是首笔交易标记客户状态为有效客户
         if firstTrade:
-
             customer.status = 40
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
@@ -154,11 +153,12 @@ def addTrade(request):
 @login_required()
 def handleTrade(request):
     data = {}
+    firstTrade = False
     try:
         customer = Customer.objects.get(id=request.POST.get('htcustomerid'))
         # 判断是否首笔交易
-        firstTrade = Trade.objects.filter(customer=customer).earliest('create')
-        if int(request.POST.get('htid')) == firstTrade.id:
+        firstTradeObj = Trade.objects.filter(customer=customer).earliest('create')
+        if int(request.POST.get('htid')) == firstTradeObj.id:
             firstTrade = True
 
         newTrade = Trade.objects.get(id=request.POST.get("htid"))
@@ -185,7 +185,7 @@ def handleTrade(request):
             if buycash < 20000:
                 raise Exception("buycashlow")
             customer.first_trade_cash = buycash
-            customer.first_trade = timezone.now()
+            # customer.first_trade = timezone.now()
 
         newTrade.buycash = buycash
         customer.modify = timezone.now()
