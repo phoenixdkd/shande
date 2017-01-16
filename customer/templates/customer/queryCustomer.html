@@ -4,7 +4,7 @@
         <tr>
 {#            <td>ID</td>#}
             <td>序号</td>
-            <td>合作时间</td><!-- 首次交易时间 -->
+            <td>时间</td><!-- 首次交易时间 -->
             <td>开发ID</td>
             {% if request.user.userprofile.title.role_name == 'saleboss' or  request.user.userprofile.title.role_name in 'admin ops' %}
             <td>对接老师</td>
@@ -38,11 +38,8 @@
 {#            <td>{{ customerObj.id }}</td>#}
             <td>{{ forloop.counter }}</td>
             <td>
-                {% if customerObj.first_trade %}
-                    {{ customerObj.first_trade }}
-                {% else %}
-                    -
-                {% endif %}
+                提交时间:{{ customerObj.create }}<br>
+                首次合作:{{ customerObj.first_trade }}
             </td>
             <td>
                 <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">

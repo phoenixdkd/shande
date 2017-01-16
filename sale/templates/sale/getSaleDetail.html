@@ -2,7 +2,7 @@
 <table class="table table-bordered">
     <thead class="bg-info">
         <th width="2%">序号</th>
-        <th width="2%">生效日期</th>
+        <th width="2%">首次合作时间</th>
         <th width="5%">客户姓名</th>
         <th width="5%">客户电话</th>
         <th width="5%">买入资金</th>
@@ -11,7 +11,7 @@
     {% for customer in customers %}
         <tr style="background-color:{% getCrudeColorByCustomerId customer.id %}">
             <td>{{ forloop.counter }}</td>
-            <td>{{ customer.first_trade.date }}</td>
+            <td>{{ customer.first_trade }}</td>
             <td>{{ customer.name }}</td>
             <td>{{ customer.phone }}</td>
             <td>{% getTotalBuycashByCustomerId customer.id %}</td>
