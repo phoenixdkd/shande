@@ -97,7 +97,8 @@
                             <input type="hidden" value="{{ customer.id }}" class="" id="htcustomerid" name="htcustomerid"/>
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="htstockid">产品代码</label>
                             <div class="col-lg-5 col-md-5">
-                                <input type="text" class="form-control" id="htstockid" name="htstockid"/>
+                                <input type="text" class="form-control" id="htstockid" name="htstockid"
+                                />
                             </div>
                         </div>
                         <script type="text/javascript">
@@ -261,6 +262,21 @@
         $('#htsellprice').val($(obj).data("htsellprice"));
         $('#htincome').val($(obj).data("htincome"));
         $('#htcommission').val($(obj).data("htcommission"));
+        var tradeCreate = Date.parse($(obj).data("htcreate").replace("年",'/').replace("月", '/').replace("日",''));
+        var today = Date.parse( new Date().toLocaleDateString());
+        if(today - tradeCreate >= 86400000){
+            $('#htstockid').attr("readonly", true);
+            $('#htstockname').attr("readonly", true);
+            $('#htbuyprice').attr("readonly", true);
+            $('#htbuycount').attr("readonly", true);
+            $('#htshare').attr('readonly', true);
+        }else{
+            $('#htstockid').attr("readonly", false);
+            $('#htstockname').attr("readonly", false);
+            $('#htbuyprice').attr("readonly", false);
+            $('#htbuycount').attr("readonly", false);
+            $('#htshare').attr('readonly', false);
+        }
         $('#handleTradeModal').modal("show");
     }
     function deleteTrade(obj){
