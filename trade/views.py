@@ -93,7 +93,7 @@ def addTrade(request):
         customer.modify = timezone.now()
         # 判断是否VIP和10W+
         if buycash >= 100000:
-            customer.vip = True
+            customer.tcrude = True
 
 
         #如果是首笔交易标记客户状态为有效客户
@@ -185,6 +185,10 @@ def handleTrade(request):
             if buycash < 20000:
                 raise Exception("buycashlow")
             customer.first_trade_cash = buycash
+            if buycash >= 100000:
+                customer.crude = True
+            else:
+                customer.crude = False
             # customer.first_trade = timezone.now()
 
         newTrade.buycash = buycash
@@ -192,7 +196,8 @@ def handleTrade(request):
         #判断是否VIP
         if buycash >= 100000:
             customer.vip = True
-            customer.crude = True
+            customer.tcrude = True
+
 
         newTrade.share = request.POST.get('htshare')
         newTrade.sellprice = request.POST.get('htsellprice', '0')

@@ -316,6 +316,151 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addTeacherCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">客户管理</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!-- The form is placed inside the body of modal -->
+                    <form id="addTeacherCustomerForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="saletool" >来源</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="saletool" name="saletool">
+                                    <option value="wx">微信</option>
+                                    <option value="qq">qq</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="qqDiv" style="display:none">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="qqid" >QQ号</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="qqid" name="qqid"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="qqname" >昵称</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="qqname" name="qqname"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="salesqq" >工具</label>
+                                <div class="col-md-5">
+                                    <select type="select" class="form-control" id="salesqq" name="salesqq">
+                                        <option>请选择QQ来源</option>
+                                        {% if qqList %}
+                                            {% for qq in qqList %}
+                                                <option value="{{ qq.id }}">{{ qq.qqid }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option>无</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="wxDiv">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="wxid" >微信号</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="wxid" name="wxid"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="wxname" >昵称</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="wxname" name="wxname"/>
+                                </div>
+                            </div>
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="saleswx" >工具</label>
+                                <div class="col-md-5">
+                                    <select type="select" class="form-control" id="saleswx" name="saleswx">
+                                        <option>请选择微信来源</option>
+                                        {% if wxList %}
+                                            {% for wx in wxList %}
+                                                <option value="{{ wx.id }}">{{ wx.wxid }}</option>
+                                            {% endfor %}
+                                        {% else %}
+                                            <option>无</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $('#saletool').on('change', function(){
+
+                                if($(this).val() == 'qq'){
+                                    $('#qqDiv').show();
+                                    $('#wxDiv').hide();
+
+                                }else {
+                                    $('#qqDiv').hide();
+                                    $('#wxDiv').show();
+                                }
+                                $('#addCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
+                            });
+                        </script>
+                        <hr/>
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="id" name="id"/>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="name">姓名</label>
+                            <div class="col-lg-5 col-md-5">
+                                <input type="text" class="form-control" id="name" name="name"
+                                data-bv-notempty="true"
+                                data-bv-notempty-message="不允许为空"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="phone" >电话</label>
+                            <div class="col-md-5">
+                                    <input type="text" class="form-control" id="phone" name="phone"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="startup" >资金</label>
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="startup" name="startup"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="gem" >GEM</label>
+                            <div class="checkbox col-md-5">
+                                <label>
+                                    <input type="checkbox" name="gem" value="gem" />
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <div id="managerPasswordDiv" style="display:none">
+                            <div class="form-group" >
+                                <label class="col-md-offset-2 col-md-2 control-label" for="managerPassword" >经理授权</label>
+                                <div class="col-md-5">
+                                    <input type="password" class="form-control" id="managerPassword" name="managerPassword"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button id="addTeacherCustomerBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
     $(function () {
         formValidator();
@@ -676,6 +821,11 @@
             <div class="col-md-1">
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
+            <div class="col-md-1">
+                    {% if request.user.userprofile.title.role_name in 'teacher ops admin' %}
+                        <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTeacherCustomerModal">新增客户</button>
+                    {% endif %}
+            </div>
         </div>
         </div>
 {#        <div class="form-group">#}
@@ -739,5 +889,6 @@
 {#        </div>#}
 
     </form>
+
     <div id="customerHandleDiv"></div>
 {% endblock %}
