@@ -441,6 +441,7 @@ def handleCustomer(request):
         customer = Customer.objects.get(id=customerId)
         status = request.POST.get('status')
         customer.status = status
+        customer.bursar = customer.teacher.bindbursar
         customer.modify = timezone.now()
         if status == '10':
             customer.message = request.POST.get('message')
@@ -453,6 +454,7 @@ def handleCustomer(request):
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
 
+#已经加微信的客户
 @login_required()
 def handleValidCustomer(request):
     data = {}
@@ -460,9 +462,7 @@ def handleValidCustomer(request):
         customerId = request.POST.get('validCustomerId')
         customer = Customer.objects.get(id=customerId)
         validCustomerChange = int(request.POST.get('validCustomerChange'))
-        print(validCustomerChange)
         if validCustomerChange == 100000:
-            print(validCustomerChange)
             customer.crude = True
         elif validCustomerChange == 30:
             customer.status = 30
