@@ -272,9 +272,10 @@
     });
 </script>
 <nav class="navbar-right">
-    <input type="hidden" id="page" value="{{ customerPage.number }}"/>
+
   <ul class="pagination">
     <li>
+    <input type="hidden" id="page" value="{{ customerPage.number }}"/>
         {% if customerPage.has_previous %}
             <span aria-hidden="true" onclick="loadCustomerHandleDiv('page={{ customerPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
         {% endif %}
