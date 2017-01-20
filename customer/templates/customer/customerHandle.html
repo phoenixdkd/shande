@@ -354,14 +354,7 @@
                                 <label class="col-md-offset-2 col-md-2 control-label" for="salesqq" >工具</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="salesqq" name="salesqq">
-                                        <option>请选择QQ来源</option>
-                                        {% if qqList %}
-                                            {% for qq in qqList %}
-                                                <option value="{{ qq.id }}">{{ qq.qqid }}</option>
-                                            {% endfor %}
-                                        {% else %}
-                                            <option>无</option>
-                                        {% endif %}
+                                        <option>admincreate</option>
                                     </select>
                                 </div>
                             </div>
@@ -383,14 +376,7 @@
                                 <label class="col-md-offset-2 col-md-2 control-label" for="saleswx" >工具</label>
                                 <div class="col-md-5">
                                     <select type="select" class="form-control" id="saleswx" name="saleswx">
-                                        <option>请选择微信来源</option>
-                                        {% if wxList %}
-                                            {% for wx in wxList %}
-                                                <option value="{{ wx.id }}">{{ wx.wxid }}</option>
-                                            {% endfor %}
-                                        {% else %}
-                                            <option>无</option>
-                                        {% endif %}
+                                        <option>admincreate</option>
                                     </select>
                                 </div>
                             </div>
@@ -406,7 +392,7 @@
                                     $('#qqDiv').hide();
                                     $('#wxDiv').show();
                                 }
-                                $('#addCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
+                                $('#addTeacherCustomerForm').data('bootstrapValidator').disableSubmitButtons(false);
                             });
                         </script>
                         <hr/>

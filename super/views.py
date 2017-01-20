@@ -49,7 +49,7 @@ def login_view(request):
             except Exception as e:
                 print(e.__str__())
                 print(request.POST['username'])
-                error_msg = "用户不存在"
+                error_msg = "用户  %s 不存在" % request.POST['username']
             if user:
                 faillocktime = user.userprofile.faillocktime
                 if faillocktime:
@@ -88,7 +88,7 @@ def login_view(request):
                         user.userprofile.failcount = failcount
                     user.userprofile.save()
             else:
-                error_msg = "用户%s不存在" % request.POST['username']
+                error_msg = "用户不存在"
         else:
             error_msg = "验证码错误"
     return render(request, 'super/login_view.html', locals())
@@ -169,16 +169,6 @@ def titleManage(request):
     return render(request, 'super/titleManage.html', locals())
 
 @login_required()
-def demo(request):
-    if (request.user.userprofile.title.role_name != 'admin'):
-        return HttpResponseRedirect("/")
-    titles = 'It is my demo'
-    data = {
-        "titles": titles,
-    }
-    return render(request, 'super/demo.html', locals())
-
-@login_required()
 def addTitle(request):
     data = {}
     title = Title()
@@ -252,3 +242,6 @@ def getTransmission(request):
         "msg": msg,
     }
     return HttpResponse(json.dumps(data))
+
+def demo(request):
+    return render(request, 'super/demo.html', locals())
