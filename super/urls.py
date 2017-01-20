@@ -42,4 +42,8 @@ urlpatterns = [
 
     url(r'^getTransmission$', views.getTransmission, name='getTransmission'),
     url(r'^demo$', views.demo, name='demo'),
+
+
+
+    
 ]
