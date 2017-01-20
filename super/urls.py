@@ -34,6 +34,9 @@ urlpatterns = [
     url(r'^modifyPassword$', views.modifyPassword, name='modifyPassword'),
 
     url(r'^titleManage$', views.titleManage, name='titleManage'),
+    #add demo
+    url(r'^demo$', views.demo, name='demo'),
+
     url(r'^addTitle$', views.addTitle, name='addTitle'),
     url(r'^deleteTitle$', views.deleteTitle, name='deleteTitle'),
 

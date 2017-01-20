@@ -88,7 +88,7 @@ def login_view(request):
                         user.userprofile.failcount = failcount
                     user.userprofile.save()
             else:
-                error_msg = "用户不存在"
+                error_msg = "用户%s不存在" % request.POST['username']
         else:
             error_msg = "验证码错误"
     return render(request, 'super/login_view.html', locals())
@@ -167,6 +167,16 @@ def titleManage(request):
         "titles": titles,
     }
     return render(request, 'super/titleManage.html', locals())
+
+@login_required()
+def demo(request):
+    if (request.user.userprofile.title.role_name != 'admin'):
+        return HttpResponseRedirect("/")
+    titles = 'It is my demo'
+    data = {
+        "titles": titles,
+    }
+    return render(request, 'super/demo.html', locals())
 
 @login_required()
 def addTitle(request):
