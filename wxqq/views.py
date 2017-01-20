@@ -234,7 +234,7 @@ def queryQq(request):
             qqs = qqs.filter(delete__isnull=False)
         else:
             qqs = qqs.filter(delete__isnull=True)
-    p = Paginator(qqs, 1)
+    p = Paginator(qqs, 20)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
