@@ -295,6 +295,13 @@ def checkCustomerPhone(request):
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
         if customers.__len__() == 0:
             valid = True
+        else:
+            # addey by jdeng to extract client latest trade time
+            latest = customers.latest('latest')
+            nowtime = timezone.now()
+            deltaday = (nowtime - latest.first_trade).days
+            if deltaday >= 30.0:
+                valid = True
     except:
         traceback.print_exc()
 
