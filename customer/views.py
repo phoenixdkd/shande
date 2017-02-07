@@ -340,15 +340,40 @@ def customerHandle(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
+
+    if request.user.userprofile.title.role_name == 'teacher':
+        teacher = Teacher.objects.get(binduser=request.user)
+    else:
+        teacher = None
+
+    if request.user.userprofile.title.role_name == 'teacherboss':
+        teachers = Teacher.objects.filter(company=request.user.userprofile.company, binduser__isnull=False)
+    elif request.user.userprofile.title.role_name == 'teachermanager':
+        teachers = Teacher.objects.filter(company= request.user.userprofile.company, department=request.user.userprofile.department,
+                                          group= request.user.userprofile.group, binduser__isnull=False)
+    elif request.user.userprofile.title.role_name in ['admin', 'ops']:
+        teachers = Teacher.objects.filter(binduser__isnull=False)
     data = {
         "spotTeachers": spotTeachers,
         "startDate": str(startDate),
         "endDate": str(endDate),
+        "teacher": teacher,
+        "teachers": teachers,
     }
     return render(request, 'customer/customerHandle.html', data)
 
 @login_required()
 def queryCustomerHandle(request):
+    endDate = request.GET.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.datetime.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d")
+    startDate = request.GET.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.datetime.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d")
     customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
@@ -357,6 +382,7 @@ def queryCustomerHandle(request):
         group = request.user.userprofile.group
         customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
         customers = customers.filter(~Q(status=99))
+
     elif request.user.userprofile.title.role_name in ['teacherboss']:
         company = request.user.userprofile.company
         customers = customers.filter(teacher__company=company)
@@ -375,7 +401,8 @@ def queryCustomerHandle(request):
     # 按条件查询
     # customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
     # customers = customers.filter(sales__department__icontains=request.GET.get('department', ''))
-    customers = customers.filter(sales__saleId__icontains=request.GET.get('saleid', ''))
+    if request.GET.get('saleid', '') !='':
+        customers = customers.filter(sales__saleId__icontains=request.GET.get('saleid', ''))
     if request.GET.get('teacherid', '') != '':
         customers = customers.filter(teacher__teacherId__icontains=request.GET.get('teacherid', ''))
     if request.GET.get('saleswx', '') != '':
@@ -406,10 +433,9 @@ def queryCustomerHandle(request):
         customers = customers.filter(vip=request.GET.get('vip'))
     if request.GET.get('spot', '') != '':
         customers = customers.filter(spotStatus=request.GET.get('spot'))
-    if request.GET.get('startDate', '') != '':
-        customers = customers.filter(create__gte=request.GET.get('startDate'))
-    if request.GET.get('endDate', '') != '':
-        customers = customers.filter(create__lte=request.GET.get('endDate'))
+
+    customers = customers.filter(create__gte=startDate)
+    customers = customers.filter(create__lte=endDate)
     if request.GET.get('status', '') != '':
         customers = customers.filter(status=request.GET.get('status'))
     if (request.GET.get('stockid', '') != ''):
@@ -892,5 +918,55 @@ def resumeDishonestCustomer(request):
     except Exception as e:
         traceback.print_exc()
         data['msg'] = "操作失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def addTeacherCustomer(request):
+    data = {}
+    try:
+        newCustomer = Customer.objects.create(create=timezone.now(), modify=timezone.now())
+        teacher = Teacher.objects.get(id=request.POST.get('teacher'))
+        newCustomer.teacher = teacher
+        newCustomer.bursar = teacher.bindbursar
+        newCustomer.status = 20
+        newCustomer.name = request.POST.get('name', '')
+        
+        newCustomer.phone = request.POST.get('phone', '')
+        newCustomer.startup = request.POST.get('startup', 0)
+        newCustomer.gem = 'gem' in request.POST
+        if request.POST.get('saletool') == 'wx':
+            newCustomer.wxid = request.POST.get('wxid', '')
+            newCustomer.wxname = request.POST.get('wxname', '')
+        else:
+            newCustomer.qqid = request.POST.get('qqid', '')
+            newCustomer.qqname = request.POST.get('qqname', '')
+        newCustomer.save()
+
+
+        # 提交时刷新对应老师的消息
+        teacherUser = newCustomer.teacher.binduser
+        if teacherUser:
+            transmission, created = Transmission.objects.get_or_create(user=teacherUser)
+            transmission.transmission = "客户信息有更新，请刷新页面查看。"
+            transmission.checked = False
+            transmission.save()
+
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        traceback.print_exc()
+        if str(e.__str__()).__contains__('saleId'):
+            data['msg'] = "操作失败,开发ID已存在"
+        elif str(e.__str__()).__contains__('binduser'):
+            data['msg'] = "操作失败,用户已绑定开发，请刷新页面重试"
+        elif str(e.__str__()).__contains__('bursar'):
+            data['msg'] = "操作失败,指定客户管理专员未绑定财务"
+        elif str(e.__str__()).__contains__('manager password'):
+            data['msg'] = "部门密钥错误"
+        elif str(e.__str__()).__contains__('SaleManagerPassword'):
+            data['msg'] = "部门密钥错误"
+        else:
+            data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))

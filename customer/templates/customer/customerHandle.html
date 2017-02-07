@@ -425,14 +425,19 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="form-group" >
+                            <label class="col-md-offset-2 col-md-2 control-label" for="teacher" >对接老师</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="teacher" name="teacher">
+                                    {% if request.user.userprofile.title.role_name == 'teacher' %}
+                                        <option value="{{ teacher.id }}">{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</option>
+                                    {% else %}
+                                        {% for teacherObj in teachers %}
+                                            <option value="{{ teacherObj.id }}">{{ teacherObj.teacherId }} {{ teacherObj.binduser.userprofile.nick }}</option>
+                                        {% endfor %}
+                                    {% endif %}
 
-
-                        <div id="managerPasswordDiv" style="display:none">
-                            <div class="form-group" >
-                                <label class="col-md-offset-2 col-md-2 control-label" for="managerPassword" >经理授权</label>
-                                <div class="col-md-5">
-                                    <input type="password" class="form-control" id="managerPassword" name="managerPassword"/>
-                                </div>
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -457,6 +462,9 @@
         $('#handleSpotCustomerModal').on('hidden.bs.modal', function() {
             loadCustomerHandleDiv();
         });
+        $('#addTeacherCustomerModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
     });
     function resetFormValidator(){
         var customerFormSelector = $('#handleCustomerForm');
@@ -479,6 +487,10 @@
         $('#newRedoMessageDiv').hide();
         newCustomerFormSelector.find(':input').val("");
         newCustomerFormSelector.data('bootstrapValidator').destroy();
+
+        var addTeacherCustomerFormSelector = $('#addTeacherCustomerForm');
+        addTeacherCustomerFormSelector.find('input').val("");
+        addTeacherCustomerFormSelector.data('bootstrapValidator').destroy();
 
         $('#searchCustomerHandleForm').data('bootstrapValidator').destroy();
         formValidator();
@@ -685,6 +697,92 @@
                 resetFormValidator()
             }
         });
+        $('#addTeacherCustomerForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]{11}$/i,
+                            message: '请输入正确的手机号码'
+                        },
+                        remote: {
+                            message: '该客户已存在',
+                            url: '{% url "customer:checkCustomerPhone" %}',
+                        }
+                    }
+                },
+                startup: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        },
+                        greaterThan: {
+                            value: 20000,
+                            inclusive: true,
+                            message: '&ge;20000'
+                        }
+                    }
+                },
+                wxid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                wxname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                qqid: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                },
+                qqname: {
+                    validators: {
+                        notEmpty: {
+                            message: '必填项'
+                        }
+                    }
+                }
+            },
+            submitHandler: function (validator, form, submitButton) {
+                $('#addTeacherCustomerModal').modal('hide');
+                $.post(
+                    "{% url 'customer:addTeacherCustomer' %}",
+                    form.serialize(),
+                    function(result) {
+                        showMsgModal(result.msg, result.msgLevel);
+                        loadCustomerHandleDiv();
+                    },
+                    'json'
+                );
+                loadCustomerHandleDiv(form.serialize());
+                resetFormValidator()
+            }
+        });
     }
     function handleCustomer(obj){
         $('#id').val($(obj).data("id"));
@@ -808,7 +906,7 @@
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
             <div class="col-md-1">
-                    {% if request.user.userprofile.title.role_name in 'teacher ops admin' %}
+                    {% if request.user.userprofile.title.role_name in 'teacher ops admin teachermanager teacherboss' %}
                         <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTeacherCustomerModal">新增客户</button>
                     {% endif %}
             </div>

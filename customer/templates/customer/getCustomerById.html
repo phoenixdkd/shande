@@ -32,20 +32,20 @@
             </td>
             <td>
                 {% if customer.status == 40 %}
-                    {% if customer.saleswx %} 微信: {{ customer.wxid | mask8  }}{% endif %}
-                    {% if customer.salesqq %} QQ: {{ customer.qqid | mask8 }}{% endif %}
+                    {% if customer.wxid %} 微信: {{ customer.wxid | mask8  }}{% endif %}
+                    {% if customer.qqid %} QQ: {{ customer.qqid | mask8 }}{% endif %}
                 {% else %}
-                    {% if customer.saleswx %} 微信: {{ customer.wxid| mask8 }}{% endif %}
-                    {% if customer.salesqq %} QQ: {{ customer.qqid| mask8 }}{% endif %}
+                    {% if customer.wxid %} 微信: {{ customer.wxid| mask8 }}{% endif %}
+                    {% if customer.qqid %} QQ: {{ customer.qqid| mask8 }}{% endif %}
                 {% endif %}
             </td>
             <td>
                 {% if customer.status == 40 %}
-                    {% if customer.saleswx %} {{ customer.wxname| mask8  }}{% endif %}
-                    {% if customer.salesqq %} {{ customer.qqname | mask8 }}{% endif %}
+                    {% if customer.wxid %} {{ customer.wxname| mask8  }}{% endif %}
+                    {% if customer.qqid %} {{ customer.qqname | mask8 }}{% endif %}
                 {% else %}
-                    {% if customer.saleswx %} {{ customer.wxname| mask8  }}{% endif %}
-                    {% if customer.salesqq %} {{ customer.qqname | mask8 }}{% endif %}
+                    {% if customer.wxid %} {{ customer.wxname| mask8  }}{% endif %}
+                    {% if customer.qqid %} {{ customer.qqname | mask8 }}{% endif %}
                 {% endif %}
             </td>
             <td>{{ customer.startup }}</td>

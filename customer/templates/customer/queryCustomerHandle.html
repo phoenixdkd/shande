@@ -68,20 +68,20 @@
             </td>
             <td>
                 {% if customerObj.status == 40 %}
-                    {% if customerObj.saleswx %} 微信: {{ customerObj.wxid | mask8  }}{% endif %}
-                    {% if customerObj.salesqq %} QQ: {{ customerObj.qqid | mask8 }}{% endif %}
+                    {% if customerObj.wxid %} 微信: {{ customerObj.wxid | mask8  }}{% endif %}
+                    {% if customerObj.qqid %} QQ: {{ customerObj.qqid | mask8 }}{% endif %}
                 {% else %}
-                    {% if customerObj.saleswx %} 微信: {{ customerObj.wxid| mask8 }}{% endif %}
-                    {% if customerObj.salesqq %} QQ: {{ customerObj.qqid| mask8 }}{% endif %}
+                    {% if customerObj.wxid %} 微信: {{ customerObj.wxid| mask8 }}{% endif %}
+                    {% if customerObj.qqid %} QQ: {{ customerObj.qqid| mask8 }}{% endif %}
                 {% endif %}
             </td>
             <td>
                 {% if customerObj.status == 40 %}
-                    {% if customerObj.saleswx %} {{ customerObj.wxname| mask8  }}{% endif %}
-                    {% if customerObj.salesqq %} {{ customerObj.qqname | mask8 }}{% endif %}
+                    {% if customerObj.wxid %} {{ customerObj.wxname| mask8  }}{% endif %}
+                    {% if customerObj.qqid %} {{ customerObj.qqname | mask8 }}{% endif %}
                 {% else %}
-                    {% if customerObj.saleswx %} {{ customerObj.wxname| mask8  }}{% endif %}
-                    {% if customerObj.salesqq %} {{ customerObj.qqname | mask8 }}{% endif %}
+                    {% if customerObj.wxid %} {{ customerObj.wxname| mask8  }}{% endif %}
+                    {% if customerObj.qqid %} {{ customerObj.qqname | mask8 }}{% endif %}
                 {% endif %}
             </td>
             <td>{{ customerObj.getLatestTradeBuycash }}</td>

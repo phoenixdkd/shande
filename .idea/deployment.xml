@@ -5,8 +5,21 @@
       <paths name="shande_new">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/app/shande" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/bursar/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/customer/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/ops/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/sale/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/spot/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/shande/settings.py" />
+            <excludedPath local="true" path="$PROJECT_DIR$/stock/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/super/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/teacher/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/trade/migrations" />
+            <excludedPath local="true" path="$PROJECT_DIR$/wxqq/migrations" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

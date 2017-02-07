@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^handleValidCustomer$', views.handleValidCustomer, name='handleValidCustomer'),
     url(r'^editSpot$', views.editSpot, name='editSpot'),
     url(r'^handleSpotCustomer$', views.handleSpotCustomer, name='handleSpotCustomer'),
+    url(r'^addTeacherCustomer$', views.addTeacherCustomer, name='addTeacherCustomer'),
 
     #for bursar
     url(r'^customerPay$', views.customerPay, name='customerPay'),
