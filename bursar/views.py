@@ -156,13 +156,33 @@ def payReport(request):
                                customer__teacher__group=request.user.userprofile.group)
     if request.user.userprofile.title.role_name == 'saleboss':
         trades = trades.filter(customer__sales__company=request.user.userprofile.company)
-    tradePayCashSum = trades.aggregate(Sum('paycash'))
-    if tradePayCashSum['paycash__sum']:
-        payCashTotal = tradePayCashSum['paycash__sum']
-    else:
-        payCashTotal = 0
+
+
+    # tradePayCashSum = trades.aggregate(Sum('paycash'))
+    # if tradePayCashSum['paycash__sum']:
+    #     payCashTotal = tradePayCashSum['paycash__sum']
+    # else:
+    #     payCashTotal = 0
+
+    # {#added by deng to devide pages#}
+    p = Paginator(trades, 20)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        tradePage = p.page(page)
+    except (EmptyPage, InvalidPage):
+        tradePage = p.page(p.num_pages)
+
+
+    payCashTotal = 0
+    for tradeObj in tradePage :
+        payCashTotal = payCashTotal + tradeObj.paycash
+
     data = {
-        "trades": trades,
+        "tradePage": tradePage,
+        "requestArgs": getArgsExcludePage(request),
         "payCashTotal": payCashTotal,
         "startDate": str(startDate),
         "endDate": str(endDate),
