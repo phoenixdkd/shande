@@ -354,7 +354,7 @@
                             message: '请输入正确的手机号码'
                         },
                         remote: {
-                            message: '该客户已存在',
+                            message: '该客户不可添加：不诚信或者已存在',
                             url: '{% url "customer:checkCustomerPhone" %}',
                         }
                     }
@@ -438,7 +438,7 @@
                             message: '请输入正确的手机号码'
                         },
                         remote: {
-                            message: '该客户已存在',
+                            message: '该客户不可添加：不诚信或者已存在',
                             url: '{% url "customer:checkCustomerPhoneForEdit" %}',
                         }
                     }
