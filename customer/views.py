@@ -299,7 +299,7 @@ def checkCustomerPhone(request):
                if customer.status == 98:
                    break
                else:
-                   customer.status != 98:  #诚信客户
+                   customer.status != 98 #诚信客户
                    nowtime = timezone.now()
                    latest = customer.latest
                    if latest:
