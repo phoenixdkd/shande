@@ -145,6 +145,12 @@ def addCustomer(request):
     data = {}
     try:
         sale = Sale.objects.get(binduser=request.user)
+        if not sale.bindteacher.binduser:
+            raise Exception("teacher no bind bursar")
+        if not sale.bindteacher.bindbursar:
+            raise Exception("teacher no bind user")
+        if not sale.bindteacher.bindbursar.binduser:
+            raise Exception("bursar not bind user")
         if request.POST['id'] == "":  #新增客户
             newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
             newCustomer.realuser = sale.binduser
@@ -222,10 +228,12 @@ def addCustomer(request):
         print(e.__str__())
         if str(e.__str__()).__contains__('saleId'):
             data['msg'] = "操作失败,开发ID已存在"
-        elif str(e.__str__()).__contains__('binduser'):
-            data['msg'] = "操作失败,用户已绑定开发，请刷新页面重试"
-        elif str(e.__str__()).__contains__('bursar'):
+        elif str(e.__str__()).__contains__('teacher no bind user'):
+            data['msg'] = "操作失败,对应客户管理专员未绑定用户"
+        elif str(e.__str__()).__contains__('teacher no bind bursar'):
             data['msg'] = "操作失败,无绑定财务信息"
+        elif str(e.__str__()).__contains__('bursar not bind user'):
+            data['msg'] = "操作失败,对应财务专员未绑定用户"
         elif str(e.__str__()).__contains__('manager password'):
             data['msg'] = "部门密钥错误"
         elif str(e.__str__()).__contains__('SaleManagerPassword'):
