@@ -72,9 +72,7 @@
   <ul class="pagination">
     <li>
         {% if stockPage.has_previous %}
-
-                <a href="?page={{ stockPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>
-
+            <a href="?page={{ stockPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>
         {% endif %}
     </li>
     <li><span class="current">
@@ -82,9 +80,7 @@
         </span></li>
     <li>
         {% if stockPage.has_next %}
-
-                <a href="?page={{ stockPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>
-
+            <a href="?page={{ stockPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>
         {% endif %}
     </li>
   </ul>

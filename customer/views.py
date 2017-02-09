@@ -298,24 +298,28 @@ def delCustomerBySale(request):
 @login_required()
 def checkCustomerPhone(request):
     customerPhone = request.POST.get('phone')
-    valid = False
+    valid = True
     try:
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
         if customers.__len__() != 0:   #手机号码重复
             for customer in customers:
-               if customer.status == 98:
+               if customer.status == 98: #不诚信客户
+                   valid = False
                    break
-               if customer.status != 98:  #诚信客户
+               else:                     #诚信客户
                    nowtime = timezone.now()
                    latest = customer.latest
                    if latest:
                        deltaday = (nowtime - latest).days
-                       if deltaday >= 30.0:
-                          valid = True
-                   else:
-                       valid = True
-        else:                         #手机号码不重复
-            valid = True
+                       if deltaday < 30.0:
+                          valid = False
+                          break
+                       # else:
+                       #    valid = True
+                   # else:
+                   #     valid = True
+        # else:                         #手机号码不重复
+        #     valid = True
     except:
         traceback.print_exc()
 
