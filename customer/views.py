@@ -294,7 +294,6 @@ def checkCustomerPhone(request):
     try:
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
         if customers.__len__() != 0:   #手机号码重复
-            count = 0
             for customer in customers:
                if customer.status == 98:
                    break
@@ -304,10 +303,10 @@ def checkCustomerPhone(request):
                    latest = customer.latest
                    if latest:
                        deltaday = (nowtime - latest).days
-                       if deltaday >= 30.0:
-                          count = count + 1
-                          if count == customers.__len__():
-                            valid = True
+                       if deltaday < 30.0:
+                          break
+                       else:
+                          valid = True
                    else:
                        valid = True
         else:                         #手机号码不重复
