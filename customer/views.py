@@ -363,14 +363,14 @@ def customerHandle(request):
         teacher = Teacher.objects.get(binduser=request.user)
     else:
         teacher = None
-
+    teachers = Teacher.objects.all()
     if request.user.userprofile.title.role_name == 'teacherboss':
-        teachers = Teacher.objects.filter(company=request.user.userprofile.company, binduser__isnull=False)
+        teachers = teachers.filter(company=request.user.userprofile.company, binduser__isnull=False)
     elif request.user.userprofile.title.role_name == 'teachermanager':
-        teachers = Teacher.objects.filter(company= request.user.userprofile.company, department=request.user.userprofile.department,
+        teachers = teachers.filter(company= request.user.userprofile.company, department=request.user.userprofile.department,
                                           group= request.user.userprofile.group, binduser__isnull=False)
     elif request.user.userprofile.title.role_name in ['admin', 'ops']:
-        teachers = Teacher.objects.filter(binduser__isnull=False)
+        teachers = teachers.filter(binduser__isnull=False)
     data = {
         "spotTeachers": spotTeachers,
         "startDate": str(startDate),
