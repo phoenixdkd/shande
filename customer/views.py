@@ -294,16 +294,20 @@ def checkCustomerPhone(request):
     try:
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
         if customers.__len__() != 0:   #手机号码重复
+            count = 0
             for customer in customers:
                if customer.status == 98:
                    break
-               if customer.status != 98:  #诚信客户
+               else:
+                   customer.status != 98:  #诚信客户
                    nowtime = timezone.now()
                    latest = customer.latest
                    if latest:
                        deltaday = (nowtime - latest).days
                        if deltaday >= 30.0:
-                          valid = True
+                          count = count + 1
+                          if count == customers.__len__():
+                            valid = True
                    else:
                        valid = True
         else:                         #手机号码不重复
@@ -776,14 +780,8 @@ def analyzeReport(request):
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
     stockid = request.POST.get('stockid', '')
-
-    startDate = request.GET.get('startDate','')
-    endDate = request.GET.get('endDate','')
-    if startDate == '':
-        startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
-    if endDate == '':
-        endDate = request.POST.get('endDate', datetime.date.today()+ datetime.timedelta(days=1))
-
+    startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
+    endDate = request.POST.get('endDate', datetime.date.today()+ datetime.timedelta(days=1))
     stocks = stocks.filter(stockid__icontains=stockid, trade__create__lte=endDate, trade__create__gte=startDate,
                            trade__status=0).distinct()
     if request.user.userprofile.title.role_name == 'teachermanager':
