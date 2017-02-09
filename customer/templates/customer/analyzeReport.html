@@ -18,12 +18,12 @@
         </div>
         <label class="col-md-1 control-label">时间范围</label>
         <div class="col-md-2 ">
-             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
+             <input type="date"  class="form-control datetime" value="{{startDate }}" name="startDate"id="startDate"
              title="起始时间"/>
         </div>
         <label class="col-md-1 control-label"></label>
         <div class="col-md-2 ">
-             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate"
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate"id="endDate"
              title="结束时间"/>
         </div>
         <label class="col-md-1 control-label"></label>
@@ -72,9 +72,7 @@
   <ul class="pagination">
     <li>
         {% if stockPage.has_previous %}
-
-                <a href="?page={{ stockPage.previous_page_number }}"> <span aria-hidden="true">&laquo;</span></a>
-
+            <a href="?page={{ stockPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>
         {% endif %}
     </li>
     <li><span class="current">
@@ -82,9 +80,7 @@
         </span></li>
     <li>
         {% if stockPage.has_next %}
-
-                <a href="?page={{ stockPage.next_page_number }}"><span aria-hidden="true">&raquo; </span></a>
-
+            <a href="?page={{ stockPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>
         {% endif %}
     </li>
   </ul>

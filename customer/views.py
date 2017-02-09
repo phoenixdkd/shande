@@ -776,8 +776,14 @@ def analyzeReport(request):
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
     stockid = request.POST.get('stockid', '')
-    startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
-    endDate = request.POST.get('endDate', datetime.date.today()+ datetime.timedelta(days=1))
+
+    startDate = request.GET.get('startDate','')
+    endDate = request.GET.get('endDate','')
+    if startDate == '':
+        startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
+    if endDate == '':
+        endDate = request.POST.get('endDate', datetime.date.today()+ datetime.timedelta(days=1))
+
     stocks = stocks.filter(stockid__icontains=stockid, trade__create__lte=endDate, trade__create__gte=startDate,
                            trade__status=0).distinct()
     if request.user.userprofile.title.role_name == 'teachermanager':
