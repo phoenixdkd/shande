@@ -75,3 +75,6 @@ class Customer(models.Model):
             return self.trade_set.count()
         except Exception as e:
             return 0
+
+    def __str__(self):
+        return self.name.__str__()
