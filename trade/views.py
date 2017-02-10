@@ -265,6 +265,7 @@ def deleteTrade(request):
         #删除交易时，更新客户的最近合作时间
         customer.latest = customer.getLatestTradeDate()
         if trades.__len__() == 0:  #如果是唯一一笔交易
+            customer.latest = None
             #历史有效客户数-1
             firstTradeDate = customer.first_trade
             userGradeHis = customer.sales.binduser.usergradehis_set.get(user=customer.sales.binduser,
@@ -283,6 +284,7 @@ def deleteTrade(request):
             customer.first_trade = None
             customer.save()
         else:#如果非首笔交易，但其他交易金额都小于100000，则去掉客户的10W+标记
+            customer.latest = customer.getLatestTradeDate()
             crudeTrades = trades.filter(buycash__gte=100000)
             if crudeTrades.__len__() == 0:
                 customer.crude = 0
