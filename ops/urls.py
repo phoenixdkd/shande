@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^checkEditUserId$', views.checkEditUserId, name='checkEditUserId'),
     url(r'^checkCId$', views.checkCId, name='checkCId'),
     url(r'^checkEditCId$', views.checkEditCId, name='checkEditCId'),
+    url(r'^systermLog$', views.systemLog, name='systemLog'),
+    url(r'^addFixContent$',views.addFixContent,name='addFixContent'),
 ]

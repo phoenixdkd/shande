@@ -199,3 +199,33 @@ def checkEditCId(request):
         'valid': valid,
     }
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def systemLog(request):
+
+    title = 'System Log'
+    data = {
+        'title':title
+    }
+
+    return render(request, "ops/systemLog.html", data)
+
+#编辑和修改维护信息
+@login_required()
+def addFixContent(request):
+    data = {}
+    a=1
+    try:
+        if request.POST.get('id') == '':  #新增记录
+            newRecord = Systemlog.objects.create(fixTime=timezone.now())
+            newRecord.name = request.GET.get('name','')
+            newRecord.fixTime = timezone.now()
+            newRecord.fixContent = request.GET.get('fixContent', '')
+        newRecord.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        traceback.print_exc()
+        data['msg'] = "操作失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
