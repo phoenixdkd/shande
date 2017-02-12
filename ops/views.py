@@ -202,26 +202,48 @@ def checkEditCId(request):
 
 @login_required()
 def systemLog(request):
+    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']:
+        return HttpResponseRedirect("/")
 
-    title = 'System Log'
+    logs = Ops.objects.all()
+    logs = logs.order_by("-fixTime")
+    startDate = request.GET.get('startDate','')
+    endDate = request.GET.get('endDate','')
+
+    if startDate == '':
+        startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
+        endDate = request.POST.get('endDate', datetime.date.today() + datetime.timedelta(days=1))
+
+    logs = logs.filter(create__lte=endDate,create__gte=startDate).distinct()
+
+    p = Paginator(logs,20)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        logPage = p.page(page)
+    except (EmptyPage, InvalidPage):
+        logPage = p.page(p.num_pages)
     data = {
-        'title':title
+        "logPage": logPage,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
     }
-
     return render(request, "ops/systemLog.html", data)
 
 #编辑和修改维护信息
 @login_required()
 def addFixContent(request):
     data = {}
-    a=1
     try:
-        if request.POST.get('id') == '':  #新增记录
-            newRecord = Systemlog.objects.create(fixTime=timezone.now())
-            newRecord.name = request.GET.get('name','')
-            newRecord.fixTime = timezone.now()
-            newRecord.fixContent = request.GET.get('fixContent', '')
+           #新增记录
+        newRecord = Ops.objects.create(name='',create=timezone.now(),modify=timezone.now())
+        # newRecord.name = request.POST.get('name','')
+        newRecord.fixTime = request.POST.get('date','')
+        newRecord.fixContent = request.POST.get('content','')
         newRecord.save()
+
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
