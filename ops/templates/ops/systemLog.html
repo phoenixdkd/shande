@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="modal fade" id="addFixContentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
+         aria-hidden="true" xmlns="http://www.w3.org/1999/html">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -30,7 +30,8 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-lable" for="content">维护内容</label>
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="content" name="content"/>
+{#                                <input type="textarea" class="form-control"  id="content" name="content"/>#}
+                                <textarea class="form-control" id="content" name="content"/> </textarea>
                             </div>
                         </div>
 {#                        <hr/>#}
@@ -91,6 +92,10 @@
                     validators:{
                         notEmpty:{
                             message:'必须填'
+                        },
+                        stringLength:{/*长度提示*/
+                            max:300,
+                            message:'内容必须小于300字'
                         }
                     }
                 }
