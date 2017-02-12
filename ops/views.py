@@ -12,6 +12,7 @@ import string
 import datetime
 import traceback
 import json
+import time
 
 from shande.settings import BASE_DIR
 from shande.util import *
@@ -238,7 +239,7 @@ def addFixContent(request):
     data = {}
     try:
            #新增记录
-        newRecord = Ops.objects.create(name='',create=timezone.now(),modify=timezone.now())
+        newRecord = Ops.objects.create(create=timezone.now(),modify=timezone.now())
         # newRecord.name = request.POST.get('name','')
         newRecord.fixTime = request.POST.get('date','')
         newRecord.fixContent = request.POST.get('content','')
