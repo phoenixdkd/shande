@@ -131,7 +131,7 @@
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                      </button>
-                       <a class="navbar-brand" href="{% url 'ops:systemLog' %}">系统维护日志</a>
+                       <a class="navbar-brand" style="font-size: 14px" href="{% url 'ops:systemLog' %}">系统维护日志</a>
                    </div>
                 {% endif %}
 
@@ -246,16 +246,17 @@
                 <h4 class="modal-title">返回信息</h4>
             </div>
             <div class="modal-body">
-                <div id="msg" class="alert alert-info"></div>
+                <div id="msg" class="alert alert-info" ></div>
             </div>
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
-    function showMsgModal(msg,level){
+    function showMsgModal(msg,msgLevel){
         $('#msg').text(msg);
-        if(level == 'info'){
-            $('#msg').attr("class",'alert alert-info');
+        if(msgLevel == 'info'){
+            $('#msg').attr("class",'alert alert-info' ,'background-color green');
         }else{
             $('#msg').attr("class",'alert alert-danger');
         }
