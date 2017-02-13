@@ -77,17 +77,17 @@
 {#                        }#}
 {#                    }#}
 {#                },#}
-                date:{
-                    validators:{
-                        notEmpty:{
-                            message:'必须填'
-                        },
-                        date:{
-                            format:'YYYY-MM-DD HH:MM',
-                            message:'日期格式:YYYY-MM-DD hh:mm'
-                        }
-                    }
-                },
+{#                date:{#}
+{#                    validators:{#}
+{#                        notEmpty:{#}
+{#                            message:'必须填'#}
+{#                        },#}
+{#                        date:{#}
+{#                            format:'YYYY-MM-DD HH:MM',#}
+{#                            message:'日期格式:YYYY-MM-DD hh:mm'#}
+{#                        }#}
+{#                    }#}
+{#                },#}
                 content:{
                     validators:{
                         notEmpty:{
@@ -132,7 +132,7 @@
 {#         </div>#}
 
          <div class="form-group">
-             <label class="col-md-1 control-label"></label>
+{#             <label class="col-md-1 control-label"></label>#}
 {#             <div class="col-md-1">#}
 {#                 <button type="submit" class="btn btn-sm btn-primary">搜索</button>#}
 {#             </div>#}
@@ -147,9 +147,9 @@
       <section id="layout-content">
 
       </section>
-      <h1>维护日志</h1>
+      <h3>维护日志</h3>
       {% for log in logPage %}
-         <pre>  <li> {{ log.fixTime }}:      {{ log.fixContent }}</li> </pre>
+         <pre>  <li> {{ log.create }}  <hr/>  {{ log.fixContent }}</li> </pre>
       {% endfor %}
 
     </div>

@@ -203,11 +203,11 @@ def checkEditCId(request):
 
 @login_required()
 def systemLog(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']:
+    if not request.user.userprofile.title.role_name in ['admin', 'ops']:
         return HttpResponseRedirect("/")
 
     logs = Ops.objects.all()
-    logs = logs.order_by("-fixTime")
+    logs = logs.order_by("-create")
     # startDate = request.GET.get('startDate','')
     # endDate = request.GET.get('endDate','')
 
@@ -239,9 +239,7 @@ def addFixContent(request):
     data = {}
     try:
            #新增记录
-        newRecord = Ops.objects.create(create=timezone.now(),modify=timezone.now())
-        # newRecord.name = request.POST.get('name','')
-        newRecord.fixTime = request.POST.get('date','')
+        newRecord = Ops.objects.create(create=timezone.now())
         newRecord.fixContent = request.POST.get('content','')
         newRecord.save()
 
