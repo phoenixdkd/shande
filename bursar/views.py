@@ -140,7 +140,7 @@ def payReport(request):
         if request.user.userprofile.title.role_name == 'teacher':
             startDate = datetime.date.today()
         else:
-            startDate = datetime.date.today() - datetime.timedelta(days=30)
+            startDate = datetime.date.today() - datetime.timedelta(days=0)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)

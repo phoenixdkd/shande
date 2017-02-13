@@ -208,14 +208,14 @@ def systemLog(request):
 
     logs = Ops.objects.all()
     logs = logs.order_by("-fixTime")
-    startDate = request.GET.get('startDate','')
-    endDate = request.GET.get('endDate','')
+    # startDate = request.GET.get('startDate','')
+    # endDate = request.GET.get('endDate','')
 
-    if startDate == '':
-        startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
-        endDate = request.POST.get('endDate', datetime.date.today() + datetime.timedelta(days=1))
+    # if startDate == '':
+    #     startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
+    #     endDate = request.POST.get('endDate', datetime.date.today() + datetime.timedelta(days=1))
 
-    logs = logs.filter(create__lte=endDate,create__gte=startDate).distinct()
+    # logs = logs.filter(create__lte=endDate,create__gte=startDate).distinct()
 
     p = Paginator(logs,20)
     try:
@@ -228,8 +228,8 @@ def systemLog(request):
         logPage = p.page(p.num_pages)
     data = {
         "logPage": logPage,
-        "startDate": str(startDate),
-        "endDate": str(endDate),
+        # "startDate": str(startDate),
+        # "endDate": str(endDate),
     }
     return render(request, "ops/systemLog.html", data)
 

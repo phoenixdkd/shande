@@ -47,6 +47,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">开发菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
                             {% if user.userprofile.title.role_name != 'sale' %}
                                 <li class=""><a href="{% url 'sale:dishonestCustomer' %}" target="_self">不诚信客户</a></li>
                                 <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
@@ -63,7 +64,7 @@
                                 <li class=""><a href="{% url 'bursar:payCompanyReport' %}" target="_self">公司盈利归属汇总</a></li>
                                 <li class=""><a href="{% url 'bursar:payCompanySerialReport' %}" target="_self">盈利归属趋势图</a></li>
                             {% endif %}
-                            <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
+{#                            <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>#}
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">业务微信管理</a></li>
                             <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">业务QQ管理</a></li>
                         </ul>
@@ -256,7 +257,7 @@
     function showMsgModal(msg,msgLevel){
         $('#msg').text(msg);
         if(msgLevel == 'info'){
-            $('#msg').attr("class",'alert alert-info' ,'background-color green');
+            $('#msg').attr("class",'alert alert-info' );
         }else{
             $('#msg').attr("class",'alert alert-danger');
         }
