@@ -29,15 +29,17 @@
       <section id="layout-content">
 
       </section>
-{#      <h3>维护日志</h3>#}
       {% for log in logPage %}
          <pre style="line-height: 5px">
-             <li style="line-height: 10px">{{ log.create }}  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editFixContentModal"
+            {%  if user.userprofile.title.role_name in 'admin ops' %}
+             <li style="line-height: 5px">{{ log.create }}  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editFixContentModal"
                                          data-id="{{ log.id }}" data-content="{{ log.fixContent }}" onclick="editFixContent(this)">修改</button></li>
-         <div style="font-family: 宋体; font-size: 11px">{{ log.fixContent }}</div>
+            {% else %}
+                <li style="line-height: 5px">{{ log.create }}</li>
+            {% endif %}
+         <div style="font-family: 宋体; font-size: 11px; line-height: 5px">{{ log.fixContent }}</div>
          </pre>
       {% endfor %}
-
     </div>
 {#    <table class="table table-bordered">#}
 {#      <thead class="bg-info">#}
