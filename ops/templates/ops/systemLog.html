@@ -28,6 +28,7 @@
 {#                            </div>#}
 {#                        </div>#}
                         <div class="form-group">
+                            <input type="hidden" value="" class="" id="id" name="id"/>
                             <label class="col-md-offset-2 col-md-2 control-lable" for="content">维护内容</label>
                             <div class="col-md-5">
 {#                                <input type="textarea" class="form-control"  id="content" name="content"/>#}
@@ -47,11 +48,49 @@
             </div>
         </div>
     </div>
-    
+
+    <div class="modal fade" id="editFixContentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true" xmlns="http://www.w3.org/1999/html">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">系统维护</h4>
+                </div>
+
+                <div class="modal-body">
+                    <!---The form is placed inside the body of moadl-->
+                    <form id="editFixContentForm" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" value="" class="" id="eid" name="id"/>
+                            <label class="col-md-offset-2 col-md-2 control-lable" for="econtent">维护内容</label>
+                            <div class="col-md-5">
+{#                                <input type="textarea" class="form-control"  id="content" name="content"/>#}
+                                <textarea class="form-control" id="econtent" name="content"/> </textarea>
+                            </div>
+                        </div>
+{#                        <hr/>#}
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    {% if request.user.userprofile.title.role_name == 'admin'  or  request.user.userprofile.title.role_name == 'ops' %}
+                                     <button id="editFixContontBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
     $(function () {
         formValidator();
         $('#addFixContentModal').on('hidden.bs.modal', function() {
+            resetFormValidator();
+        });
+        $('#editFixContentModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
     });
@@ -112,13 +151,49 @@
                 );
             }
         });
+       $('#editFixContentForm').bootstrapValidator({
+            message:'This value is not valid',
+            feedbackIcons:{
+                valid: 'glyphicon glyphicon-ok',
+                invalid:'glypgucon glyphicon-remove',
+                validating:'glyphicon glyphicon-refresh'
+            },
+            fields:{
+                content:{
+                    validators:{
+                        notEmpty:{
+                            message:'必须填'
+                        },
+                        stringLength:{/*长度提示*/
+                            max:300,
+                            message:'内容必须小于300字'
+                        }
+                    }
+                }
+            },
+            submitHandler: function (validator,form,submitButton) {
+                $('#editFixContentModal').modal('hide');
+                $.post(
+                    "{% url 'ops:addFixContent' %}",
+                    form.serialize(),
+                    function (result) {
+                        showMsgModal(result.msg,result.msgLevel);
+                    },
+                    'json'
+                );
+            }
+        });
+       $('#logdiv').load("{% url 'ops:queryLog' %}");
+    }
+    function editFixContent(obj) {
+        $('#eid').val($(obj).data("id"));
+        $('#econtent').val($(obj).data("content"));
     }
     </script>
     
     <br/>
-    <br/>
 
-    <form id="searchFixContentLogForm" method="POST" class="form-horizontal">
+{#    <form id="searchFixContentLogForm" method="POST" class="form-horizontal">#}
 {#         <div class="form-group">#}
 {#             <label class="col-md-1 control-label">时间范围</label>#}
 {#             <div class="col-md-2">#}
@@ -130,29 +205,33 @@
 {#                   title="结束时间" />#}
 {#             </div>#}
 {#         </div>#}
-
-         <div class="form-group">
+{##}
+{#         <div class="form-group">#}
 {#             <label class="col-md-1 control-label"></label>#}
 {#             <div class="col-md-1">#}
 {#                 <button type="submit" class="btn btn-sm btn-primary">搜索</button>#}
 {#             </div>#}
-             <div class="col-md-1">
-                 <button type="button" class="btn btm-sm btn-success" data-toggle="modal" data-target="#addFixContentModal" >新增记录</button>
-             </div>
-         </div>
-    </form>
-
-
-    <div id="layout" class="clearfix">
-      <section id="layout-content">
-
-      </section>
-      <h3>维护日志</h3>
-      {% for log in logPage %}
-         <pre>  <li> {{ log.create }}  <hr/>  {{ log.fixContent }}</li> </pre>
-      {% endfor %}
-
-    </div>
+{#             <div class="col-md-1">#}
+{#                 <button type="button" class="btn btm-sm btn-success" data-toggle="modal" data-target="#addFixContentModal" >新增日志</button>#}
+{#             </div>#}
+{#         </div>#}
+{#    </form>#}
+{##}
+{##}
+{#    <div id="layout" class="clearfix">#}
+{#      <section id="layout-content">#}
+{##}
+{#      </section>#}
+{#      <h3>维护日志</h3>#}
+{#      {% for log in logPage %}#}
+{#         <pre>#}
+{#             <li>{{ log.create }}  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editFixContentModal"#}
+{#                                         data-id="{{ log.id }}" data-content="{{ log.fixContent }}" onclick="editFixContent(this)">修改</button></li>#}
+{#         <div style="font-family: 宋体; font-size: 11px">{{ log.fixContent }}</div>#}
+{#         </pre>#}
+{#      {% endfor %}#}
+{##}
+{#    </div>#}
 {#    <table class="table table-bordered">#}
 {#      <thead class="bg-info">#}
 {#        <th width="1%">序号</th>#}
@@ -173,25 +252,26 @@
 {#      {% endfor %}#}
 {#    </tbody>#}
 {#    </table>#}
-
-<nav class="navbar-right">
-  <ul class="pagination">
-    <li>
-        {% if logPage.has_previous %}
-            <a href="?page={{ logPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>
-        {% endif %}
-    </li>
-    <li><span class="current">
-           第{{ logPage.number }}/{{ logPage.paginator.num_pages }}页
-        </span></li>
-    <li>
-        {% if logPage.has_next %}
+{##}
+{#<nav class="navbar-right">#}
+{#  <ul class="pagination">#}
+{#    <li>#}
+{#        {% if logPage.has_previous %}#}
+{#            <a href="?page={{ logPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>#}
+{#        {% endif %}#}
+{#    </li>#}
+{#    <li><span class="current">#}
+{#           第{{ logPage.number }}/{{ logPage.paginator.num_pages }}页#}
+{#        </span></li>#}
+{#    <li>#}
+{#        {% if logPage.has_next %}#}
 {#            <a href="?page={{ logPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>#}
-           <a href="?page={{ logPage.next_page_number }}><span aria-hidden="true">&raquo; </span></a>
-        {% endif %}
-    </li>
-  </ul>
-</nav>
+{#           <a href="?page={{ logPage.next_page_number }}><span aria-hidden="true">&raquo; </span></a>#}
+{#        {% endif %}#}
+{#    </li>#}
+{#  </ul>#}
+{#</nav>#}
 
+    <div id="logdiv"></div>
 
 {% endblock %}

@@ -123,7 +123,7 @@
                         </ul>
                     </li>
                 {% endif %}
-                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' or user.userprofile.title.role_name == 'teachermanager' or user.userprofile.title.role_name == 'saleboss' %}
+{#                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' or user.userprofile.title.role_name == 'teachermanager' or user.userprofile.title.role_name == 'saleboss' %}#}
                    <div class="nav navbar-nav">
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -132,9 +132,9 @@
                       <span class="icon-bar"></span>
                       <span class="icon-bar"></span>
                      </button>
-                       <a class="navbar-brand" style="font-size: 14px" href="{% url 'ops:systemLog' %}">系统维护日志</a>
+                       <a class="navbar-brand" style="font-size: 14px" href="{% url 'ops:systemLog' %}">版本更新</a>
                    </div>
-                {% endif %}
+{#                {% endif %}#}
 
             </ul>
             <ul class="nav navbar-nav navbar-right">

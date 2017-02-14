@@ -73,7 +73,7 @@
             {% for company in companys %}
             {
                 name:'{{ company.company }}',
-                type:'line',
+                type:'bar',
                 data: [{% for day in days %} '{% getEffectCustomerByCompanyAndDay company.company day %}',{% endfor %}],
             },
             {% endfor %}

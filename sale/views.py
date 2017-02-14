@@ -469,7 +469,7 @@ def saleKpiReportSerial(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=30)
+        startDate = datetime.date.today() - datetime.timedelta(days=1)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     companys = Sale.objects.values('company').distinct()
@@ -480,6 +480,12 @@ def saleKpiReportSerial(request):
     while tmpDay <= endDate:
         days.append(tmpDay)
         tmpDay = tmpDay + datetime.timedelta(days=1)
+
+    # for company in companys:
+    #    for day in days:
+    #       num = {% getEffectCustomerByCompanyAndDay (company.company,day)%}
+
+
     data = {
         "startDate": str(startDate),
         "endDate": str(endDate),

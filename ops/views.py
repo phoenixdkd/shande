@@ -203,8 +203,8 @@ def checkEditCId(request):
 
 @login_required()
 def systemLog(request):
-    if not request.user.userprofile.title.role_name in ['admin', 'ops']:
-        return HttpResponseRedirect("/")
+    # if not request.user.userprofile.title.role_name in ['admin', 'ops']:
+    #     return HttpResponseRedirect("/")
 
     logs = Ops.objects.all()
     logs = logs.order_by("-create")
@@ -238,15 +238,43 @@ def systemLog(request):
 def addFixContent(request):
     data = {}
     try:
-           #新增记录
-        newRecord = Ops.objects.create(create=timezone.now())
-        newRecord.fixContent = request.POST.get('content','')
-        newRecord.save()
+       if request.POST['id'] == '':
 
-        data['msg'] = "操作成功"
-        data['msgLevel'] = "info"
+           #新增记录
+           newRecord = Ops.objects.create(create=timezone.now())
+           newRecord.fixContent = request.POST.get('content','')
+       else:
+           newRecord = Ops.objects.get(id=int(request.POST['id']))
+           newRecord.create = timezone.now()
+           newRecord.fixContent = request.POST['content']
+       newRecord.save()
+
+       data['msg'] = "操作成功"
+       data['msgLevel'] = "info"
     except Exception as e:
         traceback.print_exc()
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def queryLog(request):
+    # if not request.user.userprofile.title.role_name in ['admin', 'ops']:
+    #     return HttpResponseRedirect("/")
+
+    logs = Ops.objects.all()
+    logs = logs.order_by("-create")
+
+    p = Paginator(logs,20)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+    try:
+        logPage = p.page(page)
+    except (EmptyPage, InvalidPage):
+        logPage = p.page(p.num_pages)
+    data = {
+        "logPage": logPage,
+    }
+    return render(request, "ops/queryLog.html", data)
