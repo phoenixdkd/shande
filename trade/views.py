@@ -92,7 +92,7 @@ def addTrade(request):
         newTrade.buycount = buycount
 
         #上传交割单据
-        tradefile = request.FILES['file']
+        tradefile = request.FILES['picfile']
         stock_id  = request.POST.get['stockid']
         customerid= request.POST['customerid']
         filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buyprice)+'_'+str(buycount)+'.jpg'
