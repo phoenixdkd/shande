@@ -3,5 +3,17 @@
    {% block title %}职位列表{% endblock %}
    {% block content %}
     it's my demo page
+{# <form enctype="multipart/form-data">#}
+<form id="addTradeForm" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单上传</label>
+        <div class="form-inline col-md-4">
+             <input name="file" type="file"  class="btn btn-sm btn-default" required/>
+        </div>
+        <div class="form-inline col-md-4">
+            <button type="button" class="btn btn-sm btn-primary" id="uploadLogo">上传</button>
+        </div>
+    </div>
+</form>
    {% endblock %}
 

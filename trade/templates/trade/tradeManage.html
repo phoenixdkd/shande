@@ -12,7 +12,7 @@
 
                 <div class="modal-body">
                     <!-- The form is placed inside the body of modal -->
-                    <form id="addTradeForm" method="post" class="form-horizontal">
+                    <form id="addTradeForm" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <div class="form-group">
                             <input type="hidden" value="{{ customer.id }}" class="" id="customerid" name="customerid"/>
                             <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="stockid">产品代码</label>
@@ -68,6 +68,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单据</label>
+                            <div class="form-inline col-md-4" data-file="file">
+                               <input name="file" id="file" type="file"  class="btn btn-sm btn-default"  required/>
+                            </div>
+{#                            <div class="form-inline col-md-4">#}
+{#                                <button  type="button" class="btn btn-sm btn-primary" id="uploadFile">上传</button>#}
+{#                            </div>#}
+                        </div>
+
                         <div class="modal-footer">
                             <div class="form-group">
                                 <div class="col-md-5 col-md-offset-3">
@@ -238,6 +248,25 @@
         $('#addTradeModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
+{#        $('#addTradeBtn').click(function(){#}
+{#            var formData = new FormData($('form')[0]);#}
+{#            $.ajax({#}
+{#                url: "{% url 'trade:fileUpload' %}",#}
+{#                type: 'POST',#}
+{#                dataType: 'json',#}
+{#                success: function(result){#}
+{#                    showMsgModal(result.msg, result.msgLevel);#}
+{#                    if (result.msgLevel == 'info') {#}
+{#                        setTimeout("window.location.reload()", 1500);#}
+{#                    }#}
+{#                },#}
+{#                data: formData,#}
+{#                cache: false,#}
+{#                contentType: false,#}
+{#                processData: false#}
+{#            });#}
+{#        });#}
+
     });
     function loadTradeDiv(data){
         var customerId = "{{ customer.id }}";
@@ -483,7 +512,7 @@
 <div id="customerDiv"></div>
     {% if request.user.userprofile.title.role_name in 'teacher teachermanager teacherboss ops admin' %}
 <div class="col-md-2">
-        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTradeModal">新增交易</button>
+        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTradeModal" data-customerid="{{ customer.id }}">新增交易</button>
 </div>
     {% endif %}
     <br/>

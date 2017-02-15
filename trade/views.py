@@ -22,6 +22,8 @@ from sale.models import *
 from customer.models import *
 from trade.models import *
 
+from PIL import Image
+
 @login_required()
 def tradeManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
@@ -89,6 +91,18 @@ def addTrade(request):
         newTrade.buyprice = buyprice
         newTrade.buycount = buycount
 
+        #上传交割单据
+        tradefile = request.FILES['file']
+        stock_id  = request.POST.get['stockid']
+        customerid= request.POST['customerid']
+        filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buyprice)+'_'+str(buycount)+'.jpg'
+        filejpg = "trade/templates/static/trade/images/"+filename
+
+        file = open(filejpg, "wb+")
+        for chunk in tradefile.chunks():
+            file.write(chunk)
+        file.close()
+
         newTrade.buycash = buycash
         customer.modify = timezone.now()
         # 判断是否VIP和10W+
@@ -119,6 +133,7 @@ def addTrade(request):
 
         elif secondTrade:
             customer.vip = True
+
 
         # newTrade.income = request.POST.get('income', 0)
         newTrade.share = request.POST.get('share')
@@ -322,3 +337,27 @@ def getNameByStockId(request):
     except Exception as e:
         traceback.print_exc()
         return HttpResponse("无此代码，请联系管理员")
+
+@login_required
+def fileUpload(request):
+    data = {}
+    try:
+        tradefile = request.FILES['file']
+        stock_id  = request.POST['stockid']
+        customerid= request.POST['customerid']
+        buy_price = request.POST['buyprice']
+        buy_count = request.POST['buycount']
+        filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buy_price)+'_'+str(buy_count)+'.jpg'
+        filejpg = "trade/templates/static/trade/images/"+filename
+
+        file = open(filejpg, "wb+")
+        for chunk in tradefile.chunks():
+            file.write(chunk)
+        file.close()
+        data['msg'] = "上传成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        print(e.__str__)
+        data['msg'] = "上传失败"
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))

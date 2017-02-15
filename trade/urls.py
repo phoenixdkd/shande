@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^payManage$', views.payManage, name='payManage'),
     url(r'^payTrade$', views.payTrade, name='payTrade'),
     url(r'^backTrade$', views.backTrade, name='backTrade'),
+    url(r'^fileUpload$', views.fileUpload, name='fileUpload'),
 
 ]
