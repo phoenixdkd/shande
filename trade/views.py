@@ -91,18 +91,6 @@ def addTrade(request):
         newTrade.buyprice = buyprice
         newTrade.buycount = buycount
 
-        #上传交割单据
-        tradefile = request.FILES['picfile']
-        stock_id  = request.POST.get['stockid']
-        customerid= request.POST['customerid']
-        filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buyprice)+'_'+str(buycount)+'.jpg'
-        filejpg = "trade/templates/static/trade/images/"+filename
-
-        file = open(filejpg, "wb+")
-        for chunk in tradefile.chunks():
-            file.write(chunk)
-        file.close()
-
         newTrade.buycash = buycash
         customer.modify = timezone.now()
         # 判断是否VIP和10W+
@@ -140,8 +128,20 @@ def addTrade(request):
         customer.latest = timezone.now()
         # newTrade.sellprice = request.POST.get('sellprice', '0')
         # newTrade.commission = request.get('commission', 0)
+        tradeid = newTrade.id
         newTrade.save()
         customer.save()
+
+        #上传交割单据
+        tradefile = request.FILES['file']
+        customerid= request.POST['customerid']
+        filename = str(tradeid)+'.jpg'
+        filejpg = "trade/templates/static/trade/images/"+filename
+        file = open(filejpg, "wb+")
+
+        for chunk in tradefile.chunks():
+            file.write(chunk)
+        file.close()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -170,6 +170,8 @@ def handleTrade(request):
     data = {}
     firstTrade = False
     try:
+        a=request.POST.get('htcustomerid')
+
         customer = Customer.objects.get(id=request.POST.get('htcustomerid'))
         # 判断是否首笔交易
         firstTradeObj = Trade.objects.filter(customer=customer).earliest('create')
@@ -220,6 +222,17 @@ def handleTrade(request):
         newTrade.commission = request.POST.get('htcommission', 0)
         newTrade.save()
         customer.save()
+
+        #上传交割单据
+        tradefile = request.FILES['htfile']
+        filename = str(newTrade.id)+'.jpg'
+        filejpg = "trade/templates/static/trade/images/"+filename
+        file = open(filejpg, "wb+")
+
+        for chunk in tradefile.chunks():
+            file.write(chunk)
+        file.close()
+
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
@@ -338,26 +351,29 @@ def getNameByStockId(request):
         traceback.print_exc()
         return HttpResponse("无此代码，请联系管理员")
 
-@login_required
-def fileUpload(request):
-    data = {}
-    try:
-        tradefile = request.FILES['file']
-        stock_id  = request.POST['stockid']
-        customerid= request.POST['customerid']
-        buy_price = request.POST['buyprice']
-        buy_count = request.POST['buycount']
-        filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buy_price)+'_'+str(buy_count)+'.jpg'
-        filejpg = "trade/templates/static/trade/images/"+filename
-
-        file = open(filejpg, "wb+")
-        for chunk in tradefile.chunks():
-            file.write(chunk)
-        file.close()
-        data['msg'] = "上传成功"
-        data['msgLevel'] = "info"
-    except Exception as e:
-        print(e.__str__)
-        data['msg'] = "上传失败"
-        data['msgLevel'] = "error"
-    return HttpResponse(json.dumps(data))
+@login_required()
+def pictureshow(request):
+    return render(request, 'trade/pictureshow.html', locals())
+# @login_required
+# def fileUpload(request):
+#     data = {}
+#     try:
+#         tradefile = request.FILES['file']
+#         stock_id  = request.POST['stockid']
+#         customerid= request.POST['customerid']
+#         buy_price = request.POST['buyprice']
+#         buy_count = request.POST['buycount']
+#         filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buy_price)+'_'+str(buy_count)+'.jpg'
+#         filejpg = "trade/templates/static/trade/images/"+filename
+#
+#         file = open(filejpg, "wb+")
+#         for chunk in tradefile.chunks():
+#             file.write(chunk)
+#         file.close()
+#         data['msg'] = "上传成功"
+#         data['msgLevel'] = "info"
+#     except Exception as e:
+#         print(e.__str__)
+#         data['msg'] = "上传失败"
+#         data['msgLevel'] = "error"
+#     return HttpResponse(json.dumps(data))

@@ -71,13 +71,9 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单据</label>
                             <div class="form-inline col-md-4" >
-                               <input name="picfile" id="file" type="file"  class="btn btn-sm btn-default"  required/>
+                               <input name="file" id="file" type="file"  class="btn btn-sm btn-default"  required/>
                             </div>
-{#                            <div class="form-inline col-md-4">#}
-{#                                <button  type="button" class="btn btn-sm btn-primary" id="uploadFile">上传</button>#}
-{#                            </div>#}
                         </div>
-
                         <div class="modal-footer">
                             <div class="form-group">
                                 <div class="col-md-5 col-md-offset-3">
@@ -89,7 +85,7 @@
                 </div>
             </div>
         </div>
-    </div>
+</div>
 <div class="modal fade" id="handleTradeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -220,6 +216,12 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="htfile">交割单据</label>
+                            <div class="form-inline col-md-4" >
+                               <input name="htfile" id="htfile" type="file"  class="btn btn-sm btn-default"  required/>
+                            </div>
+                        </div>
                         <div class="modal-footer">
                             <div class="form-group">
                                 <div class="col-md-5 col-md-offset-3">
@@ -248,25 +250,6 @@
         $('#addTradeModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
-{#        $('#addTradeBtn').click(function(){#}
-{#            var formData = new FormData($('form')[0]);#}
-{#            $.ajax({#}
-{#                url: "{% url 'trade:fileUpload' %}",#}
-{#                type: 'POST',#}
-{#                dataType: 'json',#}
-{#                success: function(result){#}
-{#                    showMsgModal(result.msg, result.msgLevel);#}
-{#                    if (result.msgLevel == 'info') {#}
-{#                        setTimeout("window.location.reload()", 1500);#}
-{#                    }#}
-{#                },#}
-{#                data: formData,#}
-{#                cache: false,#}
-{#                contentType: false,#}
-{#                processData: false#}
-{#            });#}
-{#        });#}
-
     });
     function loadTradeDiv(data){
         var customerId = "{{ customer.id }}";
@@ -383,17 +366,33 @@
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addTradeModal').modal('hide');
-                $.post(
-                    "{% url 'trade:addTrade' %}",
-                    form.serialize(),
-                    function(result) {
-                        showMsgModal(result.msg, result.msgLevel);
-                        loadTradeDiv();
-                        loadCustomerDiv();
-                        updateParentWindow();
-                    },
-                    'json'
-                );
+{#                $.post(#}
+{#                    "{% url 'trade:addTrade' %}",#}
+{#                    form.serialize(),#}
+{#                    function(result) {#}
+{#                        showMsgModal(result.msg, result.msgLevel);#}
+{#                        loadTradeDiv();#}
+{#                        loadCustomerDiv();#}
+{#                        updateParentWindow();#}
+{#                    },#}
+{#                    'json'#}
+{#                );#}
+               var formData = new FormData($('form')[0]);
+               $.ajax({
+                  url:"{% url 'trade:addTrade' %}",
+                  type:'POST',
+                  dataType:'json',
+                  success: function (result) {
+                     showMsgModal(result.msg,result.msgLevel);
+                     if (result.msgLevel == 'info'){
+                        setTimeout("window.location.reload()",1500);
+                     }
+                  },
+                  data:formData,
+                  cache:false,
+                  contentType:false,
+                  processData:false
+               });
             }
         });
         $('#handleTradeForm').bootstrapValidator({
@@ -479,6 +478,22 @@
                     },
                     'json'
                 );
+{#                var formData = new FormData($('form')[0]);#}
+{#                $.ajax({#}
+{#                  url:"{% url 'trade:handleTrade' %}",#}
+{#                  type:'POST',#}
+{#                  dataType:'json',#}
+{#                  success: function (result) {#}
+{#                     showMsgModal(result.msg,result.msgLevel);#}
+{#                     if (result.msgLevel == 'info'){#}
+{#                        setTimeout("window.location.reload()",1500);#}
+{#                     }#}
+{#                  },#}
+{#                  data:formData,#}
+{#                  cache:false,#}
+{#                  contentType:false,#}
+{#                  processData:false#}
+{#                });#}
             }
         });
 {#        $('#searchSaleForm').bootstrapValidator({#}
@@ -508,6 +523,24 @@
 {#        $('#searchSaleForm').data('bootstrapValidator').destroy();#}
         formValidator();
     }
+{#    function fileUpload(){#}
+{#        var formData = new FormData($('form')[0]);#}
+{#        $.ajax({#}
+{#            url:"{% url 'trade:fileUpload' %}",#}
+{#            type:'POST',#}
+{#            dataType:'json',#}
+{#            success: function (result) {#}
+{#                showMsgModal(result.msg,result.msgLevel);#}
+{#                if (result.msgLevel == 'info'){#}
+{#                    setTimeout("window.location.reload()",1500);#}
+{#                }#}
+{#            },#}
+{#            data:formData,#}
+{#            cache:false,#}
+{#            contentType:false,#}
+{#            processData:false#}
+{#        });#}
+{#    }#}
 </script>
 <div id="customerDiv"></div>
     {% if request.user.userprofile.title.role_name in 'teacher teachermanager teacherboss ops admin' %}
