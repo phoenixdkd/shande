@@ -263,6 +263,9 @@
         }
         $('#msgModal').modal('show');
     }
+    $('#msgModal').on('hidden.bs.modal', function() {
+            $('body').css("padding",0);
+    });
 </script>
 
 <audio src="/static/assets/sound/incoming_transmission.ogg" id="transmissionAudio">
