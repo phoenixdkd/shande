@@ -16,6 +16,6 @@ urlpatterns = [
     url(r'^payTrade$', views.payTrade, name='payTrade'),
     url(r'^backTrade$', views.backTrade, name='backTrade'),
     url(r'^pictureshow$',views.pictureshow,name='pictureshow'),
-    # url(r'^fileUpload$', views.fileUpload, name='fileUpload'),
+     url(r'^updateFile$', views.updateFile, name='updateFile'),
 
 ]

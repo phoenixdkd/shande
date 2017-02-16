@@ -95,6 +95,11 @@
                     data-ptpaycash="{{ tradeObj.commission }}"
                 >收款</button>
                 {% endif %}
+                {% if request.user.userprofile.title.role_name in "admin ops teachermanage teacherboss" %}
+                 <button id="update" type="button" class="btn btn-sm btn-primary" data-toggle="modal" onclick="updateFile(this)"
+                    data-udid="{{ tradeObj.id }}"
+                >更新</button>
+                {% endif %}
 
             </td>
         </tr>

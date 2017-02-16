@@ -134,7 +134,6 @@ def addTrade(request):
 
         #上传交割单据
         tradefile = request.FILES['file']
-        customerid= request.POST['customerid']
         filename = str(tradeid)+'.jpg'
         filejpg = "trade/static/trade/images/"+filename
         file = open(filejpg, "wb+")
@@ -223,15 +222,15 @@ def handleTrade(request):
         newTrade.save()
         customer.save()
 
-        #上传交割单据
-        tradefile = request.FILES['htfile']
-        filename = str(newTrade.id)+'.jpg'
-        filejpg = "trade/templates/static/trade/images/"+filename
-        file = open(filejpg, "wb+")
+        # #上传交割单据
+        # tradefile = request.FILES['htfile']
+        # filename = str(newTrade.id)+'.jpg'
+        # filejpg = "trade/static/trade/images/"+filename
+        # file = open(filejpg, "wb+")
 
-        for chunk in tradefile.chunks():
-            file.write(chunk)
-        file.close()
+        # for chunk in tradefile.chunks():
+        #     file.write(chunk)
+        # file.close()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -354,26 +353,28 @@ def getNameByStockId(request):
 @login_required()
 def pictureshow(request):
     return render(request, 'trade/pictureshow.html', locals())
-# @login_required
-# def fileUpload(request):
-#     data = {}
-#     try:
-#         tradefile = request.FILES['file']
-#         stock_id  = request.POST['stockid']
-#         customerid= request.POST['customerid']
-#         buy_price = request.POST['buyprice']
-#         buy_count = request.POST['buycount']
-#         filename = str(customerid)+'_'+str(stock_id)+'_'+'_'+str(buy_price)+'_'+str(buy_count)+'.jpg'
-#         filejpg = "trade/templates/static/trade/images/"+filename
-#
-#         file = open(filejpg, "wb+")
-#         for chunk in tradefile.chunks():
-#             file.write(chunk)
-#         file.close()
-#         data['msg'] = "上传成功"
-#         data['msgLevel'] = "info"
-#     except Exception as e:
-#         print(e.__str__)
-#         data['msg'] = "上传失败"
-#         data['msgLevel'] = "error"
-#     return HttpResponse(json.dumps(data))
+
+@login_required()
+def updateFile(request):
+    data = {}
+    try:
+        # tradeid = request.POST["tradeid"]
+        #上传交割单据
+        # tradeid=request.POST.get('tradeid')
+        # tradeid=request.POST('tradeid')
+        # tradefile = request.FILES['file']
+        # filename = str(tradeid)+'.jpg'
+        # filejpg = "trade/static/trade/images/"+filename
+        # file = open(filejpg, "wb+")
+        #
+        # for chunk in tradefile.chunks():
+        #     file.write(chunk)
+        # file.close()
+
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
+    except Exception as e:
+        traceback.print_exc()
+        data['msg'] = "操作失败, %s" % e.__str__()
+        data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
