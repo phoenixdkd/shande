@@ -57,7 +57,7 @@
             </td>
             <td>{{ tradeObj.stock.stockid}}</td>
 {#            <td><a href="pictureshow?tradeid={{ tradeObj.id }}" target="_blank"> {{ tradeObj.stock.stockname }}</a></td>#}
-             <td><a href="http://localhost:8000/trade/templates/static/trade/images/9300.jpg" target="_blank"> {{ tradeObj.stock.stockname }}</a></td>
+             <td><a href="/static/trade/images/{{ tradeObj.id }}.jpg" target="_blank"> {{ tradeObj.stock.stockname }}</a></td>
             <td>{{ tradeObj.buyprice}}</td>
             <td>{{ tradeObj.buycount}}</td>
             <td>{{ tradeObj.buycash}}</td>

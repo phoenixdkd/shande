@@ -97,10 +97,10 @@ def addTrade(request):
         if buycash >= 100000:
             customer.tcrude = True
 
-
+        customer.status = 40
         #如果是首笔交易标记客户状态为有效客户
         if firstTrade:
-            customer.status = 40
+
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
             #绑定开发的真实用户有效客户数加1
@@ -136,7 +136,7 @@ def addTrade(request):
         tradefile = request.FILES['file']
         customerid= request.POST['customerid']
         filename = str(tradeid)+'.jpg'
-        filejpg = "trade/templates/static/trade/images/"+filename
+        filejpg = "trade/static/trade/images/"+filename
         file = open(filejpg, "wb+")
 
         for chunk in tradefile.chunks():
