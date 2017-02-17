@@ -286,6 +286,7 @@ def deleteTrade(request):
     data = {}
     try:
         trade = Trade.objects.get(id=request.POST.get("id"))
+        tradeid = trade.id
         customer = trade.customer
         trade.delete()
         trades = Trade.objects.filter(customer=customer)
@@ -316,6 +317,11 @@ def deleteTrade(request):
             if crudeTrades.__len__() == 0:
                 customer.crude = 0
                 customer.save()
+
+        #删除图片
+        jpgfile = "trade/static/trade/images/"+str(tradeid)+'.jpg'
+        if os.path.isfile(jpgfile):
+               os.remove(jpgfile)
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -358,18 +364,16 @@ def pictureshow(request):
 def updateFile(request):
     data = {}
     try:
-        # tradeid = request.POST["tradeid"]
         #上传交割单据
-        # tradeid=request.POST.get('tradeid')
-        # tradeid=request.POST('tradeid')
-        # tradefile = request.FILES['file']
-        # filename = str(tradeid)+'.jpg'
-        # filejpg = "trade/static/trade/images/"+filename
-        # file = open(filejpg, "wb+")
-        #
-        # for chunk in tradefile.chunks():
-        #     file.write(chunk)
-        # file.close()
+        tradeid=request.POST.get('tradeid')
+        tradefile = request.FILES['file']
+        filename = str(tradeid)+'.jpg'
+        jpgfile = "trade/static/trade/images/"+filename
+        file = open(jpgfile, "wb+")
+
+        for chunk in tradefile.chunks():
+            file.write(chunk)
+        file.close()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
