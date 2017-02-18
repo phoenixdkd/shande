@@ -382,3 +382,26 @@ def updateFile(request):
         data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
+
+@login_required()
+def showFile(request):
+    data = {}
+    try:
+        tradeid = request.POST.get('tradeid')
+        dpath = 'trade/static/trade/images/'
+        filename = str(tradeid)+'.jpg'
+        existfile = "trade/static/trade/images/"+filename
+        if os.path.isfile(existfile):
+            data["filename"] = "/static/trade/images/"+filename
+            data["msg"] = " "
+            data['msgLevel'] = "info"
+        else:
+            data["filename"] = ''
+            data["msg"] = "文件不存在"
+            data['msgLevel'] = "error"
+    except:
+            traceback.print_exc()
+            data['msg'] = "文件不存在"
+            data['msgLevel'] = "error"
+            data['filename'] = " "
+    return HttpResponse(json.dumps(data))
