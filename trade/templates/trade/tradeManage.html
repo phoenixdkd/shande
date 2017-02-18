@@ -102,7 +102,7 @@
                             <input type="hidden" value=" " class="" id="tradeid" name="tradeid"/>
                             <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单据</label>
                             <div class="form-inline col-md-4" >
-                               <input name="file" id="file" type="file"  class="btn btn-sm btn-default" onchange="checkfile()" required/>
+                               <input name="file" id="file" type="file"  class="btn btn-sm btn-default" required/>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -611,22 +611,30 @@
 
         formValidator();
     }
-    function checkfile() {
-        var maxsize = 0.5*1024*1024.; //500K
-        var errMsg = "上传的图片不能超过500K！！！";
-        var tipMsg = "建议使用IE、FireFox、Chrome浏览器。";
-        var browerCfg = {};
-        var ua = window.navigator.userAgent;
-        if (ua.indexOf("MSIE")>=1){
-            browerCfg.ie = true;
-        }else if(ua.indexOf("Firefox")>=1){
-            browerCfg.firefox = true;
-        }
-        else if(ua.indexOf("Chrome")>=1){
-            browerCfg.chrome = true;
-        }
-        var obj_file = document.getElementById("file");
-        var filesize = 0;
+{#    function checkfile() {#}
+{#        var maxsize = 0.5*1024*1024.; //500K#}
+{#        var errMsg = "上传的图片不能超过500K！！！";#}
+{#        var tipMsg = "建议使用IE、FireFox、Chrome浏览器。";#}
+{#        var browerCfg = {};#}
+{#        var ua = window.navigator.userAgent;#}
+{#        if (ua.indexOf("MSIE")>=1){#}
+{#            browerCfg.ie = true;#}
+{#        }else if(ua.indexOf("Firefox")>=1){#}
+{#            browerCfg.firefox = true;#}
+{#        }#}
+{#        else if(ua.indexOf("Chrome")>=1){#}
+{#            browerCfg.chrome = true;#}
+{#        }#}
+{#        var obj_file = document.getElementById("file");#}
+{#        var filesize = 0;#}
+{#        try{#}
+{#            filesize = obj_file.sizes;#}
+{#        }#}
+{#        catch(e){#}
+{#            alert(e.message);#}
+{#        }finally {}#}
+{##}
+{#        alert(filesize);#}
 {#        try:{#}
 {#          if (browerCfg.firefox || browerCfg.chrome){#}
 {#             alert(obj_file);#}
@@ -654,14 +662,13 @@
 {#            alert("文件大小符合要求");#}
 {#            return;#}
 {#        }#}
-    }
+{#    }#}
 
 </script>
 <div id="customerDiv"></div>
     {% if request.user.userprofile.title.role_name in 'teacher teachermanager teacherboss ops admin' %}
      <div class="col-md-2">
         <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addTradeModal" >新增交易</button>
-{#        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#updateFileModal" >更新交易</button>#}
      </div>
     {% endif %}
     <br/>

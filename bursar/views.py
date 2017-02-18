@@ -89,17 +89,30 @@ def addBursar(request):
 def addBursarGroup(request):
     data = {}
     try:
-        bursarCount = request.POST.get('bursarCount')
-        for i in range(1, int(bursarCount) + 1):
-            if i < 10:
-                index = '0' + str(i)
-            else:
-                index = str(i)
-            bursarId = "CW" + index
-            bursar, created = Bursar.objects.get_or_create(bursarId=bursarId)
-            bursar.save()
-        data['msg'] = "操作成功"
-        data['msgLevel'] = "info"
+        # bursarCount = request.POST.get('bursarCount')
+        bursarCode = request.POST.get('bursarCode')
+        departmentID = request.POST.get('departmentID')
+        groupID = request.POST.get('groupID')
+        bursarID = str(bursarCode)+str(groupID)+str(departmentID)
+        # for i in range(1, int(bursarCount) + 1):
+        #     if i < 10:
+        #         index = '0' + str(i)
+        #     else:
+        #         index = str(i)
+        #     bursarId = "CW" + index
+        #     bursar, created = Bursar.objects.get_or_create(bursarId=bursarId)
+        #     bursar.save()
+        # bursar,created = Bursar.objects.get_or_create(bursarID=bursarID)
+        bursar = Bursar.objects.filter(bursarId=bursarID,bursarId__isnull=False)
+        if(bursar.__len__() !=0):
+          raise Exception('财务ID已经存在')
+        else:
+          newbursar = Bursar.objects.create()
+          newbursar.bursarId = bursarID
+          newbursar.save()
+          data['msg'] = "操作成功"
+          data['msgLevel'] = "info"
+
     except Exception as e:
         print(e.__str__())
         if str(e.__str__()).__contains__('bursarId'):

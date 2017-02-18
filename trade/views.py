@@ -370,7 +370,6 @@ def updateFile(request):
         filename = str(tradeid)+'.jpg'
         jpgfile = "trade/static/trade/images/"+filename
         file = open(jpgfile, "wb+")
-
         for chunk in tradefile.chunks():
             file.write(chunk)
         file.close()
