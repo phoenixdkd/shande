@@ -102,16 +102,16 @@ def addBursarGroup(request):
         #     bursarId = "CW" + index
         #     bursar, created = Bursar.objects.get_or_create(bursarId=bursarId)
         #     bursar.save()
-        # bursar,created = Bursar.objects.get_or_create(bursarID=bursarID)
-        bursar = Bursar.objects.filter(bursarId=bursarID,bursarId__isnull=False)
-        if(bursar.__len__() !=0):
-          raise Exception('财务ID已经存在')
-        else:
-          newbursar = Bursar.objects.create()
-          newbursar.bursarId = bursarID
-          newbursar.save()
-          data['msg'] = "操作成功"
-          data['msgLevel'] = "info"
+        bursar,created = Bursar.objects.get_or_create(bursarId=bursarID)
+        # bursar = Bursar.objects.filter(bursarId=bursarID,bursarId__isnull=False)
+        # if(bursar.__len__() !=0):
+        #   raise Exception('财务ID已经存在')
+        # else:
+        #   newbursar = Bursar.objects.create()
+        #   newbursar.bursarId = bursarID
+        #   newbursar.save()
+        data['msg'] = "操作成功"
+        data['msgLevel'] = "info"
 
     except Exception as e:
         print(e.__str__())
