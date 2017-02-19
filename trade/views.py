@@ -395,12 +395,12 @@ def showFile(request):
             data["msg"] = " "
             data['msgLevel'] = "info"
         else:
-            data["filename"] = ''
+            data["filename"] = '/static/trade/images/filenotexist.jpg'
             data["msg"] = "文件不存在"
-            data['msgLevel'] = "error"
+            data['msgLevel'] = "info"
     except:
             traceback.print_exc()
             data['msg'] = "文件不存在"
             data['msgLevel'] = "error"
-            data['filename'] = " "
+            data['filename'] = ""
     return HttpResponse(json.dumps(data))

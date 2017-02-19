@@ -1,15 +1,15 @@
-<div class="modal fade" id="showMsgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="showMsgModal" style="margin-right: 20%" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">交割单据</h4>
-            </div>
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
+{#                <h4 class="modal-title">交割单据</h4>#}
+{#            </div>#}
             <div class="modal-body">
-                <div id="msgtext" class="alert alert-info" ></div>
+{#                <div id="msgtext" class="alert alert-info" ></div>#}
                 <div> <img id="imgid" src=" "/></div>
             </div>
-        </div>
+{#        </div>#}
     </div>
 </div>
 <table class="table table-bordered col-md-12 table-hover">
@@ -153,6 +153,7 @@
     };
      function showFileMsgModal(msg,msgLevel,filename){
         $('#msgtext').text(msg);
+        alert(filename)
         if(msgLevel == 'info'){
             $('#msgtext').attr("class",'alert alert-info' );
             $('#imgid').attr("src",filename);
