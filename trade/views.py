@@ -22,8 +22,6 @@ from sale.models import *
 from customer.models import *
 from trade.models import *
 
-from PIL import Image
-
 @login_required()
 def tradeManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
@@ -135,8 +133,12 @@ def addTrade(request):
         #上传交割单据
         tradefile = request.FILES['file']
         filename = str(tradeid)+'.jpg'
-        filejpg = "trade/static/trade/images/"+filename
-        file = open(filejpg, "wb+")
+        jpgfile = "trade/static/trade/images/"+filename
+        #如果存在先删除
+        if os.path.isfile(jpgfile):
+               os.remove(jpgfile)
+
+        file = open(jpgfile, "wb+")
 
         for chunk in tradefile.chunks():
             file.write(chunk)
@@ -221,16 +223,6 @@ def handleTrade(request):
         newTrade.commission = request.POST.get('htcommission', 0)
         newTrade.save()
         customer.save()
-
-        # #上传交割单据
-        # tradefile = request.FILES['htfile']
-        # filename = str(newTrade.id)+'.jpg'
-        # filejpg = "trade/static/trade/images/"+filename
-        # file = open(filejpg, "wb+")
-
-        # for chunk in tradefile.chunks():
-        #     file.write(chunk)
-        # file.close()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -369,8 +361,11 @@ def updateFile(request):
         tradefile = request.FILES['file']
         filename = str(tradeid)+'.jpg'
         jpgfile = "trade/static/trade/images/"+filename
-        file = open(jpgfile, "wb+")
+        #如果存在先删除
+        if os.path.isfile(jpgfile):
+               os.remove(jpgfile)
 
+        file = open(jpgfile, "wb+")
         for chunk in tradefile.chunks():
             file.write(chunk)
         file.close()
@@ -381,4 +376,27 @@ def updateFile(request):
         traceback.print_exc()
         data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
+    return HttpResponse(json.dumps(data))
+
+@login_required()
+def showFile(request):
+    data = {}
+    try:
+        tradeid = request.POST.get('tradeid')
+        dpath = 'trade/static/trade/images/'
+        filename = str(tradeid)+'.jpg'
+        existfile = "trade/static/trade/images/"+filename
+        if os.path.isfile(existfile):
+            data["filename"] = "/static/trade/images/"+filename
+            data["msg"] = " "
+            data['msgLevel'] = "info"
+        else:
+            data["filename"] = '/static/trade/images/filenotexist.jpg'
+            data["msg"] = "文件不存在"
+            data['msgLevel'] = "info"
+    except:
+            traceback.print_exc()
+            data['msg'] = "文件不存在"
+            data['msgLevel'] = "error"
+            data['filename'] = ""
     return HttpResponse(json.dumps(data))

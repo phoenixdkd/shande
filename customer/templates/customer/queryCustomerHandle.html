@@ -1,4 +1,11 @@
 {% load customer_tags %}
+<div class="modal fade" id="showMsgModal" style="margin-right: 20%" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+            <div class="modal-body">
+                <div> <img id="imgid" src=" "/></div>
+            </div>
+    </div>
+</div>
 <table class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
@@ -92,7 +99,7 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
             </td>
-            <td>{% getLatestStockByCustomerId customerObj.id %}</td>
+            <td><button id="showfile" type="button" data-fsid="{%getLatestTradeIDByCustomerId customerObj.id%}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</button></td>
             <td class="spotTd">
 {#                <lable class="btn btn-xs btn-primary spotLable">{{ customerObj.spotStatus }}</lable>#}
                 <select class="spotSelect"
@@ -270,6 +277,33 @@
             }
         }
     });
+
+
+    function showFile(obj){
+        var tradeId = $(obj).data("fsid");
+        $.post(
+            "{% url 'trade:showFile' %}",
+            {"tradeid":tradeId},
+            function(result) {
+                showFileMsgModal(result.msg, result.msgLevel,result.filename);
+            },
+            'json'
+        );
+    };
+     function showFileMsgModal(msg,msgLevel,filename){
+        $('#msgtext').text(msg);
+        if(msgLevel == 'info'){
+            $('#msgtext').attr("class",'alert alert-info' );
+            $('#imgid').attr("src",filename);
+        }else{
+            $('#msgtext').attr("class",'alert alert-danger');
+        }
+        $('#showMsgModal').modal('show');
+    }
+    $('#showMsgModal').on('hidden.bs.modal', function() {
+            $('body').css("padding",0);
+    });
+
 </script>
 <nav class="navbar-right">
 

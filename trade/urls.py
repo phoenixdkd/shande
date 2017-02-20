@@ -10,12 +10,12 @@ urlpatterns = [
     url(r'^addTrade$', views.addTrade, name='addTrade'),
     url(r'^handleTrade$', views.handleTrade, name='handleTrade'),
     url(r'^deleteTrade$', views.deleteTrade, name='deleteTrade'),
+    url(r'^updateFile$', views.updateFile, name='updateFile'),
+    url(r'^showFile$', views.showFile, name='showFile'),
 
     # for bursar
     url(r'^payManage$', views.payManage, name='payManage'),
     url(r'^payTrade$', views.payTrade, name='payTrade'),
     url(r'^backTrade$', views.backTrade, name='backTrade'),
     url(r'^pictureshow$',views.pictureshow,name='pictureshow'),
-     url(r'^updateFile$', views.updateFile, name='updateFile'),
-
 ]

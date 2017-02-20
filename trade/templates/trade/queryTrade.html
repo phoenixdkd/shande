@@ -1,3 +1,17 @@
+<div class="modal fade" id="showMsgModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
+{#                <h4 class="modal-title">交割单据</h4>#}
+{#            </div>#}
+            <div class="modal-body">
+{#                <div id="msgtext" class="alert alert-info" ></div>#}
+                <div style="text-align: center"> <img id="imgid" src=" "/></div>
+            </div>
+{#        </div>#}
+    </div>
+</div>
 <table class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
@@ -56,8 +70,7 @@
                 {% endif %}
             </td>
             <td>{{ tradeObj.stock.stockid}}</td>
-{#            <td><a href="pictureshow?tradeid={{ tradeObj.id }}" target="_blank"> {{ tradeObj.stock.stockname }}</a></td>#}
-             <td><a href="/static/trade/images/{{ tradeObj.id }}.jpg" target="_blank"> {{ tradeObj.stock.stockname }}</a></td>
+            <td> <button id="showfile" type="button" data-fsid="{{ tradeObj.id }}" onclick="showFile(this)">{{ tradeObj.stock.stockname }}</button></td>
             <td>{{ tradeObj.buyprice}}</td>
             <td>{{ tradeObj.buycount}}</td>
             <td>{{ tradeObj.buycash}}</td>
@@ -125,3 +138,30 @@
     </li>
   </ul>
 </nav>
+
+<script type="text/javascript">
+    function showFile(obj){
+        var tradeId = $(obj).data("fsid");
+        $.post(
+            "{% url 'trade:showFile' %}",
+            {"tradeid":tradeId},
+            function(result) {
+                showFileMsgModal(result.msg, result.msgLevel,result.filename);
+            },
+            'json'
+        );
+    };
+     function showFileMsgModal(msg,msgLevel,filename){
+        $('#msgtext').text(msg);
+        if(msgLevel == 'info'){
+            $('#msgtext').attr("class",'alert alert-info' );
+            $('#imgid').attr("src",filename);
+        }else{
+            $('#msgtext').attr("class",'alert alert-danger');
+        }
+        $('#showMsgModal').modal('show');
+    }
+    $('#showMsgModal').on('hidden.bs.modal', function() {
+            $('body').css("padding",0);
+    });
+</script>

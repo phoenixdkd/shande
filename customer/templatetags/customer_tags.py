@@ -24,6 +24,15 @@ def getLatestStockByCustomerId(customerId):
         print(e.__str__())
         return ""
 
+@register.simple_tag
+def getLatestTradeIDByCustomerId(customerId):
+    try:
+        trade = Trade.objects.filter(customer=Customer.objects.get(id=customerId)).order_by('-create')
+        return trade[0].id
+    except Exception as e:
+        print(e.__str__())
+        return ""
+
 @register.simple_tag()
 def getCommissionTotalByCustomerId(customerId):
     try:
