@@ -159,6 +159,19 @@
         formValidator();
     }
     function loadTeacherDiv(data){
+        var searchData = $('#searchTeacherForm').serialize();
+        var page =  "page="+$('#page').val();
+        if(data && data.indexOf('page') >= 0){
+            var arr = new Array(2);
+            arr[0] = searchData;
+            arr[1] = data;
+            data = arr.join("&");
+        }else{
+            var arr = new Array(2);
+            arr[0] = searchData;
+            arr[1] = page;
+            data = arr.join("&");
+        }
         $('#teacherDiv').load("{% url 'teacher:queryTeacher' %}", data);
     }
     function formValidator(){
