@@ -71,8 +71,11 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单据</label>
                             <div class="form-inline col-md-4" >
-                               <input name="file" id="file" type="file"  class="btn btn-sm btn-default"  required/>
+                               <input name="file" id="ulfile" type="file"  class="btn btn-sm btn-default"  required/>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-3" style="color: red; font-size: 10px">(温馨提示：文件大小100K以内，格式：png或jpg)</label>
                         </div>
                         <div class="modal-footer">
                             <div class="form-group">
@@ -102,8 +105,60 @@
                             <input type="hidden" value=" " class="" id="tradeid" name="tradeid"/>
                             <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单据</label>
                             <div class="form-inline col-md-4" >
-                               <input name="file" id="file" type="file"  class="btn btn-sm btn-default" required/>
+                               <input name="file" id="udfile" type="file"  class="btn btn-sm btn-default"  required/>
+                                <script type="text/javascript">
+                                     var maxsize = 100*1024;//100K
+                                     var errMsg = "上传文件超过100K,请重新上传！！！";
+                                     var tipMsg = "您的浏览器暂不支持计算上传文件的大小，确保上传文件不要超过1M，建议使用FireFox、Chrome浏览器。";
+                                     var  browserCfg = {};
+                                     var ua = window.navigator.userAgent;
+                                     if (ua.indexOf("MSIE")>=1){
+                                            browserCfg.ie = true;
+                                     }else if(ua.indexOf("Firefox")>=1){
+                                            browserCfg.firefox = true;
+                                     }else if(ua.indexOf("Chrome")>=1){
+                                            browserCfg.chrome = true;
+                                     }
+                                     function checkfile(obj){
+                                         result = false;
+                                         try{
+                                              if(obj.value==""){
+                                                alert("请先选择上传文件");
+                                                 return result;
+                                               }
+                                              var filesize = 0;
+                                              if(browserCfg.firefox || browserCfg.chrome ){
+                                                  filesize = obj.files[0].size;
+                                              }else if(browserCfg.ie){
+{#                                                  var obj_img = document.getElementById('tempimg');#}
+{#                                                  obj_img.dynsrc=obj_file.value;#}
+{#                                                  filesize = obj_img.fileSize;#}
+                                                  alert(tipMsg);
+                                                  return result;
+                                              }else{
+                                                  alert(tipMsg);
+                                                  return result;
+                                              }
+                                              if(filesize==-1){
+                                                 alert(tipMsg);
+                                                 return result;
+                                              }else if(filesize>maxsize){
+                                                  alert(errMsg);
+                                                  return result;
+                                              }else{
+{#                                                  alert("文件大小符合要求");#}
+                                                  result = true;
+                                                  return result;
+                                              }
+                                         }catch(e){
+                                                  alert(e);
+                                         }
+                                     }
+                                </script>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-offset-3" style="color: red; font-size: 10px">(温馨提示：文件大小100K以内，格式：png或jpg)</label>
                         </div>
                         <div class="modal-footer">
                             <div class="form-group">
@@ -344,6 +399,7 @@
         }
     }
     function formValidator(){
+        try{
         $('#addTradeForm').bootstrapValidator({
             excluded: [':disabled'],
             message: 'This value is not valid',
@@ -401,22 +457,26 @@
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addTradeModal').modal('hide');
-               var formData = new FormData($('#addTradeForm')[0]);
-               $.ajax({
-                  url:"{% url 'trade:addTrade' %}",
-                  type:'POST',
-                  dataType:'json',
-                  success: function (result) {
-                     showMsgModal(result.msg,result.msgLevel);
-                     if (result.msgLevel == 'info'){
-                        setTimeout("window.location.reload()",1500);
-                     }
-                  },
-                  data:formData,
-                  cache:false,
-                  contentType:false,
-                  processData:false
-               });
+                var form1 = document.getElementById('addTradeForm');
+                var inputs = form1.getElementsByTagName('input');
+                if (checkfile(inputs[5])){
+                  var formData = new FormData($('#addTradeForm')[0]);
+                  $.ajax({
+                     url:"{% url 'trade:addTrade' %}",
+                     type:'POST',
+                     dataType:'json',
+                     success: function (result) {
+                        showMsgModal(result.msg,result.msgLevel);
+                        if (result.msgLevel == 'info'){
+                           setTimeout("window.location.reload()",1500);
+                        }
+                     },
+                     data:formData,
+                     cache:false,
+                     contentType:false,
+                     processData:false
+                  });
+                }
             }
         });
         $('#handleTradeForm').bootstrapValidator({
@@ -512,73 +572,32 @@
                 invalid: 'glyphicon glyphicon-remove',
                 validating: 'glyphicon glyphicon-refresh'
             },
-            fields: {
-                stockid: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项'
-                        }
-                    }
-                },
-                stockname: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项'
-                        }
-                    }
-                },
-                buyprice: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项'
-                        },
-                        lessThan: {
-                            value: 500,
-                            inclusive: true,
-                            message: '必须&le;500'
-                        }
-                    }
-                },
-                buycount: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项'
-                        },
-                        greaterThan: {
-                            value: 100,
-                            inclusive: true,
-                            message: '必须&ge;100'
-                        }
-                    }
-                },
-                share: {
-                    validators: {
-                        notEmpty: {
-                            message: '必填项',
-                        },
-                    }
-                },
-            },
+
             submitHandler: function (validator, form, submitButton) {
-                $('#updateFileModal').modal('hide');
-               var formData = new FormData($('#updateFileForm')[0]);
-               $.ajax({
-                  url:"{% url 'trade:updateFile' %}",
-                  type:'POST',
-                  dataType:'json',
-                  success: function (result) {
-                     showMsgModal(result.msg,result.msgLevel);
-                     if (result.msgLevel == 'info'){
-                        setTimeout("window.location.reload()",1500);
-                     }
-                  },
-                  data:formData,
-                  cache:false,
-                  contentType:false,
-                  processData:false
-               });
+                    $('#updateFileModal').modal('hide');
+                    var form1 = document.getElementById("updateFileForm");
+                    var inputs = form1.getElementsByTagName('input');
+                    if (checkfile(inputs[1])){
+                      var formData = new FormData($('#updateFileForm')[0]);
+                      $.ajax({
+                         url:"{% url 'trade:updateFile' %}",
+                         type:'POST',
+                         dataType:'json',
+                         success: function (result) {
+                             showMsgModal(result.msg,result.msgLevel);
+                             if (result.msgLevel == 'info'){
+                                 setTimeout("window.location.reload()",1500);
+                             }
+                         },
+                         data:formData,
+                         cache:false,
+                         contentType:false,
+                         processData:false
+                      });
+                    }
             }
         });
+        }catch(e){alert(e)}
 {#        $('#searchSaleForm').bootstrapValidator({#}
 {#            excluded: [':disabled'],#}
 {#            message: 'This value is not valid',#}

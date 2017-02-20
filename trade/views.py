@@ -133,12 +133,12 @@ def addTrade(request):
         #上传交割单据
         tradefile = request.FILES['file']
         filename = str(tradeid)+'.jpg'
-        filejpg = "trade/static/trade/images/"+filename
+        jpgfile = "trade/static/trade/images/"+filename
         #如果存在先删除
         if os.path.isfile(jpgfile):
                os.remove(jpgfile)
 
-        file = open(filejpg, "wb+")
+        file = open(jpgfile, "wb+")
 
         for chunk in tradefile.chunks():
             file.write(chunk)
