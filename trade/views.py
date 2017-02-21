@@ -177,7 +177,7 @@ def handleTrade(request):
     data = {}
     firstTrade = False
     try:
-        a=request.POST.get('htcustomerid')
+        # a=request.POST.get('htcustomerid')
 
         customer = Customer.objects.get(id=request.POST.get('htcustomerid'))
         # 判断是否首笔交易
@@ -353,10 +353,6 @@ def getNameByStockId(request):
     except Exception as e:
         traceback.print_exc()
         return HttpResponse("无此代码，请联系管理员")
-
-@login_required()
-def pictureshow(request):
-    return render(request, 'trade/pictureshow.html', locals())
 
 @login_required()
 def updateFile(request):
