@@ -21,9 +21,12 @@ from super.models import *
 from sale.models import *
 from customer.models import *
 from trade.models import *
+import logging
+logger = logging.getLogger("django")
 
 @login_required()
 def tradeManage(request):
+
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
     customerId = request.GET.get("customerId")
@@ -56,6 +59,7 @@ def queryTrade(request):
 
 @login_required()
 def addTrade(request):
+
     data = {}
     firstTrade = False
     secondTrade = False
@@ -146,6 +150,7 @@ def addTrade(request):
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
+        logger.error("%s add a trade for customer %s success,customer.status change to %s" % (request.user.username,customer.id,customer.status))
     except Exception as e:
         traceback.print_exc()
         print(e.__str__())
@@ -164,6 +169,7 @@ def addTrade(request):
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
+        logger.error("%s add a trade for customer failed" % (request.user.username))
     return HttpResponse(json.dumps(data))
 
 @login_required()
