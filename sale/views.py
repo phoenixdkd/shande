@@ -45,7 +45,7 @@ def querySale(request):
     if 'bindbursar' in request.GET and request.GET['bindbursar'] != '':
         sales = sales.filter(bindteacher__bindbursar__bursarId__icontains=request.GET.get('bindbursar'))
 
-    p = Paginator(sales, 20)
+    p = Paginator(sales, 25)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:

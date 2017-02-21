@@ -143,12 +143,23 @@ def payReport(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher', 'teachermanager', 'saleboss']):
         return HttpResponseRedirect("/")
     trades = Trade.objects.filter(paytime__isnull=False).order_by('-paytime')
-    endDate = request.POST.get('endDate', "")
+
+    if request.POST.get("startDate",'') == '':
+        startDate = request.GET.get('startDate','')
+        endDate = request.GET.get('endDate','')
+        company = request.GET.get('company','')
+        bursarID = request.GET.get('bursarID','')
+    else:
+        startDate = request.POST.get('startDate')
+        endDate = request.POST.get('endDate')
+        bursarID = request.POST.get('bursarID')
+        company = request.POST.get('company')
+
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
     else:
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
-    startDate = request.POST.get('startDate', "")
+
     if startDate == "":
         if request.user.userprofile.title.role_name == 'teacher':
             startDate = datetime.date.today()
@@ -157,6 +168,14 @@ def payReport(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
+
+    # #按条件筛选
+    if bursarID != '':
+        trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
+        C = 0
+    if company != '':
+        trades = trades.filter(customer__sales__company=str(company))
+        D = 0
 
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
@@ -195,10 +214,12 @@ def payReport(request):
 
     data = {
         "tradePage": tradePage,
-        "requestArgs": getArgsExcludePage(request),
+        # "requestArgs": getArgsExcludePage(request),
         "payCashTotal": payCashTotal,
         "startDate": str(startDate),
         "endDate": str(endDate),
+        "bursarID": bursarID,
+        "company": company,
     }
     return render(request, 'bursar/payReport.html', data)
 

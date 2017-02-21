@@ -86,6 +86,7 @@ def queryCustomer(request):
     customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
     customers = customers.filter(sales__department__icontains=request.GET.get('department', ''))
     customers = customers.filter(sales__saleId__icontains=request.GET.get('saleid', ''))
+
     if request.GET.get('saleswx', '') != '':
         customers = customers.filter(saleswx__wxid__icontains=request.GET.get('saleswx', ''))
     if request.GET.get('salesqq', '') != '':

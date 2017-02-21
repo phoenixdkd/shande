@@ -9,15 +9,42 @@
 </h1>
     <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
     <div class="form-group">
-        <label class="col-md-offset-2 col-md-1 control-label">时间范围</label>
+        <label class="col-md-1 control-label">财务专员</label>
+        <div class="col-md-1 " style="width: 150px">
+            <select type="select" class="form-control" id="bursarID" name="bursarID">
+                <option></option>
+                <option value="CW0101" {% if bursarID == 'CW0101' %}selected {% endif %}>CW0101</option>
+                <option value="CW0102" {% if bursarID == 'CW0102' %}selected {% endif %}>CW0102</option>
+                <option value="CW0103" {% if bursarID == 'CW0103' %}selected {% endif %}>CW0103</option>
+                <option value="CW0201" {% if bursarID == 'CW0201' %}selected {% endif %}>CW0201</option>
+                <option value="CW0202" {% if bursarID == 'CW0202' %}selected {% endif %}>CW0202</option>
+                <option value="CW0203" {% if bursarID == 'CW0203' %}selected {% endif %}>CW0203</option>
+                <option value="CW0302" {% if bursarID == 'CW0302' %}selected {% endif %}>CW0302</option>
+            </select>
+        </div>
+        <label class=" col-md-1 control-label" style="width: 150px">时间范围</label>
         <div class="col-md-2 ">
-             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
+             <input type="date"  class="form-control datetime" style="width: 150px" value="{{ startDate }}" name="startDate" id="startDate"
              title="起始时间"/>
         </div>
-        <label class="col-md-1 control-label"></label>
+{#        <label class="col-md-1 control-label"></label>#}
         <div class="col-md-2 ">
-             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
+             <input type="date"  class="form-control datetime" style="width: 150px" value="{{ endDate }}" name="endDate" id="endDate"
              title="结束时间"/>
+        </div>
+        <label class="col-md-1 control-label">公司</label>
+        <div class="col-md-1 ">
+           <select type="select" class="form-control" id="company" name="company">
+               <option></option>
+                <option value="A" {% if company == 'A' %}selected{%endif%}>A</option>
+                <option value="B" {% if company == 'B' %}selected{%endif%}>B</option>
+                <option value="C" {% if company == 'C' %}selected{%endif%}>C</option>
+                <option value="D" {% if company == 'D' %}selected{%endif%}>D</option>
+                <option value="E" {% if company == 'E' %}selected{%endif%}>E</option>
+                <option value="F" {% if company == 'F' %}selected{%endif%}>F</option>
+                <option value="F" {% if company == 'G' %}selected{%endif%}>G</option>
+                <option value="H" {% if company == 'H' %}selected{%endif%}>H</option>
+            </select>
         </div>
         <label class="col-md-1 control-label"></label>
         <div class="col-md-2">
@@ -89,9 +116,11 @@
     <li>
         {% if tradePage.has_previous %}
 {#            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>#}
-            <span aria-hidden="true">
-                <a href="?page={{ tradePage.previous_page_number }}&{{ requestArgs }}">&laquo;</a>
-            </span>
+{#            <span aria-hidden="true">#}
+{#                <a href="?page={{ tradePage.previous_page_number }}&{{ requestArgs }}">&laquo;</a>#}
+{#                <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}">&laquo;</a>#}
+{#            </span>#}
+            <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&laquo;</span></a>
         {% endif %}
     </li>
     <li><span class="current">
@@ -100,9 +129,11 @@
     <li>
         {% if tradePage.has_next %}
 {#            <span aria-hidden="true" onclick="loadBursarDiv('page={{ tradePage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>#}
-            <span aria-hidden="true">
-                <a href="?page={{ tradePage.next_page_number }}&{{ requestArgs }}">&raquo;</a>
-            </span>
+{#            <span aria-hidden="true">#}
+{#                <a href="?page={{ tradePage.next_page_number }}&{{ requestArgs }}">&raquo;</a>#}
+{#                <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}">&raquo;</a>#}
+{#            </span>#}
+             <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&raquo; </span></a>
         {% endif %}
     </li>
   </ul>
