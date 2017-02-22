@@ -26,6 +26,9 @@ from trade.models import *
 from stock.models import *
 from spot.models import *
 
+import logging
+logger = logging.getLogger("django")
+
 @login_required()
 def customerManage(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
@@ -242,6 +245,8 @@ def addCustomer(request):
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
+
+    # logger.error("%s add a customer for customer failed %s" % (request.user.username,Sale.objects(binduser=request.user)))
     return HttpResponse(json.dumps(data))
 
 @login_required()
@@ -300,8 +305,10 @@ def delCustomerBySale(request):
 def checkCustomerPhone(request):
     customerPhone = request.POST.get('phone')
     valid = True
+
     try:
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
+        a = customers.__len__()
         if customers.__len__() != 0:   #手机号码重复
             for customer in customers:
                if customer.status == 98: #不诚信客户
@@ -315,12 +322,6 @@ def checkCustomerPhone(request):
                        if deltaday < 30.0:
                           valid = False
                           break
-                       # else:
-                       #    valid = True
-                   # else:
-                   #     valid = True
-        # else:                         #手机号码不重复
-        #     valid = True
     except:
         traceback.print_exc()
 

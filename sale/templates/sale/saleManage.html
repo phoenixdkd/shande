@@ -333,8 +333,10 @@
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
             <div class="col-md-2">
+                {% if request.user.userprofile.title.role_name == 'admin ops' %}
 {#                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleModal">新增开发</button>#}
                     <lable class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleGroupModal">新增开发组</lable>
+                {% endif %}
             </div>
         </div>
     </form>

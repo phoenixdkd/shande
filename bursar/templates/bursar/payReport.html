@@ -73,6 +73,17 @@
         {% endif %}
     </thead>
     <tbody>
+        <tr style="color:red">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>合计</td>
+            <td></td>
+            <td>{{ payCashTotal }}
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
     {% if tradePage %}
     {% for tradeObj in tradePage %}
      <tr class="trade_row" id="trade_row_{{ tradeObj.id }}">
@@ -96,17 +107,17 @@
     {% endif %}
 
 
-        <tr style="color:red">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>合计</td>
-            <td></td>
-            <td>{{ payCashTotal }}
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+{#        <tr style="color:red">#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td>合计</td>#}
+{#            <td></td>#}
+{#            <td>{{ payCashTotal }}#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#        </tr>#}
     </tbody>
 </table>
 
