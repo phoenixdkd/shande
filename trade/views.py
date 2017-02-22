@@ -177,8 +177,6 @@ def handleTrade(request):
     data = {}
     firstTrade = False
     try:
-        # a=request.POST.get('htcustomerid')
-
         customer = Customer.objects.get(id=request.POST.get('htcustomerid'))
         # 判断是否首笔交易
         firstTradeObj = Trade.objects.filter(customer=customer).earliest('create')
@@ -196,8 +194,19 @@ def handleTrade(request):
             raise Exception("stockerror")
         newTrade.stockid = request.POST.get('htstockid')
         newTrade.stockname = request.POST.get('htstockname')
-        tradeStatus = request.POST.get('htstatus')
+
+        if request.POST.get('statustool')=='20':
+            tradeStatus = request.POST.get('statustool')
+            a = request.POST.get('payDiv')
+            tradeBursar = Bursar.objects.get(bursarId=request.POST.get('payDiv'))
+            #更改客户绑定财务
+            customer.bursar_id = tradeBursar.id
+        else:
+            tradeStatus = request.POST.get('otherDiv')
+
         newTrade.status = tradeStatus
+
+
         if tradeStatus == '20':
             newTrade.dealtime = timezone.now()
         buyprice = float(request.POST.get('htbuyprice'))
