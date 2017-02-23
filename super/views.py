@@ -31,7 +31,7 @@ def index(request):
 
 def login_view(request):
     data = {
-        "accept": request.META['HTTP_ACCEPT'],
+        #"accept": request.META['HTTP_ACCEPT'],
     }
     failed = False
     if 'next' in request.GET:
