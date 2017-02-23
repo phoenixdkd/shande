@@ -172,10 +172,8 @@ def payReport(request):
     # #按条件筛选
     if bursarID != '':
         trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
-        C = 0
     if company != '':
         trades = trades.filter(customer__sales__company=str(company))
-        D = 0
 
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
@@ -197,7 +195,7 @@ def payReport(request):
     #     payCashTotal = 0
 
     # {#added by deng to devide pages#}
-    p = Paginator(trades, 20)
+    p = Paginator(trades, 100)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -256,6 +254,17 @@ def payCompanyReport(request):
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'saleboss']):
         return HttpResponseRedirect("/")
     data = { }
+    startDate = request.GET.get('startDate', '')
+    endDate = request.GET.get('endDate', '')
+    if startDate =='':
+        startDate = datetime.date.today()
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+
+    data = {
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+    }
     return render(request, 'bursar/payCompanyReport.html', data)
 
 def queryPayCompany(request):
