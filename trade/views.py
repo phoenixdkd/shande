@@ -105,19 +105,22 @@ def addTrade(request):
 
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
-            #绑定开发的真实用户有效客户数加1
-            customer.sales.binduser.userprofile.grade += 1
-            customer.sales.binduser.userprofile.save()
-            #历史有效客户数加1
-            userGradeHis, created = customer.sales.binduser.usergradehis_set.get_or_create(user=customer.sales.binduser,
+#--------------------------------------------------------------------------------------------------------------------------------
+            if customer.sales:
+               #绑定开发的真实用户有效客户数加1
+               customer.sales.binduser.userprofile.grade += 1
+               customer.sales.binduser.userprofile.save()
+               #历史有效客户数加1
+               userGradeHis, created = customer.sales.binduser.usergradehis_set.get_or_create(user=customer.sales.binduser,
                                                                                   day=datetime.date.today())
-            userGradeHis.delta += 1
-            userGradeHis.total = customer.sales.binduser.userprofile.grade
-            userGradeHis.save()
-            #同时建立历史提交数记录
-            userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
-            userCommitHis.total = customer.sales.binduser.userprofile.commit
-            userCommitHis.save()
+               userGradeHis.delta += 1
+               userGradeHis.total = customer.sales.binduser.userprofile.grade
+               userGradeHis.save()
+               #同时建立历史提交数记录
+               userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
+               userCommitHis.total = customer.sales.binduser.userprofile.commit
+               userCommitHis.save()
+#---------------------------------------------------------------------------------------------------------------------------------
             if buycash >= 100000:
                 customer.crude = True
 
@@ -197,7 +200,6 @@ def handleTrade(request):
 
         if request.POST.get('statustool')=='20':
             tradeStatus = request.POST.get('statustool')
-            a = request.POST.get('payDiv')
             tradeBursar = Bursar.objects.get(bursarId=request.POST.get('payDiv'))
             #更改客户绑定财务
             customer.bursar_id = tradeBursar.id
@@ -205,7 +207,6 @@ def handleTrade(request):
             tradeStatus = request.POST.get('otherDiv')
 
         newTrade.status = tradeStatus
-
 
         if tradeStatus == '20':
             newTrade.dealtime = timezone.now()

@@ -291,6 +291,7 @@
                                   <option value="other">其它</option>
                               </select>
                               <select id="payDiv" type="select" name="payDiv" class="form-control">
+                                  <option></option>
                                   <option value="CW0101" >CW0101</option>
                                   <option value="CW0102" >CW0102</option>
                                   <option value="CW0103" >CW0103</option>
@@ -317,7 +318,7 @@
                         </div>
                         <script type="text/javascript">
                             $('#statustool').on('change',function () {
-                                if($(this).val()=='pay'){
+                                if($(this).val()=='20'){
                                     $('#payDiv').show();
                                     $('#otherDiv').hide();
                                 }else {

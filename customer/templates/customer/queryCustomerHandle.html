@@ -2,7 +2,7 @@
 <div class="modal fade" id="showMsgModal" style="margin-right: 20%" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
             <div class="modal-body">
-                <div> <img id="imgid" src=" "/></div>
+                <div> <img id="imgid" src=" " style="height: auto; width: auto"/></div>
             </div>
     </div>
 </div>
@@ -99,7 +99,7 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
             </td>
-            <td><button id="showfile" type="button" data-fsid="{%getLatestTradeIDByCustomerId customerObj.id%}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</button></td>
+            <td><label id="showfile" type="button" data-fsid="{%getLatestTradeIDByCustomerId customerObj.id%}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</label></td>
             <td class="spotTd">
 {#                <lable class="btn btn-xs btn-primary spotLable">{{ customerObj.spotStatus }}</lable>#}
                 <select class="spotSelect"

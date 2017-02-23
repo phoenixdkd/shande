@@ -7,7 +7,7 @@
 {#            </div>#}
             <div class="modal-body">
 {#                <div id="msgtext" class="alert alert-info" ></div>#}
-                <div style="text-align: center"> <img id="imgid" src=" "/></div>
+                <div style="text-align: center"> <img id="imgid" src=" " style="width: auto; height: auto"/></div>
             </div>
 {#        </div>#}
     </div>
@@ -70,7 +70,7 @@
                 {% endif %}
             </td>
             <td>{{ tradeObj.stock.stockid}}</td>
-            <td> <button id="showfile" type="button" data-fsid="{{ tradeObj.id }}" onclick="showFile(this)">{{ tradeObj.stock.stockname }}</button></td>
+            <td> <label id="showfile" type="button" data-fsid="{{ tradeObj.id }}" onclick="showFile(this)">{{ tradeObj.stock.stockname }}</label></td>
             <td>{{ tradeObj.buyprice}}</td>
             <td>{{ tradeObj.buycount}}</td>
             <td>{{ tradeObj.buycash}}</td>
