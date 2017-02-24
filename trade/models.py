@@ -39,4 +39,6 @@ class Trade(models.Model):
     paytime = models.DateTimeField('收款时间', default=None, null=True)
     paycash = models.DecimalField('收款金额', max_digits=10, decimal_places=2, default=0)
 
+    realteacheruser = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 真实提交交易老师
+
 

@@ -134,6 +134,7 @@ def addTrade(request):
         # newTrade.sellprice = request.POST.get('sellprice', '0')
         # newTrade.commission = request.get('commission', 0)
         tradeid = newTrade.id
+        newTrade.realteacheruser = request.user
         newTrade.save()
         customer.save()
 

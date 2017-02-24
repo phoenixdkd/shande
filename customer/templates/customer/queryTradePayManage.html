@@ -3,6 +3,7 @@
     <thead class="bg-info">
         <tr>
             <td>序号</td>
+            <td>ID</td>
             <td>客户专员</td>
             <td>客户姓名</td>
             <td>电话</td>
@@ -12,6 +13,7 @@
             <td>应收金额</td>
             <td>状态</td>
             <td>提交时间</td>
+            <td>ID</td>
             <td>客户管理专员</td>
             <td>财务专员</td>
             <td>操作</td>
@@ -22,9 +24,13 @@
     {% for trade in trades %}
         <tr>
             <td>{{ forloop.counter }}</td>
+            <td>{{ trade.customer.sales.saleId }}</td>
             <td>
+{#                <span class="tooltips" data-toggle="tooltip" title="公司:{{ trade.customer.sales.company }}-部门:{{ trade.customer.sales.department }}">#}
+{#                    {{ trade.customer.sales.saleId }} {{ trade.customer.sales.binduser.userprofile.nick }}#}
+{#                </span>#}
                 <span class="tooltips" data-toggle="tooltip" title="公司:{{ trade.customer.sales.company }}-部门:{{ trade.customer.sales.department }}">
-                    {{ trade.customer.sales.saleId }} {{ trade.customer.sales.binduser.userprofile.nick }}
+                    {{ trade.customer.realuser.userprofile.nick }}
                 </span>
             </td>
             <td>{{ trade.customer.name }}</td>
@@ -41,7 +47,9 @@
             <td>{{ trade.commission }}</td>
             <td>待收款</td>
             <td>{{ trade.dealtime}}</td>
-            <td>{{ trade.customer.teacher.teacherId }} {{ trade.customer.teacher.binduser.userprofile.nick }}</td>
+{#            <td>{{ trade.customer.teacher.teacherId }} {{ trade.customer.teacher.binduser.userprofile.nick }}</td>#}
+            <td>{{ trade.customer.teacher.teacherId }}</td>
+            <td>{{ trade.realteacheruser.userprofile.nick }}</td>
             <td>{{ trade.customer.bursar.bursarId }} {{ trade.customer.bursar.binduser.userprofile.nick }}</td>
             <td>
                 {% if request.user.userprofile.title.role_name in "bursar admin bursarmanager ops" %}
