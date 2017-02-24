@@ -464,13 +464,13 @@ def saleKpiReportSerial(request):
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
     if endDate == '':
-        # endDate = datetime.date.today()
-        endDate = timezone.now()
+        endDate = datetime.date.today()
+        # endDate = timezone.now()
     else:
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=1)
+        startDate = datetime.date.today() - datetime.timedelta(days=2)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     companys = Sale.objects.values('company').distinct()
