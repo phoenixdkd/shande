@@ -398,10 +398,10 @@ def queryCustomerHandle(request):
     customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
-        company = request.user.userprofile.company
-        department = request.user.userprofile.department
-        group = request.user.userprofile.group
-        customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
+        # company = request.user.userprofile.company
+        # department = request.user.userprofile.department
+        # group = request.user.userprofile.group
+        # customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
         customers = customers.filter(~Q(status=99))
 
     elif request.user.userprofile.title.role_name in ['teacherboss']:
@@ -957,7 +957,8 @@ def addTeacherCustomer(request):
         newCustomer.name = request.POST.get('name', '')
 
         # #将老师新增的客户绑定在虚拟sale Z88888
-        # newCustomer.sales.id = 1633
+        sale = Sale.objects.get(id=1633)
+        newCustomer.sales = sale
         
         newCustomer.phone = request.POST.get('phone', '')
         newCustomer.startup = request.POST.get('startup', 0)

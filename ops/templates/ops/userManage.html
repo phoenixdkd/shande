@@ -152,11 +152,20 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="ecompany" name="company"
-                                {% if request.user.userprofile.title.role_name == 'saleboss' %}
-                                    value="{{ request.user.userprofile.company }}" readonly
-                                {% endif %}
-                                />
+{#                                <input type="text" class="form-control" id="ecompany" name="company"#}
+{#                                {% if request.user.userprofile.title.role_name == 'saleboss' %}#}
+{#                                    value="{{ request.user.userprofile.company }}" readonly#}
+{#                                {% endif %}#}
+{#                                />#}
+                                <select type="select" class="form-control" id="ecompany" name="company" >
+                                   <option value="A" {% if request.user.userprofile.company == 'A' %} selected {% endif %}>A</option>
+                                   <option value="B" {% if request.user.userprofile.company == 'B' %} selected {% endif %}>B</option>
+                                   <option value="C" {% if request.user.userprofile.company == 'C' %} selected {% endif %}>C</option>
+                                   <option value="D" {% if request.user.userprofile.company == 'D' %} selected {% endif %}>D</option>
+                                   <option value="E" {% if request.user.userprofile.company == 'E' %} selected {% endif %}>E</option>
+                                   <option value="F" {% if request.user.userprofile.company == 'F' %} selected {% endif %}>F</option>
+                                   <option value="G" {% if request.user.userprofile.company == 'G' %} selected {% endif %}>H</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
