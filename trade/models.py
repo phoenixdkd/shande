@@ -40,5 +40,6 @@ class Trade(models.Model):
     paycash = models.DecimalField('收款金额', max_digits=10, decimal_places=2, default=0)
 
     realteacheruser = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 真实提交交易老师
+    dealcompany = models.CharField('操作交易公司',max_length=2,default="")
 
 

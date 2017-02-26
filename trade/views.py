@@ -31,8 +31,10 @@ def tradeManage(request):
         return HttpResponseRedirect("/")
     customerId = request.GET.get("customerId")
     customer = Customer.objects.get(id=customerId)
+    bursars = Bursar.objects.all()
     data = {
         "customer": customer,
+        "bursars": bursars,
     }
     return render(request, 'trade/tradeManage.html', data)
 
@@ -154,7 +156,7 @@ def addTrade(request):
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
-        logger.error("%s add a trade for customer %s success,customer.status change to %s" % (request.user.username,customer.id,customer.status))
+        # logger.error("%s add a trade for customer %s success,customer.status change to %s" % (request.user.username,customer.id,customer.status))
     except Exception as e:
         traceback.print_exc()
         print(e.__str__())
@@ -238,6 +240,10 @@ def handleTrade(request):
         newTrade.sellprice = request.POST.get('htsellprice', '0')
         newTrade.income = request.POST.get('htincome', 0)
         newTrade.commission = request.POST.get('htcommission', 0)
+        #记录操作该交易的提交者
+        newTrade.realteacheruser = request.user
+        #记录操作该交易提交者所属公司
+        newTrade.dealcompany = request.user.userprofile.company
         newTrade.save()
         customer.save()
 
