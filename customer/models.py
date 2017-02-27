@@ -55,6 +55,7 @@ class Customer(models.Model):
     create = models.DateTimeField('创建时间')
     modify = models.DateTimeField('更新时间')
     latest = models.DateTimeField('最近合作时间', null=True)
+    developcompany = models.CharField('开发公司',max_length=2,default="")
 
     def getLatestTradeDate( self ):
         try:

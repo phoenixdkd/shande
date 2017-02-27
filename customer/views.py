@@ -150,11 +150,12 @@ def addCustomer(request):
     try:
         sale = Sale.objects.get(binduser=request.user)
         if not sale.bindteacher.binduser:
-            raise Exception("teacher no bind bursar")
+           raise Exception("teacher no bind bursar")
         if not sale.bindteacher.bindbursar:
             raise Exception("teacher no bind user")
         if not sale.bindteacher.bindbursar.binduser:
-            raise Exception("bursar not bind user")
+           raise Exception("bursar not bind user")
+
         if request.POST['id'] == "":  #新增客户
             newCustomer = Customer.objects.create(sales=sale, create=timezone.now(), modify=timezone.now())
             newCustomer.realuser = sale.binduser
@@ -397,10 +398,10 @@ def queryCustomerHandle(request):
     customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
-        company = request.user.userprofile.company
-        department = request.user.userprofile.department
-        group = request.user.userprofile.group
-        customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
+        # company = request.user.userprofile.company
+        # department = request.user.userprofile.department
+        # group = request.user.userprofile.group
+        # customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
         customers = customers.filter(~Q(status=99))
 
     elif request.user.userprofile.title.role_name in ['teacherboss']:
@@ -954,6 +955,10 @@ def addTeacherCustomer(request):
         newCustomer.bursar = teacher.bindbursar
         newCustomer.status = 20
         newCustomer.name = request.POST.get('name', '')
+
+        # #将老师新增的客户绑定在虚拟sale Z88888
+        sale = Sale.objects.get(id=1633)
+        newCustomer.sales = sale
         
         newCustomer.phone = request.POST.get('phone', '')
         newCustomer.startup = request.POST.get('startup', 0)

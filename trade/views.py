@@ -31,8 +31,10 @@ def tradeManage(request):
         return HttpResponseRedirect("/")
     customerId = request.GET.get("customerId")
     customer = Customer.objects.get(id=customerId)
+    bursars = Bursar.objects.all()
     data = {
         "customer": customer,
+        "bursars": bursars,
     }
     return render(request, 'trade/tradeManage.html', data)
 
@@ -105,19 +107,22 @@ def addTrade(request):
 
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
-            #绑定开发的真实用户有效客户数加1
-            customer.sales.binduser.userprofile.grade += 1
-            customer.sales.binduser.userprofile.save()
-            #历史有效客户数加1
-            userGradeHis, created = customer.sales.binduser.usergradehis_set.get_or_create(user=customer.sales.binduser,
+#--------------------------------------------------------------------------------------------------------------------------------
+            if customer.sales:
+               #绑定开发的真实用户有效客户数加1
+               customer.sales.binduser.userprofile.grade += 1
+               customer.sales.binduser.userprofile.save()
+               #历史有效客户数加1
+               userGradeHis, created = customer.sales.binduser.usergradehis_set.get_or_create(user=customer.sales.binduser,
                                                                                   day=datetime.date.today())
-            userGradeHis.delta += 1
-            userGradeHis.total = customer.sales.binduser.userprofile.grade
-            userGradeHis.save()
-            #同时建立历史提交数记录
-            userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
-            userCommitHis.total = customer.sales.binduser.userprofile.commit
-            userCommitHis.save()
+               userGradeHis.delta += 1
+               userGradeHis.total = customer.sales.binduser.userprofile.grade
+               userGradeHis.save()
+               #同时建立历史提交数记录
+               userCommitHis, created = customer.sales.binduser.usercommithis_set.get_or_create(user=customer.sales.binduser, day=datetime.date.today())
+               userCommitHis.total = customer.sales.binduser.userprofile.commit
+               userCommitHis.save()
+#---------------------------------------------------------------------------------------------------------------------------------
             if buycash >= 100000:
                 customer.crude = True
 
@@ -131,6 +136,7 @@ def addTrade(request):
         # newTrade.sellprice = request.POST.get('sellprice', '0')
         # newTrade.commission = request.get('commission', 0)
         tradeid = newTrade.id
+        newTrade.realteacheruser = request.user
         newTrade.save()
         customer.save()
 
@@ -150,7 +156,7 @@ def addTrade(request):
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
-        logger.error("%s add a trade for customer %s success,customer.status change to %s" % (request.user.username,customer.id,customer.status))
+        # logger.error("%s add a trade for customer %s success,customer.status change to %s" % (request.user.username,customer.id,customer.status))
     except Exception as e:
         traceback.print_exc()
         print(e.__str__())
@@ -197,7 +203,6 @@ def handleTrade(request):
 
         if request.POST.get('statustool')=='20':
             tradeStatus = request.POST.get('statustool')
-            a = request.POST.get('payDiv')
             tradeBursar = Bursar.objects.get(bursarId=request.POST.get('payDiv'))
             #更改客户绑定财务
             customer.bursar_id = tradeBursar.id
@@ -205,7 +210,6 @@ def handleTrade(request):
             tradeStatus = request.POST.get('otherDiv')
 
         newTrade.status = tradeStatus
-
 
         if tradeStatus == '20':
             newTrade.dealtime = timezone.now()
@@ -236,6 +240,10 @@ def handleTrade(request):
         newTrade.sellprice = request.POST.get('htsellprice', '0')
         newTrade.income = request.POST.get('htincome', 0)
         newTrade.commission = request.POST.get('htcommission', 0)
+        #记录操作该交易的提交者
+        newTrade.realteacheruser = request.user
+        #记录操作该交易提交者所属公司
+        newTrade.dealcompany = request.user.userprofile.company
         newTrade.save()
         customer.save()
 
