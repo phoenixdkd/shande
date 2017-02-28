@@ -398,10 +398,10 @@ def queryCustomerHandle(request):
     customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
-        # company = request.user.userprofile.company
-        # department = request.user.userprofile.department
-        # group = request.user.userprofile.group
-        # customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
+        company = request.user.userprofile.company
+        department = request.user.userprofile.department
+        group = request.user.userprofile.group
+        customers = customers.filter(teacher__company=company, teacher__department=department, teacher__group=group)
         customers = customers.filter(~Q(status=99))
 
     elif request.user.userprofile.title.role_name in ['teacherboss']:
@@ -435,6 +435,16 @@ def queryCustomerHandle(request):
             Q(wxid="", qqid__icontains=request.GET.get('wxqq')) | Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
     customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
+    if request.GET.get('phone'):
+        customers = Customer.objects.all().order_by('status', '-create', 'teacher__teacherId')
+        customers = customers.filter(~Q(status=99))
+        # 去掉退回状态的客户
+        customers = customers.exclude(status=10)
+        customers = customers.exclude(status=30)
+        customers = customers.exclude(status=98)
+        # 通过电话号码获取客户信息
+        customers = customers.filter(phone__icontains=request.GET.get('phone'))
+
     if request.GET.get('wxid', '') != '':
         customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
     if request.GET.get('wxname', '') != '':

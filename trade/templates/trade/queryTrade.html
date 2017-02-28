@@ -7,7 +7,7 @@
 {#            </div>#}
             <div class="modal-body">
 {#                <div id="msgtext" class="alert alert-info" ></div>#}
-                <div style="text-align: center"> <img id="imgid" src=" " style="width: auto; height: auto"/></div>
+                <div style="text-align: center; width: 900px; height: 600px"> <img id="imgid" src=" " style="width: 900px; height: 600px"/></div>
             </div>
 {#        </div>#}
     </div>
@@ -84,7 +84,7 @@
             <td>{{ tradeObj.paytype}}</td>
             <td>
                 {% if request.user.userprofile.title.role_name in "admin teacher ops teachermanager teacherboss" %}
-                <button type="button" class="btn btn-sm btn-primary" onclick="handleTrade(this)"
+                <button type="button" class="btn btn-sm btn-primary" onclick="handleTrade(this)" {% if tradeObj.status == 30 %} disabled="disabled" {% endif %}
                     data-htid="{{ tradeObj.id }}"
                     data-htstockid="{{ tradeObj.stock.stockid }}"
                     data-htcreate="{{ tradeObj.create.date }}"
