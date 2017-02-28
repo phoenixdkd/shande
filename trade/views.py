@@ -76,7 +76,7 @@ def addTrade(request):
         existTrade = Trade.objects.filter(customer=customer)
         if existTrade.__len__() == 0:
             firstTrade = True
-            if buycash < 20000:
+            if buycash < 30000:
                 raise Exception("buycashlow")
         elif existTrade.__len__() == 1:
             secondTrade = True
@@ -219,7 +219,7 @@ def handleTrade(request):
         newTrade.buycount = buycount
         buycash = buyprice * buycount
         if firstTrade:
-            if buycash < 20000:
+            if buycash < 30000:
                 raise Exception("buycashlow")
             customer.first_trade_cash = buycash
             if buycash >= 100000:

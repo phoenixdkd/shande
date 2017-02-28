@@ -56,7 +56,7 @@ class Customer(models.Model):
     modify = models.DateTimeField('更新时间')
     latest = models.DateTimeField('最近合作时间', null=True)
     developcompany = models.CharField('开发公司',max_length=2,default="")
-    teacheruser = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)#真实管理老师用户
+    # teacheruser = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)#真实管理老师用户
 
     def getLatestTradeDate( self ):
         try:

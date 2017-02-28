@@ -181,9 +181,13 @@ def payReport(request):
         trades = trades.filter(customer__teacher__binduser=request.user)
 
     if request.user.userprofile.title.role_name == 'teachermanager':
-        trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
-                               customer__teacher__department=request.user.userprofile.department,
-                               customer__teacher__group=request.user.userprofile.group)
+        # trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+        #                        customer__teacher__department=request.user.userprofile.department,
+        #                        customer__teacher__group=request.user.userprofile.group)
+        user = request.user
+        bursarID = 'CW'+user.userprofile.group+user.userprofile.department
+        trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
+
     if request.user.userprofile.title.role_name == 'saleboss':
         trades = trades.filter(customer__sales__company=request.user.userprofile.company)
 

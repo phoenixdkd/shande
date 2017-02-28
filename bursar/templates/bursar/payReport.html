@@ -65,6 +65,7 @@
         <th width="5%">产品代码/名称</th>
         <th width="5%">金额</th>
         <th width="5%">支付方式</th>
+        <th width="5%">客户管理ID</th>
         <th width="5%">客户管理专员</th>
         {% if request.user.userprofile.title.role_name == 'teacher' %}
         <th width="5%">收款专员</th>
@@ -94,7 +95,9 @@
           <td>{{ tradeObj.stock.stockid }}/{{ tradeObj.stock.stockname }}</td>
           <td>{{ tradeObj.paycash }} </td>
           <td>{{ tradeObj.paytype }} </td>
-          <td>{{ tradeObj.customer.teacher.teacherId }} {{ tradeObj.customer.teacher.binduser.userprofile.nick }}</td>
+{#          <td>{{ tradeObj.customer.teacher.teacherId }} {{ tradeObj.customer.teacher.binduser.userprofile.nick }}</td>#}
+         <td>{{ tradeObj.customer.teacher.teacherId }} </td>
+         <td>{{ tradeObj.realteacheruser.userprofile.nick }}</td>
           {% if request.user.userprofile.title.role_name == 'teacher' %}
                 <td>{{ tradeObj.customer.bursar.bursarId }} {{ tradeObj.customer.bursar.binduser.userprofile.nick }}</td>
           {% else %}
