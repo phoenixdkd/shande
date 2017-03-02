@@ -168,7 +168,7 @@ def payReport(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
-
+    bursars = Bursar.objects.all()
     # #按条件筛选
     if bursarID != '':
         trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
@@ -222,6 +222,7 @@ def payReport(request):
         "endDate": str(endDate),
         "bursarID": bursarID,
         "company": company,
+        "bursars": bursars,
     }
     return render(request, 'bursar/payReport.html', data)
 

@@ -42,7 +42,8 @@ def tradeManage(request):
 def queryTrade(request):
     customerId = request.GET.get("customerid")
     trades = Trade.objects.filter(customer_id=customerId)
-
+    user = request.user
+    user_title = user.userprofile.title
     # 分页
     p = Paginator(trades, 20)
     try:
@@ -56,6 +57,7 @@ def queryTrade(request):
     data = {
         "tradePage": tradePage,
         "requestArgs": getArgsExcludePage(request),
+        "user_title": user_title,
     }
     return render(request, 'trade/queryTrade.html', data)
 
@@ -76,7 +78,7 @@ def addTrade(request):
         existTrade = Trade.objects.filter(customer=customer)
         if existTrade.__len__() == 0:
             firstTrade = True
-            if buycash < 30000:
+            if buycash < 20000:
                 raise Exception("buycashlow")
         elif existTrade.__len__() == 1:
             secondTrade = True
@@ -219,7 +221,7 @@ def handleTrade(request):
         newTrade.buycount = buycount
         buycash = buyprice * buycount
         if firstTrade:
-            if buycash < 30000:
+            if buycash < 20000:
                 raise Exception("buycashlow")
             customer.first_trade_cash = buycash
             if buycash >= 100000:

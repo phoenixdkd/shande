@@ -95,6 +95,7 @@
                     data-htsellprice="{{ tradeObj.sellprice }}"
                     data-htincome="{{ tradeObj.income }}"
                     data-htcommission="{{ tradeObj.commission }}"
+                    data-htusertitle = "{{ user_title }}"
                 >处理</button>
                 {% endif %}
                 {% if request.user.userprofile.title.role_name in "admin ops" %}

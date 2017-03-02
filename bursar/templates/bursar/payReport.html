@@ -13,13 +13,16 @@
         <div class="col-md-1 " style="width: 150px">
             <select type="select" class="form-control" id="bursarID" name="bursarID">
                 <option></option>
-                <option value="CW0101" {% if bursarID == 'CW0101' %}selected {% endif %}>CW0101</option>
-                <option value="CW0102" {% if bursarID == 'CW0102' %}selected {% endif %}>CW0102</option>
-                <option value="CW0103" {% if bursarID == 'CW0103' %}selected {% endif %}>CW0103</option>
-                <option value="CW0201" {% if bursarID == 'CW0201' %}selected {% endif %}>CW0201</option>
-                <option value="CW0202" {% if bursarID == 'CW0202' %}selected {% endif %}>CW0202</option>
-                <option value="CW0203" {% if bursarID == 'CW0203' %}selected {% endif %}>CW0203</option>
-                <option value="CW0302" {% if bursarID == 'CW0302' %}selected {% endif %}>CW0302</option>
+                {% for bursarObj in bursars %}
+                    <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
+                {% endfor %}
+{#                <option value="CW0101" {% if bursarID == 'CW0101' %}selected {% endif %}>CW0101</option>#}
+{#                <option value="CW0102" {% if bursarID == 'CW0102' %}selected {% endif %}>CW0102</option>#}
+{#                <option value="CW0103" {% if bursarID == 'CW0103' %}selected {% endif %}>CW0103</option>#}
+{#                <option value="CW0201" {% if bursarID == 'CW0201' %}selected {% endif %}>CW0201</option>#}
+{#                <option value="CW0202" {% if bursarID == 'CW0202' %}selected {% endif %}>CW0202</option>#}
+{#                <option value="CW0203" {% if bursarID == 'CW0203' %}selected {% endif %}>CW0203</option>#}
+{#                <option value="CW0302" {% if bursarID == 'CW0302' %}selected {% endif %}>CW0302</option>#}
             </select>
         </div>
         <label class=" col-md-1 control-label" style="width: 150px">时间范围</label>

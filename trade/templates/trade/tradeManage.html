@@ -294,7 +294,7 @@
                                   <option value="other">其它</option>
                               </select>
                               <select id="payDiv" type="select" name="payDiv" class="form-control">
-                                  <option></option>
+                                  <option>请选择财务专员</option>
                                   {% for bursarObj in bursars %}
                                      <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
                                   {% endfor %}
@@ -407,9 +407,13 @@
         $('#htsellprice').val($(obj).data("htsellprice"));
         $('#htincome').val($(obj).data("htincome"));
         $('#htcommission').val($(obj).data("htcommission"));
-        var tradeCreate = Date.parse($(obj).data("htcreate").replace("年",'/').replace("月", '/').replace("日",''));
-        var today = Date.parse( new Date().toLocaleDateString());
-        if(today - tradeCreate >= 86400000){
+{#        var tradeCreate = Date.parse($(obj).data("htcreate").replace("年",'/').replace("月", '/').replace("日",''));#}
+{#        var today = Date.parse( new Date().toLocaleDateString());#}
+        var tradeCreate = $(obj).data("htcreate").replace("年",'/').replace("月", '/').replace("日",'');
+        var today =  new Date().toLocaleDateString();
+        var user = $(obj).data("htusertitle");
+
+        if(today > tradeCreate && user!='admin'){
             $('#htstockid').attr("readonly", true);
             $('#htstockname').attr("readonly", true);
             $('#htbuyprice').attr("readonly", true);
