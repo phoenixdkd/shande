@@ -44,7 +44,7 @@ class Customer(models.Model):
     # 0 新客户；10 待跟进 ；20 无交易； 30 退回； 40 有效；98 不诚信删除; 99 删除；
     status = models.IntegerField('状态', default=0)
     sales = models.ForeignKey(Sale, null=True, on_delete=models.SET_NULL)
-    realuser = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)#真实开发用户
+    realuser = models.ForeignKey(to=User, null=True, on_delete=models.SET_NULL,related_name='real_user')#真实开发用户
     saleswx = models.ForeignKey(Wx, null=True, blank=True, on_delete=models.SET_NULL)
     salesqq = models.ForeignKey(Qq, null=True, blank=True, on_delete=models.SET_NULL)
     teacher = models.ForeignKey(Teacher, null=True, blank=True, on_delete=models.SET_NULL)
@@ -56,7 +56,7 @@ class Customer(models.Model):
     modify = models.DateTimeField('更新时间')
     latest = models.DateTimeField('最近合作时间', null=True)
     developcompany = models.CharField('开发公司',max_length=2,default="")
-    # teacheruser = models.ForeignKey(User,null=True,on_delete=models.SET_NULL)#真实管理老师用户
+    # teacheruser = models.ForeignKey(to=User,null=True,on_delete=models.SET_NULL,related_name='teacher_user') #真实管理老师用户
 
     def getLatestTradeDate( self ):
         try:

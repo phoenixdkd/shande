@@ -13,7 +13,7 @@
             <td>应收金额</td>
             <td>状态</td>
             <td>提交时间</td>
-            <td>客户管理ID</td>
+            <td>ID</td>
             <td>客户管理专员</td>
             <td>财务专员</td>
             <td>操作</td>
@@ -36,10 +36,14 @@
             <td>{{ trade.customer.name }}</td>
             <td>{{ trade.customer.phone }}</td>
             <td>
+{#                {% if trade.customer.saleswx %} 微信: {{ trade.customer.wxid | mask8  }}{% endif %}#}
+{#                {% if trade.customer.salesqq %} QQ: {{ trade.customer.qqid | mask8 }}{% endif %}#}
                 {% if trade.customer.wxid %} 微信: {{ trade.customer.wxid | mask8  }}{% endif %}
                 {% if trade.customer.qqid %} QQ: {{ trade.customer.qqid | mask8 }}{% endif %}
             </td>
             <td>
+{#                {% if trade.customer.saleswx %} {{ trade.customer.wxname| mask8  }}{% endif %}#}
+{#                {% if trade.customer.salesqq %} {{ trade.customer.qqname| mask8  }}{% endif %}#}
                 {% if trade.customer.wxname %} {{ trade.customer.wxname| mask8  }}{% endif %}
                 {% if trade.customer.qqname %} {{ trade.customer.qqname| mask8  }}{% endif %}
             </td>

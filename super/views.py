@@ -24,12 +24,7 @@ from super.models import *
 # Create your views here.
 def index(request):
     if request.user.is_authenticated():
-        # message = Config.objects.get(key="管理公告")
-        # data = {
-        #     "message": message.value,
-        # }
         return render(request, 'super/index.html', locals())
-        # return render(request, 'super/index.html', data)
     else:
         redirect_to = 'accounts/login/'
         return HttpResponseRedirect(redirect_to)
@@ -65,24 +60,23 @@ def login_view(request):
                 userauth = authenticate(username=request.POST['username'], password=request.POST['password'])
                 if userauth is not None:
                     login(request, userauth)
-                    # if userauth.userprofile.title.role_name in ['sale', 'saleboss', 'salemanager']:
-                    #     # redirect_to = '/customer/customerManage'
-                    #     redirect_to = '/'
-                    # elif userauth.userprofile.title.role_name in ['teacher', 'teacherboss', 'teachermanager']:
-                    #     # redirect_to = '/customer/customerHandle'
-                    #     redirect_to = '/'
-                    # elif userauth.userprofile.title.role_name in ['spotteacher', 'spotmanager']:
-                    #     # redirect_to = '/spot/spotCustomer'
-                    #     redirect_to = '/'
-                    # elif userauth.userprofile.title.role_name in ['bursar', 'bursarmanager']:
-                    #     # redirect_to = '/customer/tradePayManage'
-                    #     redirect_to = '/'
-                    # elif userauth.userprofile.title.role_name in ['admin', 'ops']:
-                    #     # redirect_to = '/ops/userManage'
-                    #     redirect_to = '/'
-                    # else:
-                    #     redirect_to = '/'
-                    redirect_to='/'
+                    if userauth.userprofile.title.role_name in ['sale', 'saleboss', 'salemanager']:
+                        # redirect_to = '/customer/customerManage'
+                        redirect_to = '/'
+                    elif userauth.userprofile.title.role_name in ['teacher', 'teacherboss', 'teachermanager']:
+                        # redirect_to = '/customer/customerHandle'
+                        redirect_to = '/'
+                    elif userauth.userprofile.title.role_name in ['spotteacher', 'spotmanager']:
+                        # redirect_to = '/spot/spotCustomer'
+                        redirect_to = '/'
+                    elif userauth.userprofile.title.role_name in ['bursar', 'bursarmanager']:
+                        # redirect_to = '/customer/tradePayManage'
+                        redirect_to = '/'
+                    elif userauth.userprofile.title.role_name in ['admin', 'ops']:
+                        # redirect_to = '/ops/userManage'
+                        redirect_to = '/'
+                    else:
+                        redirect_to = '/'
                     userauth.userprofile.failcount = 0
                     userauth.userprofile.faillocktime = None
                     userauth.userprofile.save()
@@ -256,23 +250,3 @@ def getTransmission(request):
 
 def demo(request):
     return render(request, 'super/demo.html', locals())
-
-# @login_required
-# def addNotice(request):
-#
-#    data = {}
-#    try:
-#       # message = Config.objects.get(key="管理公告")
-#       # message.value = request.POST.get('content')
-#       if message.value:
-#          message.save()
-#          a=0
-#
-#       data['msg'] = "通知更新成功"
-#       data['msgLevel'] = "info"
-#    except Exception as e:
-#       print(e.__str__)
-#       data['msg'] = "通知更新失败"
-#       data['msgLevel'] = "error"
-#    return HttpResponse(json.dumps(data))
-

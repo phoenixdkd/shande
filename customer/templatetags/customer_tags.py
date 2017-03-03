@@ -19,7 +19,10 @@ def getNoPayTradeCountByCustomerId(customerId):
 def getLatestStockByCustomerId(customerId):
     try:
         trade = Trade.objects.filter(customer=Customer.objects.get(id=customerId)).order_by('-create')
-        return "%s %s" % (trade[0].stock.stockid , trade[0].stock.stockname)
+        if trade.__len__() != 0:
+           return "%s %s" % (trade[0].stock.stockid , trade[0].stock.stockname)
+        else:
+           return None
     except Exception as e:
         print(e.__str__())
         return ""
@@ -28,9 +31,12 @@ def getLatestStockByCustomerId(customerId):
 def getLatestTradeIDByCustomerId(customerId):
     try:
         trade = Trade.objects.filter(customer=Customer.objects.get(id=customerId)).order_by('-create')
-        return trade[0].id
+        if trade.__len__() !=0:
+            return trade[0].id
+        else:
+            return None
     except Exception as e:
-        print(e.__str__())
+        traceback.print_exc()
         return ""
 
 @register.simple_tag()

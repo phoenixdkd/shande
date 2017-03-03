@@ -52,19 +52,14 @@
     {% if customerPage %}
     {% for customerObj in customerPage %}
         <tr>
-{#            <td>{{ customerObj.id }}</td>#}
             <td>{{ forloop.counter }}</td>
             <td>
                 提交时间:{{ customerObj.create }}<br>
                 首次合作:{{ customerObj.first_trade }}<br>
                 最近合作:{{ customerObj.getLatestTradeDate }}
             </td>
-{#            <td>#}
-{#                {% if customerObj.saleswx %} 微信: {{ customerObj.saleswx.wxid }}{% endif %}#}
-{#                {% if customerObj.salesqq %} QQ: {{ customerObj.salesqq.qqid }}{% endif %}#}
-{#            </td>#}
             <td>
-                {{ customerObj.name }}
+                {{ customerObj.name }} {{ customerObj.id }}
             </td>
             <td>
                 {% if customerObj.status == 40 %}
@@ -99,11 +94,9 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 {% endif %}
             </td>
-            <td><label id="showfile" type="button" data-fsid="{%getLatestTradeIDByCustomerId customerObj.id%}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</label></td>
+            <td><label id="showfile" type="button" data-fsid="{% getLatestTradeIDByCustomerId customerObj.id %}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</label></td>
             <td class="spotTd">
-{#                <lable class="btn btn-xs btn-primary spotLable">{{ customerObj.spotStatus }}</lable>#}
                 <select class="spotSelect"
-{#                        style="display: none"#}
                         value="{{ customerObj.spotStatus }}"
                 data-id="{{ customerObj.id }}">
                     {% if customerObj.spotStatus  == "未开发" %}
@@ -151,6 +144,7 @@
                     <span class="label label-disable">&gt;</span> 标记删除
                 {% endif %}
             </td>
+{#        ---------------------------------注释--------------------------------------------------------------------------------------------------------------#}
 {#            <td>#}
 {#                <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">#}
 {#                    {{ customerObj.sales.saleId }}#}
@@ -185,7 +179,7 @@
 {#            <td>{% getLatestStockByCustomerId customerObj.id %}</td>#}
 {#            <td>{% getCommissionTotalByCustomerId customerObj.id %}</td>#}
 {#            <td>{% getTradeTotalByCustomerId customerObj.id %}</td>#}
-
+{##}
 {##}
 {#            <td>#}
 {#                <span class="badge-info" title="待收款交易数">{% getNoPayTradeCountByCustomerId customerObj.id %}</span>#}
@@ -194,6 +188,7 @@
 {#            <td>{{ customerObj.message }}</td>#}
 {##}
 {#            <td>{{ customerObj.modify }}</td>#}
+{#        -------------------------------------------------------------------------------------------------------------------------#}
             <td>
                 {% if request.user.userprofile.title.role_name in "teacher ops admin teachermanager"  and customerObj.status == 0 %}
                     <button type="button" class="btn btn-sm btn-primary" onclick="handleCustomer(this)"

@@ -395,7 +395,7 @@ def queryCustomerHandle(request):
         startDate = datetime.datetime.today()
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d")
-    customers = Customer.objects.all().order_by( 'teacher__teacherId','status', '-create')
+    customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -917,13 +917,12 @@ def tradePayManage(request):
 
 def queryTradePayManage(request):
     trades = Trade.objects.filter(status=20).order_by('-dealtime')
-    # trades = Trade.objects.filter(status=20).order_by('customer__teacher__teacherId')
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
-    if request.user.userprofile.title.role_name == 'teachermanager':
-        user = request.user
-        bursarID = 'CW'+user.userprofile.group+user.userprofile.department
-        trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
+    # if request.user.userprofile.title.role_name == 'teachermanager':
+    #     user = request.user
+    #     bursurID = 'CW'+user.userprofile.group+user.userprofile.department
+    #     trades = trades.filter(customer__bursar__bursarId=bursurID)
     endDate = request.GET.get('endDate', "")
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)

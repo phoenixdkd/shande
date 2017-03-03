@@ -94,22 +94,7 @@ def addBursarGroup(request):
         departmentID = request.POST.get('departmentID')
         groupID = request.POST.get('groupID')
         bursarID = str(bursarCode)+str(groupID)+str(departmentID)
-        # for i in range(1, int(bursarCount) + 1):
-        #     if i < 10:
-        #         index = '0' + str(i)
-        #     else:
-        #         index = str(i)
-        #     bursarId = "CW" + index
-        #     bursar, created = Bursar.objects.get_or_create(bursarId=bursarId)
-        #     bursar.save()
         bursar,created = Bursar.objects.get_or_create(bursarId=bursarID)
-        # bursar = Bursar.objects.filter(bursarId=bursarID,bursarId__isnull=False)
-        # if(bursar.__len__() !=0):
-        #   raise Exception('财务ID已经存在')
-        # else:
-        #   newbursar = Bursar.objects.create()
-        #   newbursar.bursarId = bursarID
-        #   newbursar.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
 
@@ -169,6 +154,7 @@ def payReport(request):
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
     bursars = Bursar.objects.all()
+
     # #按条件筛选
     if bursarID != '':
         trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
@@ -198,7 +184,7 @@ def payReport(request):
     # else:
     #     payCashTotal = 0
 
-    # {#added by deng to devide pages#}
+    # {#added by jdeng to devide pages#}
     p = Paginator(trades, 100)
     try:
         page = int(request.GET.get('page', '1'))

@@ -35,6 +35,9 @@ def querySale(request):
     #不同的用户看到不同的列表
     if request.user.userprofile.title.role_name == 'saleboss':
         sales = sales.filter(company=request.user.userprofile.company)
+
+        a = request.user.userprofile.company
+        b= sales.__len__()
     sales = sales.filter(saleId__icontains=request.GET.get('saleid', ''))
     sales = sales.filter(company__icontains=request.GET.get('company', ''))
     sales = sales.filter(department__icontains=request.GET.get('department', ''))

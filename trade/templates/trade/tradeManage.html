@@ -298,7 +298,6 @@
                                   {% for bursarObj in bursars %}
                                      <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
                                   {% endfor %}
-
                               </select>
                               <select id="otherDiv" type="select" class="form-control" name="otherDiv"  style="display: none" >
                                     <option value="0">未出货</option>#}
@@ -505,6 +504,7 @@
                         },
                     }
                 },
+{#                payDiv#}
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addTradeModal').modal('hide');

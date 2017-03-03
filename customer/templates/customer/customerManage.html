@@ -15,7 +15,8 @@
                     <!-- The form is placed inside the body of modal -->
                     <form id="addCustomerForm" method="post" class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="saletool" >来源</label>
+{#                            <input type="hidden" class="form-control" id="sourceid" name="sourceid">#}
+                            <label  class="col-md-offset-2 col-md-2 control-label" for="saletool" >来源</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="saletool" name="saletool">
                                     <option value="wx">微信</option>
@@ -23,6 +24,18 @@
                                 </select>
                             </div>
                         </div>
+{#                        <script type="text/javascript">#}
+{#                            $('#saletool').on('hidden.bs.select', function (e) { //该方法注册到$(function(){})函数中#}
+{#                            var tmpSelected = $('#saletool').val();#}
+{#                            if(tmpSelected != null){#}
+{#                                 $('#sourceid').val(tmpSelected);#}
+{#                             }else {#}
+{#                                 $('#sourceid').val("");#}
+{#                             }#}
+{#                               //由于input为hidden，验证会出现一些bug，此处手动验证隐藏的input组件#}
+{#                            $('#addUserForm').data('bootstrapValidator').updateStatus('sourceid', 'NOT_VALIDATED').validateField('sourceid');#}
+{#                            });#}
+{#                        </script>#}
                         <div id="qqDiv" style="display:none">
                             <div class="form-group" >
                                 <label class="col-md-offset-2 col-md-2 control-label" for="qqid" >QQ号</label>
@@ -313,7 +326,8 @@
         $('#emanagerPasswordDiv').hide();
         $('#delCustomerBtn').hide();
         var customerFormSelector = $('#addCustomerForm');
-        customerFormSelector.find(':input').val("");
+{#        customerFormSelector.find(':input').val("");#}
+        $('#addCustomerForm input').not('#saletool').val("");
         customerFormSelector.data('bootstrapValidator').destroy();
         $('#searchCustomerForm').data('bootstrapValidator').destroy();
         formValidator();
@@ -337,6 +351,13 @@
                 validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
+{#                sourceid: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '必填项'#}
+{#                        }#}
+{#                    }#}
+{#                },#}
                 name: {
                     validators: {
                         notEmpty: {

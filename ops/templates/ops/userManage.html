@@ -321,6 +321,21 @@
                             url: '{% url "ops:checkCId" %}',
                         }
                     }
+                },
+                company: {
+                    validators: {
+                        notEmpty: {
+                            message: '公司代码不能为空',
+                        },
+                        stringLength: {
+                            max: 1,
+                            message: "公司代码只包含一个字符"
+                        },
+{#                        regexp: {#}
+{#                            regexp: "^[A-Z]$",#}
+{#                            message: "公司代码必须为大写字母"#}
+{#                        },#}
+                    }
                 }
             },
             submitHandler: function (validator, form, submitButton) {
