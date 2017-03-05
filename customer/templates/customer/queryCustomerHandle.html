@@ -2,7 +2,7 @@
 <div class="modal fade" id="showMsgModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
             <div class="modal-body">
-                <div style="text-align: center; width: 900px; height: 600px"> <img id="imgid" src=" " style="height: 600px; width: 900px"/></div>
+                <div style="text-align: center; width: 540px; height: 360px"> <img id="imgid" src=" " style="height: auto; width: auto; max-height: 100%; max-width: 100%"/></div>
             </div>
     </div>
 </div>
@@ -59,7 +59,7 @@
                 最近合作:{{ customerObj.getLatestTradeDate }}
             </td>
             <td>
-                {{ customerObj.name }} {{ customerObj.id }}
+                {{ customerObj.name }}
             </td>
             <td>
                 {% if customerObj.status == 40 %}

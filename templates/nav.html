@@ -35,7 +35,7 @@
                             <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
                             <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                             <li class=""><a href="{% url 'teacher:teacherManage' %}" target="_self">客户管理部ID</a></li>
-                            <li class=""><a href="{% url 'spot:teacherManage' %}" target="_self">现货客户管理部ID</a></li>
+{#                            <li class=""><a href="{% url 'spot:teacherManage' %}" target="_self">现货客户管理部ID</a></li>#}
                             <li class=""><a href="{% url 'bursar:bursarManage' %}" target="_self">财务部ID</a></li>
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">开发部微信管理</a></li>
                             <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">开发部QQ管理</a></li>
@@ -49,7 +49,7 @@
                            aria-haspopup="true" aria-expanded="false">开发菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
-                            {% if user.userprofile.title.role_name != 'sale' %}
+                            {% if user.userprofile.title.role_name in 'admin ops saleboss salemanager' %}
                                 <li class=""><a href="{% url 'sale:dishonestCustomer' %}" target="_self">不诚信客户</a></li>
                                 <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
@@ -58,7 +58,7 @@
                             {% if user.userprofile.title.role_name == 'salemanager' %}
                                 <li class=""><a href="{% url 'sale:saleKpiReportForManager' %}" target="_self">有效客户增长趋势</a></li>
                             {% endif %}
-                            {% if user.userprofile.title.role_name in ' admin ops' or user.userprofile.title.role_name == 'saleboss' %}
+                            {% if user.userprofile.title.role_name in ' admin ops saleboss' %}
                                 <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
                                 <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReportSerial' %}" target="_self">有效客户增长趋势</a></li>
@@ -102,29 +102,29 @@
 {#                        </ul>#}
 {#                    </li>#}
 {#                {% endif %}#}
-                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' or user.userprofile.title.role_name == 'teachermanager' or user.userprofile.title.role_name == 'saleboss' %}
+                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager teachermanager saleboss' %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">财务菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             {% if not user.userprofile.title.role_name == 'saleboss' %}
 {#                            <li class=""><a href="{% url 'customer:customerPay' %}" target="_self">收款管理</a></li>#}
-                            <li class=""><a href="{% url 'customer:tradePayManage' %}" target="_self">收款管理</a></li>
+                            <li class=""><a href="{% url 'customer:tradePayManage' %}" target="_self">待收款管理</a></li>
                             {% endif %}
 
-                            <li class=""><a href="{% url 'bursar:payReport' %}" target="_self">收款汇总表</a></li>
+                            <li class=""><a href="{% url 'bursar:payReport' %}" target="_self">已收款汇明细</a></li>
                             {% if user.userprofile.title.role_name in 'admin ops bursarmanager' %}
-                            <li class=""><a href="{% url 'bursar:payTypeReport' %}" target="_self">支付方式汇总表</a></li>
+                            <li class=""><a href="{% url 'bursar:payTypeReport' %}" target="_self">支付方式汇总</a></li>
 {#                            <li class=""><a href="{% url 'bursar:payCompanyReport' %}" target="_self">公司盈利归属汇总</a></li>#}
                             {% endif %}
                             {% if user.userprofile.title.role_name in 'admin ops bursarmanager' or user.userprofile.title.role_name == 'teachermanager' %}
-                            <li class=""><a href="{% url 'bursar:payStockReport' %}" target="_self">产品盈利分析表</a></li>
-                            <li class=""><a href="{% url 'bursar:payCompanySerialReport' %}" target="_self">盈利归属趋势图</a></li>
+                            <li class=""><a href="{% url 'bursar:payStockReport' %}" target="_self">产品盈利汇总</a></li>
+{#                            <li class=""><a href="{% url 'bursar:payCompanySerialReport' %}" target="_self">盈利归属趋势图</a></li>#}
                             {% endif %}
                         </ul>
                     </li>
                 {% endif %}
-{#                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager' or user.userprofile.title.role_name == 'teachermanager' or user.userprofile.title.role_name == 'saleboss' %}#}
+                {% if user.userprofile.title.role_name in 'admin sale salemanager saleboss teacher teachermanager teacherboss bursar bursarmanager ops' %}
                    <div class="nav navbar-nav">
                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -135,7 +135,7 @@
                      </button>
                        <a class="navbar-brand" style="font-size: 14px" href="{% url 'ops:systemLog' %}">版本更新</a>
                    </div>
-{#                {% endif %}#}
+                {% endif %}
 
             </ul>
             <ul class="nav navbar-nav navbar-right">

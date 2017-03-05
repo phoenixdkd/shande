@@ -57,11 +57,11 @@
             <td>{% getCrudeCountByCompany company.company startDate endDate %}</td>
             <td>{% getTotalBuyCashByCompany company.company startDate endDate %}</td>
             <td>{% getWxFriendDeltaByCompany company.company startDate endDate %}</td>
-{#            <td>{% getWxFriendTotalByCompany company.company %}</td>#}
+{# ----------           <td>{% getWxFriendTotalByCompany company.company %}</td>#}
             <td>{% getQqFriendDeltaByCompany company.company startDate endDate %}</td>
-{#            <td>{% getQqFriendTotalByCompany company.company%}</td>#}
+{#  ---------          <td>{% getQqFriendTotalByCompany company.company%}</td>#}
             <td>{% getChargebackByCompany company.company startDate endDate %}</td>
-{#            <td>{% getDishonestByCompany company.company startDate endDate %}</td>#}
+{#  -------          <td>{% getDishonestByCompany company.company startDate endDate %}</td>#}
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="company_detail_row_{{ company.company }}" class="company_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>

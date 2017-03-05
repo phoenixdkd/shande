@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Q
 
-import os
+import os, time, logging
 import random
 import string
 import datetime
@@ -19,9 +19,11 @@ from ops.models import *
 from super.models import *
 from teacher.models import *
 from sale.models import *
+logger = logging.getLogger("django")
 
 @login_required()
 def teacherManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='teacher').order_by("username")
@@ -32,10 +34,13 @@ def teacherManage(request):
         "bindBursars": bindBursars,
         "bindspotteachers": bindspotteachers,
     }
+    # t2 = time.clock()
+    # logger.error("teacherManage cost time: %f"%(t2-t1))
     return render(request, 'teacher/teacherManage.html', data)
 
 @login_required()
 def queryTeacher(request):
+    # t1 = time.clock()
     teachers = Teacher.objects.all().order_by('teacherId')
     teachers = teachers.filter(teacherId__icontains=request.GET.get('teacherid', ''))
     teachers = teachers.filter(company__icontains=request.GET.get('company', ''))
@@ -58,10 +63,13 @@ def queryTeacher(request):
         "teacherPage": teacherPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("queryTeacher cost time: %f"%(t2-t1))
     return render(request, 'teacher/queryTeacher.html', data)
 
 @login_required()
 def addTeacher(request):
+    # t1 = time.clock()
     data = {}
     try:
 
@@ -114,10 +122,13 @@ def addTeacher(request):
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("addTeacher cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def addTeacherGroup(request):
+    # t1 = time.clock()
     data = {}
     try:
         company = request.POST.get('teacherCompany')
@@ -147,6 +158,9 @@ def addTeacherGroup(request):
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("addTeacherGroup cost time: %f"%(t2-t1))
+
     return HttpResponse(json.dumps(data))
 
 @login_required()

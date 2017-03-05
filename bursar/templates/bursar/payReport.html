@@ -137,11 +137,6 @@
         </span></li>
     <li>
         {% if tradePage.has_next %}
-{#            <span aria-hidden="true" onclick="loadBursarDiv('page={{ tradePage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>#}
-{#            <span aria-hidden="true">#}
-{#                <a href="?page={{ tradePage.next_page_number }}&{{ requestArgs }}">&raquo;</a>#}
-{#                <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}">&raquo;</a>#}
-{#            </span>#}
              <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&raquo; </span></a>
         {% endif %}
     </li>

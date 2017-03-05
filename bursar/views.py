@@ -21,8 +21,13 @@ from super.models import *
 from bursar.models import *
 from trade.models import *
 
+import logging
+import time
+logger = logging.getLogger("django")
+
 @login_required()
 def bursarManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='bursar').order_by("userprofile__nick")
@@ -31,10 +36,13 @@ def bursarManage(request):
     data = {
         "bindusers": bindUsers,
     }
+    # t2 = time.clock()
+    # logger.error("bursarMangae cost time: %f %f %f s" % ((t2-t1),t1,t2))
     return render(request, 'bursar/bursarManage.html', data)
 
 @login_required()
 def queryBursar(request):
+    # t1 = time.clock()
     bursars = Bursar.objects.all().order_by('bursarId')
     bursars = bursars.filter(bursarId__icontains=request.GET.get('bursarid', ''))
     # bursars = bursars.filter(company__icontains=request.GET.get('company', ''))
@@ -54,6 +62,8 @@ def queryBursar(request):
         "bursarPage": bursarPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("queryBursar cost time: %f"%(t2-t1))
     return render(request, 'bursar/queryBursar.html', data)
 
 @login_required()
@@ -125,6 +135,7 @@ def delBursar(request):
 
 @login_required()
 def payReport(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher', 'teachermanager', 'saleboss']):
         return HttpResponseRedirect("/")
     trades = Trade.objects.filter(paytime__isnull=False).order_by('-paytime')
@@ -210,10 +221,13 @@ def payReport(request):
         "company": company,
         "bursars": bursars,
     }
+    # t2 = time.clock()
+    # logger.error("bursar/payReport cost time: %f"%(t2-t1))
     return render(request, 'bursar/payReport.html', data)
 
 @login_required()
 def payTypeReport(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager']):
         return HttpResponseRedirect("/")
     trades = Trade.objects.filter(paytime__isnull=False)
@@ -238,10 +252,13 @@ def payTypeReport(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("bursar/payTypeReport cost time: %f"%(t2-t1))
     return render(request, 'bursar/payTypeReport.html', data)
 
 @login_required()
 def payCompanyReport(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'saleboss']):
         return HttpResponseRedirect("/")
     data = { }
@@ -256,9 +273,12 @@ def payCompanyReport(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("bursar/payCompanyReport cost time: %f"%(t2-t1))
     return render(request, 'bursar/payCompanyReport.html', data)
 
 def queryPayCompany(request):
+    # t1 = time.clock()
     startDate = request.GET.get('startDate', '')
     endDate = request.GET.get('endDate', '')
     if startDate =='':
@@ -311,6 +331,8 @@ def queryPayCompany(request):
         "startDate": startDate,
         "endDate": endDate,
     }
+    # t2 = time.clock()
+    # logger.error("bursar/queryPayCompany cost time: %f"%(t2-t1))
     return render(request, 'bursar/queryPayCompany.html', data)
 
 @login_required()
@@ -341,6 +363,7 @@ def payStockReport(request):
 
 @login_required()
 def payCompanySerialReport(request):
+    # t1 = time.clock()
     endDate = request.POST.get('endDate', "")
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -364,4 +387,6 @@ def payCompanySerialReport(request):
         "startDate": startDate,
         "endDate": endDate,
     }
+    # t2 = time.clock()
+    # logger.error("bursar/payCompanySerialReport cost time: %f"%(t2-t1))
     return render(request, 'bursar/payCompanySerialReport.html', data)

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Q
 
-import os
+import os, time, logging
 import random
 import string
 import datetime
@@ -20,8 +20,11 @@ from super.models import *
 from sale.models import *
 from wxqq.models import *
 
+logger = logging.getLogger('django')
+
 @login_required()
 def wxManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     bindsales = Sale.objects.all().order_by("saleId")
@@ -30,10 +33,13 @@ def wxManage(request):
     data = {
         "bindsales": bindsales,
     }
+    # t2 = time.clock()
+    # logger.error("wxqq/wxMange cost time: %f"%(t2-t1))
     return render(request, 'wxqq/wxManage.html', data)
 
 @login_required()
 def queryWx(request):
+    # t1 = time.clock()
     data = {}
     wxs = Wx.objects.all().order_by('delete', 'bindsale__saleId')
 
@@ -76,6 +82,8 @@ def queryWx(request):
         "wxPage": wxPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("wxqq/queryWx cost time: %f"%(t2-t1))
     return render(request, 'wxqq/queryWx.html', data)
 
 @login_required()
@@ -192,6 +200,7 @@ def wxFriendSerial(request):
 
 @login_required()
 def qqManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     bindsales = Sale.objects.all().order_by("saleId")
@@ -200,10 +209,13 @@ def qqManage(request):
     data = {
         "bindsales": bindsales,
     }
+    # t2 = time.clock()
+    # logger.error("wxqq/qqManage cost time: %f"%(t2-t1))
     return render(request, 'wxqq/qqManage.html', data)
 
 @login_required()
 def queryQq(request):
+    # t1 = time.clock()
     data = {}
     qqs = Qq.objects.all().order_by('delete','bindsale__saleId')
     # 不同角色看到的范围不同
@@ -247,6 +259,8 @@ def queryQq(request):
         "qqPage": qqPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("wxqq/quertQq cost time: %f"%(t2-t1))
     return render(request, 'wxqq/queryQq.html', data)
 
 @login_required()

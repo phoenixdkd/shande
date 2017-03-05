@@ -3,81 +3,69 @@
 {% block title %}开发管理{% endblock %}
 {% block content %}
 
-    <div class="modal fade" id="addSaleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">开发管理</h4>
-                </div>
-
-                <div class="modal-body">
-                    <!-- The form is placed inside the body of modal -->
-                    <form id="addSaleForm" method="post" class="form-horizontal">
-                        <div class="form-group">
-                            <input type="hidden" value="" class="" id="id" name="id"/>
-                            <input type="hidden" value="" class="" id="page" name="page"/>
-                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="saleid">开发ID</label>
-                            <div class="col-lg-5 col-md-5">
-                                <input type="text" class="form-control" id="saleid" name="saleid"
-                                {% if request.user.userprofile.title.role_name != 'admin' %}
-                                    readonly
-                                {% endif %}
-                                data-bv-notempty="true"
-                                data-bv-notempty-message="不允许为空"/>
-                            </div>
-                        </div>
+{#    <div class="modal fade" id="addSaleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"#}
+{#         aria-hidden="true">#}
+{#        <div class="modal-dialog">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header">#}
+{#                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>#}
+{#                    <h4 class="modal-title">开发管理</h4>#}
+{#                </div>#}
+{##}
+{#                <div class="modal-body">#}
+{#                    <!-- The form is placed inside the body of modal -->#}
+{#                    <form id="addSaleForm" method="post" class="form-horizontal">#}
 {#                        <div class="form-group">#}
-{#                            <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>#}
-{#                            <div class="col-md-5">#}
-{#                                <input type="text" class="form-control" id="company" name="company"/>#}
+{#                            <input type="hidden" value="" class="" id="id" name="id"/>#}
+{#                            <input type="hidden" value="" class="" id="page" name="page"/>#}
+{#                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="saleid">开发ID</label>#}
+{#                            <div class="col-lg-5 col-md-5">#}
+{#                                <input type="text" class="form-control" id="saleid" name="saleid"#}
+{#                                {% if request.user.userprofile.title.role_name != 'admin' %}#}
+{#                                    readonly#}
+{#                                {% endif %}#}
+{#                                data-bv-notempty="true"#}
+{#                                data-bv-notempty-message="不允许为空"/>#}
 {#                            </div>#}
 {#                        </div>#}
 {#                        <div class="form-group">#}
-{#                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>#}
+{#                            <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>#}
 {#                            <div class="col-md-5">#}
-{#                                <input type="text" class="form-control" id="department" name="department"/>#}
+{#                                <select type="select" class="form-control" id="binduser" name="binduser">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindusers %}#}
+{#                                        {% for binduser in bindusers %}#}
+{#                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
 {#                            </div>#}
 {#                        </div>#}
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
-                            <div class="col-md-5">
-                                <select type="select" class="form-control" id="binduser" name="binduser">
-                                    <option>无</option>
-                                    {% if bindusers %}
-                                        {% for binduser in bindusers %}
-                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="bindteacher" >对接老师</label>
-                            <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindteacher" name="bindteacher">
-                                    <option>无</option>
-                                    {% if bindteachers %}
-                                        {% for bindteacher in bindteachers %}
-                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }} {{ bindteacher.binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="form-group">
-                                <div class="col-md-5 col-md-offset-3">
-                                    <button id="addSaleBtn" type="submit" class="btn btn-sm btn-primary">提交</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+{#                        <div class="form-group">#}
+{#                            <label class="col-md-offset-2 col-md-2 control-label" for="bindteacher" >对接老师</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <select type="select" class="form-control" id="bindteacher" name="bindteacher">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindteachers %}#}
+{#                                        {% for bindteacher in bindteachers %}#}
+{#                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }} {{ bindteacher.binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="modal-footer">#}
+{#                            <div class="form-group">#}
+{#                                <div class="col-md-5 col-md-offset-3">#}
+{#                                    <button id="addSaleBtn" type="submit" class="btn btn-sm btn-primary">提交</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
     <div class="modal fade" id="addSaleGroupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -334,7 +322,6 @@
             </div>
             <div class="col-md-2">
                 {% if request.user.userprofile.title.role_name in 'admin ops' %}
-{#                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleModal">新增开发</button>#}
                     <lable class="btn btn-sm btn-success" data-toggle="modal" data-target="#addSaleGroupModal">新增开发组</lable>
                 {% endif %}
             </div>

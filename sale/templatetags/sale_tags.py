@@ -21,7 +21,7 @@ register = template.Library()
 def getSaleIdByUserId(uid):
     try:
         sale = Sale.objects.get(binduser__id=uid)
-        print sale.saleId
+        # print sale.saleId
         return sale.saleId
     except:
         return "未找到绑定的开发ID"

@@ -14,6 +14,9 @@ import traceback
 import json
 import time
 
+import logging
+logger = logging.getLogger("django")
+
 from shande.settings import BASE_DIR
 from shande.util import *
 from ops.models import *
@@ -21,16 +24,20 @@ from super.models import *
 
 @login_required()
 def userManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin' ,'ops', 'saleboss'] ):
         return HttpResponseRedirect("/")
     titles = Title.objects.all()
     data = {
         "titles": titles,
     }
+    # t2 = time.clock()
+    # logger.error("bursarMange cost time: %f s, start: %f, end: %f"%((t2-t1),t1,t2))
     return render(request, 'ops/userManage.html', data)
 
 @login_required()
 def addUser(request):
+    # t1 = time.clock()
     data = {}
     try:
         if request.POST['userid'] == "":
@@ -57,10 +64,13 @@ def addUser(request):
         print(e.__str__())
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("addUser cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def queryUser(request):
+    # t1 = time.clock()
     users = User.objects.all().order_by('-username')
     users = users.filter(~Q(username='admin'))
     if request.user.userprofile.title.role_name == 'saleboss':
@@ -86,10 +96,13 @@ def queryUser(request):
         "userpage": userpage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("queryUser cost time: %f" % (t2 - t1))
     return render(request, 'ops/queryUser.html', data)
 
 @login_required()
 def delUser(request):
+    # t1 = time.clock()
     data = {}
     try:
         tmpUser = User.objects.get(id=request.POST['userid'])
@@ -100,10 +113,13 @@ def delUser(request):
         print(e.__str__())
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("delUser cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def resetPw(request):
+    # t1 = time.clock()
     data = {}
     try:
         tmpUser = User.objects.get(id=request.POST['userid'])
@@ -117,10 +133,13 @@ def resetPw(request):
         print(e.__str__())
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("reserPw cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def chargebackSerial(request):
+    # t1 = time.clock()
     u = User.objects.get(id=request.GET.get('userid'))
     userCommitHis = u.usercommithis_set.all().order_by('-day')[0:30]
     userGradeHis = u.usergradehis_set.all().order_by('-day')[0:30]
@@ -139,11 +158,13 @@ def chargebackSerial(request):
         "userGradeDeltaData": userGradeDeltaData,
         "dayData": dayData,
     }
-
+    # t2 = time.clock()
+    # logger.error("chargebackSerial cost time: %f" % (t2 - t1))
     return render(request, "ops/chargebackSerial.html", data)
 
 @login_required()
 def checkUserId(request):
+    # t1 = time.clock()
     username = request.POST.get('username')
     try:
         user = User.objects.get(username=username)
@@ -153,10 +174,13 @@ def checkUserId(request):
     data = {
         'valid': valid,
     }
+    # t2 = time.clock()
+    # logger.error("checkUserId cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def checkCId(request):
+    # t1 = time.clock()
     cid = request.POST.get('cid')
     valid = False
     try:
@@ -168,10 +192,13 @@ def checkCId(request):
     data = {
         'valid': valid,
     }
+    # t2 = time.clock()
+    # logger.error("checkId cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def checkEditUserId(request):
+    # t1 = time.clock()
     username = request.POST.get('username')
     try:
         user = User.objects.filter(username=username)
@@ -184,10 +211,13 @@ def checkEditUserId(request):
     data = {
         'valid': valid,
     }
+    # t2 = time.clock()
+    # logger.error("checkEditUserId cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def checkEditCId(request):
+    # t1 = time.clock()
     cid = request.POST.get('cid')
     valid = False
     try:
@@ -199,12 +229,13 @@ def checkEditCId(request):
     data = {
         'valid': valid,
     }
+    # t2 = time.clock()
+    # logger.error("checkEditCId cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def systemLog(request):
-    # if not request.user.userprofile.title.role_name in ['admin', 'ops']:
-    #     return HttpResponseRedirect("/")
+    # t1 = time.clock()
 
     logs = Ops.objects.all()
     logs = logs.order_by("-create")
@@ -231,11 +262,14 @@ def systemLog(request):
         # "startDate": str(startDate),
         # "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("systermLog cost time: %f" % (t2 - t1))
     return render(request, "ops/systemLog.html", data)
 
 #编辑和修改维护信息
 @login_required()
 def addFixContent(request):
+    # t1 = time.clock()
     data = {}
     try:
        if request.POST['id'] == '':
@@ -255,13 +289,15 @@ def addFixContent(request):
         traceback.print_exc()
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("addFixcontent cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def queryLog(request):
     # if not request.user.userprofile.title.role_name in ['admin', 'ops']:
     #     return HttpResponseRedirect("/")
-
+    # t1 = time.clock()
     logs = Ops.objects.all()
     logs = logs.order_by("-create")
 
@@ -277,4 +313,6 @@ def queryLog(request):
     data = {
         "logPage": logPage,
     }
+    # t2 = time.clock()
+    # logger.error("queryLog cost time: %f" % (t2 - t1))
     return render(request, "ops/queryLog.html", data)

@@ -113,7 +113,9 @@ def getChargebackByDepartment( company, department, startDate, endDate ):
                                                      user__sale__department=department,
                                                      user__userprofile__title__role_name='sale', day__lte=endDate,
                                                      day__gte=startDate).aggregate(Sum('delta'))
-        chargeback = 100 -float(userGradeToday['delta__sum']) / float(userCommitsToday['delta__sum'])  *100
+
+        if userCommitsToday['delta__sum'] & userGradeToday['delta_sum']:
+            chargeback = 100 -float(userGradeToday['delta__sum']) / float(userCommitsToday['delta__sum'])  *100
         return "%s / %s (%.2f"%(userGradeToday['delta__sum'], userCommitsToday['delta__sum'], chargeback)+'%)'
     except Exception as e:
         traceback.print_exc()

@@ -65,15 +65,15 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="bindsale" >绑定开发</label>
                             <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindsale" name="bindsale">
-                                <option>无</option>
-                                    {% if bindsales %}
-                                        {% for bindsale in bindsales %}
-                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }} {{ bindsale.binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-
+                                <input type="text" class="form-control" id="bindsale" name="bindsale"/>
+{#                                <select type="select" class="form-control" id="bindsale" name="bindsale">#}
+{#                                <option>无</option>#}
+{#                                    {% if bindsales %}#}
+{#                                        {% for bindsale in bindsales %}#}
+{#                                            <option value="{{ bindsale.id }}"> {{ bindsale.saleId }} {{ bindsale.binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
                             </div>
                         </div>
                         <div class="modal-footer">

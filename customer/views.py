@@ -31,6 +31,7 @@ logger = logging.getLogger("django")
 
 @login_required()
 def customerManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'sale', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -61,10 +62,13 @@ def customerManage(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("customer/customerManage cost time: %f"%(t2-t1))
     return render(request, 'customer/customerManage.html', data)
 
 @login_required()
 def queryCustomer(request):
+    # t1 = time.clock()
     customers = Customer.objects.all().order_by('-modify')
 
     #不同角色看到不同的列表
@@ -141,11 +145,14 @@ def queryCustomer(request):
         "customerPage": customerPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("customer/queryCustomer cost time: %f"%(t2-t1))
     return render(request, 'customer/queryCustomer.html', data)
 
 #编辑和修改客户信息
 @login_required()
 def addCustomer(request):
+    # t1 = time.clock()
     data = {}
     try:
         sale = Sale.objects.get(binduser=request.user)
@@ -247,7 +254,8 @@ def addCustomer(request):
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
 
-    # logger.error("%s add a customer for customer failed %s" % (request.user.username,Sale.objects(binduser=request.user)))
+    # t2 = time.clock()
+    # logger.error("addCustomer cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
@@ -304,6 +312,7 @@ def delCustomerBySale(request):
 
 @login_required()
 def checkCustomerPhone(request):
+    # t1 = time.clock()
     customerPhone = request.POST.get('phone')
     valid = True
 
@@ -329,6 +338,8 @@ def checkCustomerPhone(request):
     data = {
         'valid': valid,
     }
+    # t2 = time.clock()
+    # logger.error("customer/checkCustomerPhone cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))
 
 def checkCustomerPhoneForEdit(request):
@@ -344,10 +355,12 @@ def checkCustomerPhoneForEdit(request):
     data = {
         'valid': valid,
     }
+
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def customerHandle(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']):
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -381,10 +394,13 @@ def customerHandle(request):
         "teacher": teacher,
         "teachers": teachers,
     }
+    # t2 = time.clock()
+    # logger.error("customer/customerHandle cost time: %f"%(t2-t1))
     return render(request, 'customer/customerHandle.html', data)
 
 @login_required()
 def queryCustomerHandle(request):
+    # t1 = time.clock()
     endDate = request.GET.get('endDate', "")
     if endDate == '':
         endDate = datetime.datetime.today() + datetime.timedelta(days=1)
@@ -395,7 +411,8 @@ def queryCustomerHandle(request):
         startDate = datetime.datetime.today()
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d")
-    customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
+    # customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
+    customers = Customer.objects.all()
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -482,6 +499,8 @@ def queryCustomerHandle(request):
                 if customer.getLatestTradeBuycash() == '' or customer.getLatestTradeBuycash() < 100000:
                     tmpCustomers = tmpCustomers.exclude(id=customer.id)
         customers = tmpCustomers
+    customers = customers.order_by("teacher__teacherId","-create")
+
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -495,10 +514,13 @@ def queryCustomerHandle(request):
         "customerPage": customerPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("customer/queryCustomerHande cost time: %f"%(t2-t1))
     return render(request, 'customer/queryCustomerHandle.html', data)
 
 @login_required()
 def handleCustomer(request):
+    # t1 = time.clock()
     data = {}
     try:
         customerId = request.POST.get('id')
@@ -516,6 +538,8 @@ def handleCustomer(request):
         print(e.__str__())
         data['msg'] = "操作失败"
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("customer/handleCustomer cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))
 
 #已经加微信的客户
@@ -535,6 +559,7 @@ def handleValidCustomer(request):
             customer.status = 98
             customer.honest = False
             customer.message = request.POST.get('dishonestMessage')
+            customer.realteacher = request.user
         elif validCustomerChange == 99:
             customer.status = 99
             customer.message = request.POST.get('delMessage')
@@ -575,6 +600,7 @@ def customerPay(request):
 
 @login_required()
 def queryCustomerPay(request):
+    # t1 = time.clock()
     customers = Customer.objects.all().order_by('-modify')
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['bursarmanager']:
@@ -621,6 +647,7 @@ def queryCustomerPay(request):
         customers = customers.filter(modify__lte=request.GET.get('endDate'))
     if (request.GET.get('status', '') != ''):
         customers = customers.filter(status=request.GET.get('status'))
+
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -634,6 +661,8 @@ def queryCustomerPay(request):
         "customerPage": customerPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("customer/queryCustomerPay cost time: %f"%(t2-t1))
     return render(request, 'customer/queryCustomerPay.html', data)
 
 @login_required()
@@ -708,6 +737,7 @@ def noTradeCustomerReport(request):
 
 @login_required()
 def tradeTypeReport(request):
+    # t1 = time.clock()
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     teachers = Teacher.objects.all()
@@ -719,7 +749,7 @@ def tradeTypeReport(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=5)
+        startDate = datetime.date.today() - datetime.timedelta(days=1)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     if request.user.userprofile.title.role_name == 'teachermanager':
@@ -737,10 +767,13 @@ def tradeTypeReport(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("customer/tradeTypeReport cost time: %f"%(t2-t1))
     return render(request, 'customer/tradeTypeReport.html', data)
 
 @login_required()
 def getTeacherDetail(request):
+    # t1 = time.clock()
     teacherid = request.POST.get('teacher')
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
@@ -750,6 +783,8 @@ def getTeacherDetail(request):
         "stocks": stocks,
         "teacherid": teacherid,
     }
+    # t2 = time.clock()
+    # logger.error("customer/getTeacherDetail cost time: %f"%(t2-t1))
     return render(request, 'customer/getTeacherDetail.html', data)
 
 @login_required()
@@ -797,6 +832,7 @@ def dCustomerReport(request):
 
 @login_required()
 def analyzeReport(request):
+    # t1 = time.clock()
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'teacher', 'teachermanager', 'teacherboss']:
         return HttpResponseRedirect("/")
     stocks = Stock.objects.all()
@@ -830,6 +866,8 @@ def analyzeReport(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("customer/analyzeReport cost time: %f"%(t2-t1))
     return render(request, 'customer/analyzeReport.html', data)
 
 @login_required()
@@ -863,6 +901,7 @@ def getStockDetailForAnalyze(request):
 
 @login_required()
 def calcProfitByStockId(request):
+    # t1 = time.clock()
     stockid = request.POST.get('stockid')
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
@@ -893,10 +932,13 @@ def calcProfitByStockId(request):
         "earnCount": earnCount,
         "earnCash": earnCash,
     }
+    # t2 = time.clock()
+    # logger.error("customer/calcProfitByStockId cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def tradePayManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teachermanager']):
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -913,9 +955,12 @@ def tradePayManage(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("customer/tradePayManage cost time: %f"%(t2-t1))
     return render(request, 'customer/tradePayManage.html', data)
 
 def queryTradePayManage(request):
+    # t1 = time.clock()
     trades = Trade.objects.filter(status=20).order_by('-dealtime')
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
@@ -937,6 +982,8 @@ def queryTradePayManage(request):
     data = {
         "trades": trades,
     }
+    # t2 = time.clock()
+    # logger.error("customer/queryTradePayManage cost time: %f"%(t2-t1))
     return render(request, 'customer/queryTradePayManage.html', data)
 
 @login_required()
@@ -961,6 +1008,7 @@ def resumeDishonestCustomer(request):
 
 @login_required()
 def addTeacherCustomer(request):
+    # t1 = time.clock()
     data = {}
     try:
         newCustomer = Customer.objects.create(create=timezone.now(), modify=timezone.now())
@@ -1011,4 +1059,6 @@ def addTeacherCustomer(request):
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("customer/addTeacherCustomer cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))

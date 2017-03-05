@@ -177,7 +177,7 @@ def addTrade(request):
         else:
             data['msg'] = "操作失败, %s" % e.__str__()
         data['msgLevel'] = "error"
-        logger.error("%s add a trade for customer failed" % (request.user.username))
+        # logger.error("%s add a trade for customer failed" % (request.user.username))
     return HttpResponse(json.dumps(data))
 
 @login_required()

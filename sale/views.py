@@ -7,14 +7,15 @@ from django.db.models import Q, Count
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-import datetime
+import datetime, logging, time
 from sale.models import *
 from customer.models import *
 from shande.util import *
 
-
+logger = logging.getLogger("django")
 @login_required()
 def saleManage(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']):
         return HttpResponseRedirect("/")
     bindUsers = User.objects.filter(userprofile__title__role_name='sale').order_by("username")
@@ -27,17 +28,18 @@ def saleManage(request):
         "bindusers": bindUsers,
         "bindteachers": bindTeachers,
     }
+    # t2 = time.clock()
+    # logger.error("saleMange cost time: %f"%(t2-t1))
     return render(request, 'sale/saleManage.html', data)
 
 @login_required()
 def querySale(request):
+    # t1 = time.clock()
     sales = Sale.objects.all().order_by('saleId')
     #不同的用户看到不同的列表
     if request.user.userprofile.title.role_name == 'saleboss':
         sales = sales.filter(company=request.user.userprofile.company)
 
-        a = request.user.userprofile.company
-        b= sales.__len__()
     sales = sales.filter(saleId__icontains=request.GET.get('saleid', ''))
     sales = sales.filter(company__icontains=request.GET.get('company', ''))
     sales = sales.filter(department__icontains=request.GET.get('department', ''))
@@ -61,10 +63,13 @@ def querySale(request):
         "salePage": salePage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("querySale cost time: %f" % (t2 - t1))
     return render(request, 'sale/querySale.html', data)
 
 @login_required()
 def addSale(request):
+    # t1 = time.clock()
     data = {}
     try:
         if request.POST['id'] == "":#新建开发ID
@@ -118,10 +123,13 @@ def addSale(request):
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("addSale cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
 def addSaleGroup(request):
+    # t1 = time.clock()
     data = {}
     try:
         company = request.POST.get('saleCompany')
@@ -151,6 +159,8 @@ def addSaleGroup(request):
         else:
             data['msg'] = "操作失败,请联系管理员。错误信息:%s" % e.__str__()
         data['msgLevel'] = "error"
+    # t2 = time.clock()
+    # logger.error("addSaleGroup cost time: %f" % (t2 - t1))
     return HttpResponse(json.dumps(data))
 
 @login_required()
@@ -209,6 +219,7 @@ def delSaleManagerPassword(request):
 
 @login_required()
 def saleKpiReport(request):
+    # t1 = time.clock()
     if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'salemanager', 'saleboss']):
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -241,10 +252,13 @@ def saleKpiReport(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("saleKpiReport cost time: %f" % (t2 - t1))
     return render(request, 'sale/saleKpiReport.html', data)
 
 @login_required()
 def getCompanyDetail(request):
+    # t1 = time.clock()
     company = request.POST.get('company')
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
@@ -269,10 +283,13 @@ def getCompanyDetail(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("getCompanyDetail cost time: %f" % (t2 - t1))
     return render(request, 'sale/getCompanyDetail.html', data)
 
 @login_required()
 def getDepartmentDetail(request):
+    # t1 =time.clock()
     company = request.POST.get('company')
     department = request.POST.get('department')
     cursor = connection.cursor()
@@ -295,10 +312,13 @@ def getDepartmentDetail(request):
         "company": company,
         "department": department,
     }
+    # t2 = time.clock()
+    # logger.error("getDepartmentDetail cost time: %f" % (t2 - t1))
     return render(request, 'sale/getDepartmentDetail.html', data)
 
 @login_required()
 def getDepartmentGroupDetail(request):
+    # t1 =time.clock()
     company = request.POST.get('company')
     department = request.POST.get('department')
     startDate = request.POST.get('startDate')
@@ -326,10 +346,13 @@ def getDepartmentGroupDetail(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("getDepartmentGroupDetail cost time: %f" % (t2 - t1))
     return render(request, 'sale/getDepartmentGroupDetail.html', data)
 
 @login_required()
 def getGroupDetail(request):
+    # t1 = time.clock()
     company = request.POST.get('company')
     department = request.POST.get('department')
     group = request.POST.get('group')
@@ -355,10 +378,13 @@ def getGroupDetail(request):
         "company": company,
         "department": department,
     }
+    # t2 = time.clock()
+    # logger.error("getGroupDetail cost time: %f" % (t2 - t1))
     return render(request, 'sale/getGroupDetail.html', data)
 
 @login_required()
 def getSaleDetail(request):
+    # t1 = time.clock()
     company = request.POST.get('company')
     department = request.POST.get('department')
     group = request.POST.get('group')
@@ -376,10 +402,13 @@ def getSaleDetail(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+    # t2 = time.clock()
+    # logger.error("getSaleDetail cost time: %f" % (t2 - t1))
     return render(request, 'sale/getSaleDetail.html', data)
 
 @login_required()
 def dishonestCustomerReport(request):
+    # t1 =time.clock()
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -389,7 +418,7 @@ def dishonestCustomerReport(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=30)
+        startDate = datetime.date.today() - datetime.timedelta(days=5)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     companys = Sale.objects.values('company').distinct()
@@ -406,10 +435,13 @@ def dishonestCustomerReport(request):
         "days": days,
         "companys": companys,
     }
+    # t2 = time.clock()
+    # logger.error("dishonestCustomerReport cost time: %f" % (t2 - t1))
     return render(request, 'sale/dishonestCustomerReport.html', data)
 
 @login_required()
 def dishonestCustomer(request):
+    # t1 =time.clock()
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager', 'teacher', 'teachermanager',
                                                         'teacherboss']:
         return HttpResponseRedirect("/")
@@ -420,7 +452,7 @@ def dishonestCustomer(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=30)
+        startDate = datetime.date.today() - datetime.timedelta(days=1)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     customers = Customer.objects.filter(status=98, modify__lte=endDate, modify__gte=startDate).order_by('sales__company')
@@ -459,10 +491,13 @@ def dishonestCustomer(request):
         "customerPage": customerPage,
         "requestArgs": getArgsExcludePage(request),
     }
+    # t2 = time.clock()
+    # logger.error("dishonestCustomer cost time: %f" % (t2 - t1))
     return render(request, 'sale/dishonestCustomer.html', data)
 
 @login_required()
 def saleKpiReportSerial(request):
+    # t1 =time.clock()
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss']:
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -491,10 +526,13 @@ def saleKpiReportSerial(request):
         "days": days,
         "companys": companys,
     }
+    # t2 = time.clock()
+    # logger.error("saleKpiReportSerial cost time: %f" % (t2 - t1))
     return render(request, 'sale/saleKpiReportSerial.html', data)
 
 @login_required()
 def saleKpiReportForManager(request):
+    # t1 = time.clock()
     if not request.user.userprofile.title.role_name in ['salemanager']:
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
@@ -521,5 +559,6 @@ def saleKpiReportForManager(request):
         "days": days,
         "sales": sales,
     }
-
+    # t2 = time.clock()
+    # logger.error("saleKpiReportForManager cost time: %f" % (t2 - t1))
     return render(request, 'sale/saleKpiReportForManager.html', data)
