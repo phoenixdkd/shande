@@ -74,12 +74,12 @@
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
             <td>
-                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid | mask8 }}{% endif %}
-                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid | mask8 }}{% endif %}
+                {% if customerObj.sales %} 微信: {{ customerObj.wxid | mask8 }}{% endif %}
+                {% if customerObj.sales and customerObj.qqid %} QQ: {{ customerObj.qqid | mask8 }}{% endif %}
             </td>
             <td>
-                {% if customerObj.saleswx %} {{ customerObj.wxname | mask8 }}{% endif %}
-                {% if customerObj.salesqq %} {{ customerObj.qqname | mask8 }}{% endif %}
+                {% if customerObj.sales %} {{ customerObj.wxname | mask8 }}{% endif %}
+                {% if customerObj.sales %} {{ customerObj.qqname | mask8 }}{% endif %}
             </td>
             {% endif %}
 {#            <td>{{ customerObj.wxid }}</td>#}
@@ -106,7 +106,7 @@
                     <span class="label label-danger">&gt;</span> 退回
                     <p>{{ customerObj.message }}</p>
                 {% elif customerObj.status == 40 %}
-                    <span class="label label-success">&gt;</span> 有效客户
+                    <span class="label label-success">&gt;</span> 已合作
                 {% elif customerObj.status == 98 %}
                     <span class="label label-disable">&gt;</span> 不诚信客户
                 {% elif customerObj.status == 99 %}

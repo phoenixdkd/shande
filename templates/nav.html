@@ -49,7 +49,7 @@
                            aria-haspopup="true" aria-expanded="false">开发菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
-                            {% if user.userprofile.title.role_name in 'admin ops saleboss salemanager' %}
+                            {% if user.userprofile.title.role_name == 'admin' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'saleboss' or user.userprofile.title.role_name == 'salemanager' %}
                                 <li class=""><a href="{% url 'sale:dishonestCustomer' %}" target="_self">不诚信客户</a></li>
                                 <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
@@ -58,7 +58,7 @@
                             {% if user.userprofile.title.role_name == 'salemanager' %}
                                 <li class=""><a href="{% url 'sale:saleKpiReportForManager' %}" target="_self">有效客户增长趋势</a></li>
                             {% endif %}
-                            {% if user.userprofile.title.role_name in ' admin ops saleboss' %}
+                            {% if user.userprofile.title.role_name == 'admin' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'saleboss'  %}
                                 <li class=""><a href="{% url 'ops:userManage' %}" target="_self">用户管理</a></li>
                                 <li class=""><a href="{% url 'sale:saleManage' %}" target="_self">开发部ID</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReportSerial' %}" target="_self">有效客户增长趋势</a></li>

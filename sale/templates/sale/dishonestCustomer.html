@@ -84,8 +84,8 @@
             <td>{{ customerObj.name }}</td>
             <td>{{ customerObj.phone }}</td>
             <td>
-                {% if customerObj.saleswx %} 微信: {{ customerObj.wxid  }}{% endif %}
-                {% if customerObj.salesqq %} QQ: {{ customerObj.qqid  }}{% endif %}
+                {% if customerObj.sales %} 微信: {{ customerObj.wxid  }}{% endif %}
+                {% if customerObj.sales and customerObj.qqid %} QQ: {{ customerObj.qqid  }}{% endif %}
             </td>
             <td>
                 <span class="tooltips" data-toggle="tooltip" title="公司:{{ customerObj.sales.company }}-部门:{{ customerObj.sales.department }}">

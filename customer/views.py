@@ -559,13 +559,13 @@ def handleValidCustomer(request):
             customer.status = 98
             customer.honest = False
             customer.message = request.POST.get('dishonestMessage')
-            customer.realteacher = request.user
         elif validCustomerChange == 99:
             customer.status = 99
             customer.message = request.POST.get('delMessage')
         else:
             raise Exception("unknown operation")
         customer.modify = timezone.now()
+        customer.realteacher = request.user.userprofile.user
         customer.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -1025,6 +1025,8 @@ def addTeacherCustomer(request):
         newCustomer.phone = request.POST.get('phone', '')
         newCustomer.startup = request.POST.get('startup', 0)
         newCustomer.gem = 'gem' in request.POST
+        newCustomer.realuser = request.user.userprofile.user
+
         if request.POST.get('saletool') == 'wx':
             newCustomer.wxid = request.POST.get('wxid', '')
             newCustomer.wxname = request.POST.get('wxname', '')

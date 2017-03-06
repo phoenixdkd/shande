@@ -90,7 +90,10 @@ def queryWx(request):
 def addWx(request):
     data = {}
     try:
-        bindsaleid = request.POST.get('bindsale', '无')
+        # bindsaleid = request.POST.get('bindsale', '无')
+        sale = Sale.objects.get(saleId=request.POST.get('bindsale'))
+        bindsaleid = str(sale.id)
+
         if request.POST['id'] == "":
             newWx = Wx.objects.create(wxid=request.POST['wxid'])
             newWx.create = datetime.date.today()
@@ -267,7 +270,9 @@ def queryQq(request):
 def addQq(request):
     data = {}
     try:
-        bindsaleid = request.POST.get('bindsale', '无')
+        # bindsaleid = request.POST.get('bindsale', '无')
+        sale = Sale.objects.get(saleId=request.POST.get('bindsale'))
+        bindsaleid = str(sale.id)
         if request.POST['id'] == "":
             newQq = Qq.objects.create(qqid=request.POST['qqid'])
             newQq.create = datetime.date.today()

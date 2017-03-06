@@ -66,7 +66,9 @@
         {% if request.user.userprofile.title.role_name == 'teacher' %}
         <th width="5%">收款专员</th>
         {% else %}
-        <th width="5%">客户开发专员</th>
+{#        <th width="5%">客户开发专员</th>#}
+         <th width="5%">开发ID</th>
+         <th width="5%">开发专员</th>
         {% endif %}
     </thead>
     <tbody>
@@ -97,7 +99,8 @@
           {% if request.user.userprofile.title.role_name == 'teacher' %}
                 <td>{{ tradeObj.customer.bursar.bursarId }} {{ tradeObj.customer.bursar.binduser.userprofile.nick }}</td>
           {% else %}
-                <td>{{ tradeObj.customer.sales.saleId }} {{ tradeObj.customer.sales.binduser.userprofile.nick }}</td>
+                <td>{{ tradeObj.customer.sales.saleId }} </td>
+                <td>{{ tradeObj.customer.realuser.userprofile.nick }}</td>
           {% endif %}
      </tr>
        {% empty %}

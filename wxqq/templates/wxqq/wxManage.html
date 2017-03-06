@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="bindsale" >绑定开发</label>
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="bindsale" name="bindsale"/>
+                                <input type="text" class="form-control" id="bindsale" name="bindsale" />
 {#                                <select type="select" class="form-control" id="bindsale" name="bindsale">#}
 {#                                <option>无</option>#}
 {#                                    {% if bindsales %}#}
@@ -223,6 +223,21 @@
                         notEmpty: {
                             message: '请输入微信昵称'
                         }
+                    }
+                },
+                company: {
+                    validators: {
+                        notEmpty: {
+                            message: '公司代码不能为空',
+                        },
+                        stringLength: {
+                            max: 1,
+                            message: "公司代码只包含一个字符"
+                        },
+                        regexp: {
+                            regexp: "^[A-Z]$",
+                            message: "公司代码必须为大写字母"
+                        },
                     }
                 }
             },
