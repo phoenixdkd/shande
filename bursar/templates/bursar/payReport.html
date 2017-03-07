@@ -9,15 +9,18 @@
 </h1>
     <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
     <div class="form-group">
-        <label class="col-md-1 control-label">财务专员</label>
-        <div class="col-md-1 " style="width: 150px">
-            <select type="select" class="form-control" id="bursarID" name="bursarID">
-                <option></option>
-                {% for bursarObj in bursars %}
-                    <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
-                {% endfor %}
-            </select>
-        </div>
+        {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
+            <label class="col-md-1 control-label">财务专员</label>
+            <div class="col-md-1 " style="width: 150px">
+                <select type="select" class="form-control" id="bursarID" name="bursarID">
+                  <option></option>
+                  {% for bursarObj in bursars %}
+                      <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
+                  {% endfor %}
+              </select>
+            </div>
+        {% endif %}
+
         <label class=" col-md-1 control-label" style="width: 150px">时间范围</label>
         <div class="col-md-2 ">
              <input type="date"  class="form-control datetime" style="width: 150px" value="{{ startDate }}" name="startDate" id="startDate"
@@ -28,6 +31,7 @@
              <input type="date"  class="form-control datetime" style="width: 150px" value="{{ endDate }}" name="endDate" id="endDate"
              title="结束时间"/>
         </div>
+    {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
         <label class="col-md-1 control-label">公司</label>
         <div class="col-md-1 ">
            <select type="select" class="form-control" id="company" name="company">
@@ -42,71 +46,123 @@
                 <option value="H" {% if company == 'H' %}selected{%endif%}>H</option>
             </select>
         </div>
+    {% endif %}
         <label class="col-md-1 control-label"></label>
         <div class="col-md-2">
-                <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
+                <button class="btn btn-sm btn-primary" onclick="loadPayReportDiv()">搜索</button>
         </div>
     </div>
 </form>
 <hr/>
+    <div id="payReportDiv"></div>
 
-<table class="table table-bordered">
-    <thead class="bg-info">
-        <th width="2%">序号</th>
-        <th width="5%">汇款时间</th>
+<script type="text/javascript">
+    $(function () {
+        loadPayReportDiv();
+    });
+    function loadPayReportDiv(data){
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        var company = $('#company').val();
+        var bursarID = $('#bursarID').val();
+        if(data){
+            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID;
+        }else{
+            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID;
+        }
+        alert(data);
+        $('#payReportDiv').load("{% url 'bursar:queryPayReport' %}", data);
+    }
+
+</script>
+{#<table class="table table-bordered">#}
+{#    <thead class="bg-info">#}
+{#        <th width="2%">序号</th>#}
+{#        <th width="5%">汇款时间</th>#}
 {#        <th width="5%">客户来源公司</th>#}
-        <th width="5%">客户姓名</th>
+{#        <th width="5%">客户姓名</th>#}
 {#        <th width="5%">客户管理专员</th>#}
-        <th width="5%">电话</th>
-        <th width="5%">产品代码/名称</th>
-        <th width="5%">金额</th>
-        <th width="5%">支付方式</th>
-{#        <th width="5%">客户管理ID</th>#}
-{#        <th width="5%">客户管理专员</th>#}
-        {% if request.user.userprofile.title.role_name == 'teacher' %}
-        <th width="5%">收款专员</th>
-        {% else %}
-{#        <th width="5%">客户开发专员</th>#}
-         <th width="5%">开发ID</th>
-         <th width="5%">开发专员</th>
-        {% endif %}
-    </thead>
-    <tbody>
-        <tr style="color:red">
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>合计</td>
-            <td></td>
-            <td>{{ payCashTotal }}
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    {% if tradePage %}
-    {% for tradeObj in tradePage %}
-     <tr class="trade_row" id="trade_row_{{ tradeObj.id }}">
-          <td>{{ forloop.counter }}</td>
-          <td>{{ tradeObj.paytime }}</td>
-          <td>{{ tradeObj.customer.name }}</td>
-          <td>{{ tradeObj.customer.phone }} </td>
-          <td>{{ tradeObj.stock.stockid }}/{{ tradeObj.stock.stockname }}</td>
-          <td>{{ tradeObj.paycash }} </td>
-          <td>{{ tradeObj.paytype }} </td>
-{#          <td>{{ tradeObj.customer.teacher.teacherId }} </td>#}
-{#         <td>{{ tradeObj.realteacheruser.userprofile.nick }}</td>#}
-          {% if request.user.userprofile.title.role_name == 'teacher' %}
-                <td>{{ tradeObj.customer.bursar.bursarId }} {{ tradeObj.customer.bursar.binduser.userprofile.nick }}</td>
-          {% else %}
-                <td>{{ tradeObj.customer.sales.saleId }} </td>
-                <td>{{ tradeObj.customer.realuser.userprofile.nick }}</td>
-          {% endif %}
-     </tr>
-       {% empty %}
-        <tr><td colspan="9">无收款信息</td></tr>
-    {% endfor %}
-    {% endif %}
-
+{#        <th width="5%">电话</th>#}
+{#        <th width="5%">产品代码/名称</th>#}
+{#        <th width="5%">金额</th>#}
+{#        <th width="5%">支付方式</th>#}
+{#        {% if request.user.userprofile.title.role_name != 'salemanager' %}#}
+{#            <th width="5%">客户管理ID</th>#}
+{#            <th width="5%">客户管理专员</th>#}
+{#        {% endif %}#}
+{#        {% if request.user.userprofile.title.role_name == 'teacher' %}#}
+{#        <th width="5%">收款专员</th>#}
+{#        {% else %}#}
+{#         <th width="5%">开发ID</th>#}
+{#         <th width="5%">开发专员</th>#}
+{#        {% endif %}#}
+{#        {% if request.user.userprofile.title.role_name == 'admin' %}#}
+{#            <td width="5%">操作</td>#}
+{#        {% endif %}#}
+{#    </thead>#}
+{#    <tbody>#}
+{#        <tr style="color:red">#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td>合计</td>#}
+{#            <td></td>#}
+{#            <td>{{ payCashTotal }}#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            <td></td>#}
+{#            {% if request.user.userprofile.title.role_name == 'admin' %}#}
+{#              <td></td>#}
+{#            {% endif %}#}
+{#        </tr>#}
+{#    {% if tradePage %}#}
+{#    {% for tradeObj in tradePage %}#}
+{#     <tr class="trade_row" id="trade_row_{{ tradeObj.id }}">#}
+{#          <td align="center">{{ forloop.counter }}</td>#}
+{#          <td align="center">{{ tradeObj.paytime }}</td>#}
+{#          <td align="center">{{ tradeObj.customer.name }}</td>#}
+{#          <td align="center">{{ tradeObj.customer.phone }} </td>#}
+{#          <td align="center">{{ tradeObj.stock.stockid }}/{{ tradeObj.stock.stockname }}</td>#}
+{#          <td align="center">{{ tradeObj.paycash }} </td>#}
+{#          <td align="center">{{ tradeObj.paytype }} </td>#}
+{#          {% if request.user.userprofile.title.role_name != 'salemanager' %}#}
+{#             <td align="center">{{ tradeObj.customer.teacher.teacherId }} </td>#}
+{#             <td align="center">{{ tradeObj.realteacheruser.userprofile.nick }}</td>#}
+{#          {% endif %}#}
+{#          {% if request.user.userprofile.title.role_name == 'teacher' %}#}
+{#                <td>{{ tradeObj.customer.bursar.bursarId }} {{ tradeObj.customer.bursar.binduser.userprofile.nick }}</td>#}
+{#          {% else %}#}
+{#                <td align="center">{{ tradeObj.customer.sales.saleId }} </td>#}
+{#                <td align="center">{{ tradeObj.customer.realuser.userprofile.nick }}</td>#}
+{#          {% endif %}#}
+{#           <td><button type="button" class="btn btn-sm btn-primary" onclick="backTradeAdmin(this)"#}
+{#                        data-id="{{ tradeObj.id }}"#}
+{#                    >退回</button></td>#}
+{#     </tr>#}
+{#       {% empty %}#}
+{#        <tr><td colspan="9">无收款信息</td></tr>#}
+{#    {% endfor %}#}
+{#    {% endif %}#}
+{##}
+{#   <script type="text/javascript">#}
+{#       function backTradeAdmin(obj){#}
+{#           $.ajax({#}
+{#               url: "{% url 'trade:backTradeAdmin' %}",#}
+{#               type: "POST",#}
+{#               data: {"backtradeid": $(obj).data("id")},#}
+{#               success: function(result){#}
+{#                   showMsgModal(result.msg,result.msgLevel);#}
+{#                   if (result.msgLevel == 'info'){#}
+{#                       setTimeout("window.location.reload()",1500);#}
+{#                   }#}
+{#               }#}
+{#           })#}
+{#    }#}
+{##}
+{#   </script>#}
+{##}
 {#        <tr style="color:red">#}
 {#            <td></td>#}
 {#            <td></td>#}
@@ -118,30 +174,30 @@
 {#            <td></td>#}
 {#            <td></td>#}
 {#        </tr>#}
-    </tbody>
-</table>
+{#    </tbody>#}
+{#</table>#}
 
 
-<nav class="navbar-right">
-  <ul class="pagination">
-    <li>
-        {% if tradePage.has_previous %}
+{#<nav class="navbar-right">#}
+{#  <ul class="pagination">#}
+{#    <li>#}
+{#        {% if tradePage.has_previous %}#}
 {#            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>#}
 {#            <span aria-hidden="true">#}
 {#                <a href="?page={{ tradePage.previous_page_number }}&{{ requestArgs }}">&laquo;</a>#}
 {#                <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}">&laquo;</a>#}
 {#            </span>#}
-            <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&laquo;</span></a>
-        {% endif %}
-    </li>
-    <li><span class="current">
-           第{{ tradePage.number }}/{{ tradePage.paginator.num_pages }}页
-        </span></li>
-    <li>
-        {% if tradePage.has_next %}
-             <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&raquo; </span></a>
-        {% endif %}
-    </li>
-  </ul>
-</nav>
+{#            <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&laquo;</span></a>#}
+{#        {% endif %}#}
+{#    </li>#}
+{#    <li><span class="current">#}
+{#           第{{ tradePage.number }}/{{ tradePage.paginator.num_pages }}页#}
+{#        </span></li>#}
+{#    <li>#}
+{#        {% if tradePage.has_next %}#}
+{#             <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&raquo; </span></a>#}
+{#        {% endif %}#}
+{#    </li>#}
+{#  </ul>#}
+{#</nav>#}
 {% endblock %}

@@ -136,20 +136,100 @@ def delBursar(request):
 @login_required()
 def payReport(request):
     # t1 = time.clock()
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher', 'teachermanager', 'saleboss']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'bursar', 'bursarmanager', 'teacher', 'teachermanager', 'saleboss', 'salemanager']):
         return HttpResponseRedirect("/")
-    trades = Trade.objects.filter(paytime__isnull=False).order_by('-paytime')
+    # trades = Trade.objects.filter(paytime__isnull=False,status=30).order_by('-paytime')
 
     if request.POST.get("startDate",'') == '':
         startDate = request.GET.get('startDate','')
         endDate = request.GET.get('endDate','')
-        company = request.GET.get('company','')
-        bursarID = request.GET.get('bursarID','')
+        # company = request.GET.get('company','')
+        # bursarID = request.GET.get('bursarID','')
     else:
         startDate = request.POST.get('startDate')
         endDate = request.POST.get('endDate')
-        bursarID = request.POST.get('bursarID')
-        company = request.POST.get('company')
+        # bursarID = request.POST.get('bursarID')
+        # company = request.POST.get('company')
+
+    if endDate == '':
+        endDate = datetime.date.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+
+    if startDate == "":
+        if request.user.userprofile.title.role_name == 'teacher':
+            startDate = datetime.date.today()
+        else:
+            startDate = datetime.date.today() - datetime.timedelta(days=0)
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    # trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
+    bursars = Bursar.objects.all()
+
+    # #按条件筛选
+    # if bursarID != '':
+    #     trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
+    # if company != '':
+    #     trades = trades.filter(customer__sales__company=str(company))
+    #
+    # if request.user.userprofile.title.role_name == 'bursar':
+    #     trades = trades.filter(customer__bursar__binduser=request.user)
+    # if request.user.userprofile.title.role_name == 'teacher':
+    #     trades = trades.filter(customer__teacher__binduser=request.user)
+    #
+    # if request.user.userprofile.title.role_name == 'teachermanager':
+    #     # trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+    #     #                        customer__teacher__department=request.user.userprofile.department,
+    #     #                        customer__teacher__group=request.user.userprofile.group)
+    #     user = request.user
+    #     bursarID = 'CW'+user.userprofile.group+user.userprofile.department
+    #     trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
+    #
+    # if request.user.userprofile.title.role_name == 'saleboss':
+    #     trades = trades.filter(customer__sales__company=request.user.userprofile.company)
+    # if request.user.userprofile.title.role_name == 'salemanager':
+    #     trades = trades.filter(customer__sales__company=request.user.userprofile.company,
+    #                            customer__sales__department=request.user.userprofile.department).order_by('customer__sales')
+    #
+    # p = Paginator(trades, 100)
+    # try:
+    #     page = int(request.GET.get('page', '1'))
+    # except ValueError:
+    #     page = 1
+    # try:
+    #     tradePage = p.page(page)
+    # except (EmptyPage, InvalidPage):
+    #     tradePage = p.page(p.num_pages)
+    #
+    #
+    # payCashTotal = 0
+    # for tradeObj in tradePage :
+    #     payCashTotal = payCashTotal + tradeObj.paycash
+
+    data = {
+        # "tradePage": tradePage,
+        # "requestArgs": getArgsExcludePage(request),
+        # "payCashTotal": payCashTotal,
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+        # "bursarID": bursarID,
+        # "company": company,
+        "bursars": bursars,
+    }
+    # t2 = time.clock()
+    # logger.error("bursar/payReport cost time: %f"%(t2-t1))
+    return render(request, 'bursar/payReport.html', data)
+
+@login_required()
+def queryPayReport(request):
+    # t1 = time.clock()
+    trades = Trade.objects.filter(paytime__isnull=False,status=30).order_by('-paytime')
+
+    company = request.GET.get('company', '')
+    bursarID = request.GET.get('bursarID', '')
+    startDate = request.GET.get('startDate', '')
+    endDate = request.GET.get('endDate', '')
+
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -164,7 +244,6 @@ def payReport(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
-    bursars = Bursar.objects.all()
 
     # #按条件筛选
     if bursarID != '':
@@ -187,15 +266,10 @@ def payReport(request):
 
     if request.user.userprofile.title.role_name == 'saleboss':
         trades = trades.filter(customer__sales__company=request.user.userprofile.company)
+    if request.user.userprofile.title.role_name == 'salemanager':
+        trades = trades.filter(customer__sales__company=request.user.userprofile.company,
+                               customer__sales__department=request.user.userprofile.department).order_by('customer__sales')
 
-
-    # tradePayCashSum = trades.aggregate(Sum('paycash'))
-    # if tradePayCashSum['paycash__sum']:
-    #     payCashTotal = tradePayCashSum['paycash__sum']
-    # else:
-    #     payCashTotal = 0
-
-    # {#added by jdeng to devide pages#}
     p = Paginator(trades, 100)
     try:
         page = int(request.GET.get('page', '1'))
@@ -213,17 +287,11 @@ def payReport(request):
 
     data = {
         "tradePage": tradePage,
-        # "requestArgs": getArgsExcludePage(request),
+         "requestArgs": getArgsExcludePage(request),
         "payCashTotal": payCashTotal,
-        "startDate": str(startDate),
-        "endDate": str(endDate),
-        "bursarID": bursarID,
-        "company": company,
-        "bursars": bursars,
     }
-    # t2 = time.clock()
-    # logger.error("bursar/payReport cost time: %f"%(t2-t1))
-    return render(request, 'bursar/payReport.html', data)
+    return render(request, 'bursar/queryPayReport.html', data)
+
 
 @login_required()
 def payTypeReport(request):

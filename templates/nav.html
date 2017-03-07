@@ -49,7 +49,7 @@
                            aria-haspopup="true" aria-expanded="false">开发菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
-                            {% if user.userprofile.title.role_name == 'admin' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'saleboss' or user.userprofile.title.role_name == 'salemanager' %}
+                            {% if user.userprofile.title.role_name == 'admin' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'saleboss' or user.userprofile.title.role_name == 'salemanager' %}
                                 <li class=""><a href="{% url 'sale:dishonestCustomer' %}" target="_self">不诚信客户</a></li>
                                 <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
                                 <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
@@ -68,6 +68,9 @@
 {#                            <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>#}
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">业务微信管理</a></li>
                             <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">业务QQ管理</a></li>
+                           {% if user.userprofile.title.role_name == 'salemanager' %}
+                               <li class=""><a href="{% url 'bursar:payReport' %}" target="_self">部门收款汇总表</a></li>
+                           {% endif %}
                         </ul>
                     </li>
                 {% endif %}

@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^delBursar$', views.delBursar, name='delBursar'),
 
     url(r'^payReport$', views.payReport, name='payReport'),
+    url(r'^queryPayReport$', views.queryPayReport, name='queryPayReport'),
     url(r'^payTypeReport$', views.payTypeReport, name='payTypeReport'),
     url(r'^payCompanyReport$', views.payCompanyReport, name='payCompanyReport'),
     url(r'^queryPayCompany$', views.queryPayCompany, name='queryPayCompany'),

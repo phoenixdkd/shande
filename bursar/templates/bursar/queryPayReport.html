@@ -1,0 +1,93 @@
+<table class="table table-bordered">
+    <thead class="bg-info">
+        <th width="2%">序号</th>
+        <th width="5%">汇款时间</th>
+{#        <th width="5%">客户来源公司</th>#}
+        <th width="5%">客户姓名</th>
+{#        <th width="5%">客户管理专员</th>#}
+        <th width="5%">电话</th>
+        <th width="5%">产品代码/名称</th>
+        <th width="5%">金额</th>
+        <th width="5%">支付方式</th>
+        {% if request.user.userprofile.title.role_name != 'salemanager' %}
+            <th width="5%">客户管理ID</th>
+            <th width="5%">客户管理专员</th>
+        {% endif %}
+        {% if request.user.userprofile.title.role_name == 'teacher' %}
+        <th width="5%">收款专员</th>
+        {% else %}
+         <th width="5%">开发ID</th>
+         <th width="5%">开发专员</th>
+        {% endif %}
+        {% if request.user.userprofile.title.role_name == 'admin' %}
+            <td width="5%">操作</td>
+        {% endif %}
+    </thead>
+    <tbody>
+        <tr style="color:red">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>合计</td>
+            <td></td>
+            <td>{{ payCashTotal }}
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            {% if request.user.userprofile.title.role_name == 'admin' %}
+              <td></td>
+            {% endif %}
+        </tr>
+    {% if tradePage %}
+    {% for tradeObj in tradePage %}
+     <tr class="trade_row" id="trade_row_{{ tradeObj.id }}">
+          <td align="center">{{ forloop.counter }}</td>
+          <td align="center">{{ tradeObj.paytime }}</td>
+          <td align="center">{{ tradeObj.customer.name }}</td>
+          <td align="center">{{ tradeObj.customer.phone }} </td>
+          <td align="center">{{ tradeObj.stock.stockid }}/{{ tradeObj.stock.stockname }}</td>
+          <td align="center">{{ tradeObj.paycash }} </td>
+          <td align="center">{{ tradeObj.paytype }} </td>
+          {% if request.user.userprofile.title.role_name != 'salemanager' %}
+             <td align="center">{{ tradeObj.customer.teacher.teacherId }} </td>
+             <td align="center">{{ tradeObj.realteacheruser.userprofile.nick }}</td>
+          {% endif %}
+          {% if request.user.userprofile.title.role_name == 'teacher' %}
+                <td>{{ tradeObj.customer.bursar.bursarId }} {{ tradeObj.customer.bursar.binduser.userprofile.nick }}</td>
+          {% else %}
+                <td align="center">{{ tradeObj.customer.sales.saleId }} </td>
+                <td align="center">{{ tradeObj.customer.realuser.userprofile.nick }}</td>
+          {% endif %}
+           <td><button type="button" class="btn btn-sm btn-primary" onclick="backTradeAdmin(this)"
+                        data-id="{{ tradeObj.id }}"
+                    >退回</button></td>
+     </tr>
+       {% empty %}
+        <tr><td colspan="9">无收款信息</td></tr>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+
+
+<nav class="navbar-right">
+
+  <ul class="pagination">
+    <li>
+    <input type="hidden" id="page" value="{{ tradePage.number }}"/>
+        {% if tradePage.has_previous %}
+            <span aria-hidden="true" onclick="loadPayReportDiv('page={{ tradePage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ tradePage.number }}/{{ tradePage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if tradePage.has_next %}
+            <span aria-hidden="true" onclick="loadPayReportDiv('page={{ tradePage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>
