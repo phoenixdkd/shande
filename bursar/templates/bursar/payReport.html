@@ -15,7 +15,7 @@
                 <select type="select" class="form-control" id="bursarID" name="bursarID">
                   <option></option>
                   {% for bursarObj in bursars %}
-                      <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
+                      <option value={{ bursarObj.bursarId}}  {% if bursarObj.bursarId == bursarID %} selected {% endif %}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
                   {% endfor %}
               </select>
             </div>
@@ -42,7 +42,7 @@
                 <option value="D" {% if company == 'D' %}selected{%endif%}>D</option>
                 <option value="E" {% if company == 'E' %}selected{%endif%}>E</option>
                 <option value="F" {% if company == 'F' %}selected{%endif%}>F</option>
-                <option value="F" {% if company == 'G' %}selected{%endif%}>G</option>
+                <option value="G" {% if company == 'G' %}selected{%endif%}>G</option>
                 <option value="H" {% if company == 'H' %}selected{%endif%}>H</option>
             </select>
         </div>
@@ -70,10 +70,8 @@
         }else{
             data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID;
         }
-        alert(data);
         $('#payReportDiv').load("{% url 'bursar:queryPayReport' %}", data);
     }
-
 </script>
 {#<table class="table table-bordered">#}
 {#    <thead class="bg-info">#}
@@ -146,22 +144,24 @@
 {#    {% endfor %}#}
 {#    {% endif %}#}
 {##}
-{#   <script type="text/javascript">#}
-{#       function backTradeAdmin(obj){#}
-{#           $.ajax({#}
-{#               url: "{% url 'trade:backTradeAdmin' %}",#}
-{#               type: "POST",#}
-{#               data: {"backtradeid": $(obj).data("id")},#}
-{#               success: function(result){#}
+   <script type="text/javascript">
+       function backTradeAdmin(obj){
+           alert('撤销交易操作，请慎重')
+           $.ajax({
+               url: "{% url 'trade:backTradeAdmin' %}",
+               type: "POST",
+               data: {"backtradeid": $(obj).data("id")},
+               success: function(result){
 {#                   showMsgModal(result.msg,result.msgLevel);#}
 {#                   if (result.msgLevel == 'info'){#}
 {#                       setTimeout("window.location.reload()",1500);#}
 {#                   }#}
-{#               }#}
-{#           })#}
-{#    }#}
-{##}
-{#   </script>#}
+                   loadPayReportDiv();
+               }
+           })
+    }
+
+   </script>
 {##}
 {#        <tr style="color:red">#}
 {#            <td></td>#}

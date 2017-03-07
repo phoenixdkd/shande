@@ -143,13 +143,13 @@ def payReport(request):
     if request.POST.get("startDate",'') == '':
         startDate = request.GET.get('startDate','')
         endDate = request.GET.get('endDate','')
-        # company = request.GET.get('company','')
-        # bursarID = request.GET.get('bursarID','')
+        company = request.GET.get('company','')
+        bursarID = request.GET.get('bursarID','')
     else:
         startDate = request.POST.get('startDate')
         endDate = request.POST.get('endDate')
-        # bursarID = request.POST.get('bursarID')
-        # company = request.POST.get('company')
+        bursarID = request.POST.get('bursarID')
+        company = request.POST.get('company')
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -212,8 +212,8 @@ def payReport(request):
         # "payCashTotal": payCashTotal,
         "startDate": str(startDate),
         "endDate": str(endDate),
-        # "bursarID": bursarID,
-        # "company": company,
+        "bursarID": bursarID,
+        "company": company,
         "bursars": bursars,
     }
     # t2 = time.clock()
