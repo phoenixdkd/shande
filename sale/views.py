@@ -78,10 +78,17 @@ def addSale(request):
             newSale = Sale.objects.get(id=request.POST['id'])
             newSale.saleId = request.POST['saleid']
 
-        binduserid = request.POST.get('binduser', '无')
+        if request.POST.get('bindusername'):
+            # binduserid = request.POST.get('binduser', '无')
+            user = User.objects.get(username=request.POST.get('bindusername',''))
+            binduserid = str(user.id)
+        else:
+            binduserid = '无'
+
         if binduserid.isdigit():
             try:
                 oldSale = Sale.objects.get(binduser_id=binduserid)
+
                 oldSale.binduser = None
                 oldSale.save()
             except Exception as e:
@@ -99,9 +106,16 @@ def addSale(request):
         #newSale.bindteacher = getTeacherBySaleId(request.POST['saleid'])
         # newSale.company = request.POST['company']
         # newSale.department = request.POST['department']
-        bindteacher = request.POST.get('bindteacher', '无')
+
+        teacher = Teacher.objects.get(teacherId=request.POST.get('bindteacherId', ''))
+        if teacher:
+            # bindteacher = request.POST.get('bindteacher', '无')
+             bindteacher = str(teacher.id)
+        else:
+            bindteacher = '无'
         if bindteacher.isdigit():
-            teacher = Teacher.objects.get(id=request.POST.get('bindteacher'))
+            # teacher = Teacher.objects.get(id=request.POST.get('bindteacher'))
+            teacher = Teacher.objects.get(id=bindteacher)
             newSale.bindteacher = teacher
         else:
             newSale.bindteacher = None

@@ -1,4 +1,4 @@
-{% extends 'base_noheader.html' %}
+ {% extends 'base_noheader.html' %}
 
 {% block title %}开发管理{% endblock %}
 {% block content %}
@@ -29,29 +29,31 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindusername" >绑定用户</label>
                             <div class="col-md-5">
-                                <select type="select" class="form-control" id="binduser" name="binduser">
-                                    <option>无</option>
-                                    {% if bindusers %}
-                                        {% for binduser in bindusers %}
-                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                                <input type="text" class="form-control" id="bindusername" name="bindusername"  style="font-size: small" placeholder="请输用户名,格式：guanliyuan" />
+{#                                <select type="select" class="form-control" id="binduser" name="binduser">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindusers %}#}
+{#                                        {% for binduser in bindusers %}#}
+{#                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="bindteacher" >对接老师</label>
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindteacherId" >对接老师</label>
                             <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindteacher" name="bindteacher">
-                                    <option>无</option>
-                                    {% if bindteachers %}
-                                        {% for bindteacher in bindteachers %}
-                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }} {{ bindteacher.binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                                <input type="text" class="form-control" id="bindteacherId" name="bindteacherId"  style="font-size: small" placeholder="请输老师ID,格式：Z010101"/>
+{#                                <select type="select" class="form-control" id="bindteacher" name="bindteacher">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindteachers %}#}
+{#                                        {% for bindteacher in bindteachers %}#}
+{#                                                <option value="{{ bindteacher.id }}"> {{ bindteacher.teacherId }} {{ bindteacher.binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -262,8 +264,8 @@
         $('#saleid').val($(obj).data("saleid"));
         $('#company').val($(obj).data("company"));
         $('#department').val($(obj).data("department"));
-        $('#binduser').val($(obj).data("binduser"));
-        $('#bindteacher').val($(obj).data("bindteacher"));
+        $('#bindusername').val($(obj).data("bindusername"));
+        $('#bindteacherId').val($(obj).data("bindteacherid"));
         $('#addSaleModal').modal("show");
     }
     function delSale(obj){

@@ -10,14 +10,15 @@
     <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
     <div class="form-group">
         {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
-            <label class="col-md-1 control-label">财务专员</label>
+            <label class="col-md-1 control-label" for="bursarID" >财务专员</label>
             <div class="col-md-1 " style="width: 150px">
-                <select type="select" class="form-control" id="bursarID" name="bursarID">
-                  <option></option>
-                  {% for bursarObj in bursars %}
-                      <option value={{ bursarObj.bursarId}}  {% if bursarObj.bursarId == bursarID %} selected {% endif %}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
-                  {% endfor %}
-              </select>
+                 <input type="text" class="form-control" id="bursarID" name="bursarID" value="{{ bursarID }}" placeholder="格式：A01101"/>
+{#                <select type="select" class="form-control" id="bursarID" name="bursarID">#}
+{#                  <option></option>#}
+{#                  {% for bursarObj in bursars %}#}
+{#                      <option value={{ bursarObj.bursarId}}  {% if bursarObj.bursarId == bursarID %} selected {% endif %}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>#}
+{#                  {% endfor %}#}
+{#              </select>#}
             </div>
         {% endif %}
 
@@ -32,19 +33,20 @@
              title="结束时间"/>
         </div>
     {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
-        <label class="col-md-1 control-label">公司</label>
+        <label class="col-md-1 control-label" for="company">公司</label>
         <div class="col-md-1 ">
-           <select type="select" class="form-control" id="company" name="company">
-               <option></option>
-                <option value="A" {% if company == 'A' %}selected{%endif%}>A</option>
-                <option value="B" {% if company == 'B' %}selected{%endif%}>B</option>
-                <option value="C" {% if company == 'C' %}selected{%endif%}>C</option>
-                <option value="D" {% if company == 'D' %}selected{%endif%}>D</option>
-                <option value="E" {% if company == 'E' %}selected{%endif%}>E</option>
-                <option value="F" {% if company == 'F' %}selected{%endif%}>F</option>
-                <option value="G" {% if company == 'G' %}selected{%endif%}>G</option>
-                <option value="H" {% if company == 'H' %}selected{%endif%}>H</option>
-            </select>
+           <input type="text" class="form-control" id="company" name="company" value="{{ company }}" placeholder="格式：A"/>
+{#           <select type="select" class="form-control" id="company" name="company">#}
+{#               <option></option>#}
+{#                <option value="A" {% if company == 'A' %}selected{%endif%}>A</option>#}
+{#                <option value="B" {% if company == 'B' %}selected{%endif%}>B</option>#}
+{#                <option value="C" {% if company == 'C' %}selected{%endif%}>C</option>#}
+{#                <option value="D" {% if company == 'D' %}selected{%endif%}>D</option>#}
+{#                <option value="E" {% if company == 'E' %}selected{%endif%}>E</option>#}
+{#                <option value="F" {% if company == 'F' %}selected{%endif%}>F</option>#}
+{#                <option value="G" {% if company == 'G' %}selected{%endif%}>G</option>#}
+{#                <option value="H" {% if company == 'H' %}selected{%endif%}>H</option>#}
+{#            </select>#}
         </div>
     {% endif %}
         <label class="col-md-1 control-label"></label>

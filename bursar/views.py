@@ -225,8 +225,12 @@ def queryPayReport(request):
     # t1 = time.clock()
     trades = Trade.objects.filter(paytime__isnull=False,status=30).order_by('-paytime')
 
-    company = request.GET.get('company', '')
-    bursarID = request.GET.get('bursarID', '')
+    if request.user.userprofile.title.role_name == 'salemanager':
+        company = request.user.userprofile.company
+        bursarID = ''
+    else:
+        company = request.GET.get('company', '')
+        bursarID = request.GET.get('bursarID', '')
     startDate = request.GET.get('startDate', '')
     endDate = request.GET.get('endDate', '')
 
@@ -254,8 +258,8 @@ def queryPayReport(request):
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
     if request.user.userprofile.title.role_name == 'teacher':
-        trades = trades.filter(customer__teacher__binduser=request.user)
-
+        # trades = trades.filter(customer__teacher__binduser=request.user)
+        trades = trades.filter(realteacheruser=request.user)
     if request.user.userprofile.title.role_name == 'teachermanager':
         # trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
         #                        customer__teacher__department=request.user.userprofile.department,

@@ -1,41 +1,45 @@
 <table class="table table-bordered">
     <thead class="bg-info">
-        <th width="2%">序号</th>
-        <th width="5%">汇款时间</th>
-{#        <th width="5%">客户来源公司</th>#}
-        <th width="5%">客户姓名</th>
-{#        <th width="5%">客户管理专员</th>#}
-        <th width="5%">电话</th>
-        <th width="5%">产品代码/名称</th>
-        <th width="5%">金额</th>
-        <th width="5%">支付方式</th>
+        <th width="2%" style="text-align: center">序号</th>
+        <th width="7%" style="text-align: center">汇款时间</th>
+        <th width="5%" style="text-align: center">客户姓名</th>
+        <th width="5%" style="text-align: center">电话</th>
+        <th width="5%" style="text-align: center">产品代码/名称</th>
+        <th width="5%" style="text-align: center">金额</th>
+        <th width="5%" style="text-align: center">支付方式</th>
         {% if request.user.userprofile.title.role_name != 'salemanager' %}
-            <th width="5%">客户管理ID</th>
-            <th width="5%">客户管理专员</th>
+            <th width="5%" style="text-align: center">客户管理ID</th>
+            <th width="5%" style="text-align: center">客户管理专员</th>
         {% endif %}
         {% if request.user.userprofile.title.role_name == 'teacher' %}
-        <th width="5%">收款专员</th>
+        <th width="5%" style="text-align: center">收款专员</th>
         {% else %}
-         <th width="5%">开发ID</th>
-         <th width="5%">开发专员</th>
+         <th width="5%" style="text-align: center">开发ID</th>
+         <th width="5%" style="text-align: center">开发专员</th>
         {% endif %}
         {% if request.user.userprofile.title.role_name == 'admin' %}
-            <td width="5%">操作</td>
+            <th width="5%" style="text-align: center">操作</th>
         {% endif %}
     </thead>
     <tbody>
         <tr style="color:red">
             <td></td>
             <td></td>
+            <td ></td>
+            <td align="center">合计</td>
             <td></td>
-            <td>合计</td>
+            <td align="center">{{ payCashTotal }} </td>
             <td></td>
-            <td>{{ payCashTotal }}
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            {% if request.user.userprofile.title.role_name != 'salemanager' %}
+                 <td></td>
+                 <td></td>
+            {% endif %}
+            {% if request.user.userprofile.title.role_name == 'teacher' %}
+                <td></td>
+            {% else %}
+                <td></td>
+                <td></td>
+            {% endif %}
             {% if request.user.userprofile.title.role_name == 'admin' %}
               <td></td>
             {% endif %}
@@ -60,9 +64,11 @@
                 <td align="center">{{ tradeObj.customer.sales.saleId }} </td>
                 <td align="center">{{ tradeObj.customer.realuser.userprofile.nick }}</td>
           {% endif %}
+          {% if request.user.userprofile.title.role_name == 'admin' %}
            <td><button type="button" class="btn btn-sm btn-primary" onclick="backTradeAdmin(this)"
                         data-id="{{ tradeObj.id }}"
                     >退回</button></td>
+          {% endif %}
      </tr>
        {% empty %}
         <tr><td colspan="9">无收款信息</td></tr>

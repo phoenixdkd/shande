@@ -51,8 +51,8 @@
                     data-saleid="{{ saleObj.saleId }}"
                     data-company="{{ saleObj.company }}"
                     data-department="{{ saleObj.department }}"
-                    data-binduser="{{ saleObj.binduser.id }}"
-                    data-bindteacher="{{ saleObj.bindteacher.id }}"
+                    data-bindusername="{{ saleObj.binduser.username }}"
+                    data-bindteacherid="{{ saleObj.bindteacher.teacherId }}"
                 >编辑</button>
                 {% if request.user.userprofile.title.role_name in 'admin ops' %}
                 <button type="button" class="btn btn-sm btn-danger" onclick="delSale(this)"

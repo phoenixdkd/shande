@@ -92,8 +92,10 @@ def addWx(request):
     try:
         # bindsaleid = request.POST.get('bindsale', '无')
         sale = Sale.objects.get(saleId=request.POST.get('bindsale'))
-        bindsaleid = str(sale.id)
-
+        if sale:
+            bindsaleid = str(sale.id)
+        else:
+            bindsaleid = '无'
         if request.POST['id'] == "":
             newWx = Wx.objects.create(wxid=request.POST['wxid'])
             newWx.create = datetime.date.today()
@@ -272,7 +274,10 @@ def addQq(request):
     try:
         # bindsaleid = request.POST.get('bindsale', '无')
         sale = Sale.objects.get(saleId=request.POST.get('bindsale'))
-        bindsaleid = str(sale.id)
+        if sale:
+            bindsaleid = str(sale.id)
+        else:
+            bindsaleid = '无'
         if request.POST['id'] == "":
             newQq = Qq.objects.create(qqid=request.POST['qqid'])
             newQq.create = datetime.date.today()

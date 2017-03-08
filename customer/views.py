@@ -565,7 +565,7 @@ def handleValidCustomer(request):
         else:
             raise Exception("unknown operation")
         customer.modify = timezone.now()
-        customer.realteacher = request.user.userprofile.user
+        customer.realteacher = request.user
         customer.save()
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
@@ -964,10 +964,10 @@ def queryTradePayManage(request):
     trades = Trade.objects.filter(status=20).order_by('-dealtime')
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
-    # if request.user.userprofile.title.role_name == 'teachermanager':
-    #     user = request.user
-    #     bursurID = 'CW'+user.userprofile.group+user.userprofile.department
-    #     trades = trades.filter(customer__bursar__bursarId=bursurID)
+    if request.user.userprofile.title.role_name == 'teachermanager':
+        user = request.user
+        bursurID = 'CW'+user.userprofile.group+user.userprofile.department
+        trades = trades.filter(customer__bursar__bursarId=bursurID)
     endDate = request.GET.get('endDate', "")
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -1025,7 +1025,7 @@ def addTeacherCustomer(request):
         newCustomer.phone = request.POST.get('phone', '')
         newCustomer.startup = request.POST.get('startup', 0)
         newCustomer.gem = 'gem' in request.POST
-        newCustomer.realuser = request.user.userprofile.user
+        newCustomer.realuser = request.user
 
         if request.POST.get('saletool') == 'wx':
             newCustomer.wxid = request.POST.get('wxid', '')
