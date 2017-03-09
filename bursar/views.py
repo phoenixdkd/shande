@@ -222,8 +222,11 @@ def payReport(request):
 
 @login_required()
 def queryPayReport(request):
-    # t1 = time.clock()
+
+    t1 = time.clock()
     trades = Trade.objects.filter(paytime__isnull=False,status=30).order_by('-paytime')
+    t2 = time.clock()
+    # logger.error("bursar/payTypeReport cost time: %f"%(t2-t1))
 
     if request.user.userprofile.title.role_name == 'salemanager':
         company = request.user.userprofile.company
@@ -234,6 +237,10 @@ def queryPayReport(request):
     startDate = request.GET.get('startDate', '')
     endDate = request.GET.get('endDate', '')
 
+    t1 = time.clock()
+    trades = Trade.objects.filter(paytime__isnull=False, status=30,paytime__gt=startDate).order_by('-paytime')
+    t2 = time.clock()
+    # logger.error("bursar/payTypeReport cost time: %f"%(t2-t1))
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -274,7 +281,11 @@ def queryPayReport(request):
         trades = trades.filter(customer__sales__company=request.user.userprofile.company,
                                customer__sales__department=request.user.userprofile.department).order_by('customer__sales')
 
-    p = Paginator(trades, 100)
+    payCashTotal = 0
+    for tradeObj in trades:
+        payCashTotal = payCashTotal + tradeObj.paycash
+
+    p = Paginator(trades, 50)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -285,9 +296,9 @@ def queryPayReport(request):
         tradePage = p.page(p.num_pages)
 
 
-    payCashTotal = 0
-    for tradeObj in tradePage :
-        payCashTotal = payCashTotal + tradeObj.paycash
+    # payCashTotal = 0
+    # for tradeObj in tradePage :
+    #     payCashTotal = payCashTotal + tradeObj.paycash
 
     data = {
         "tradePage": tradePage,

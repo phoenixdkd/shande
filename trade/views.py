@@ -106,7 +106,6 @@ def addTrade(request):
         customer.status = 40
         #如果是首笔交易标记客户状态为有效客户
         if firstTrade:
-
             customer.first_trade_cash = buycash
             customer.first_trade = timezone.now()
 #--------------------------------------------------------------------------------------------------------------------------------

@@ -30,12 +30,27 @@ def wxManage(request):
     bindsales = Sale.objects.all().order_by("saleId")
     if request.user.userprofile.title.role_name == 'saleboss':
         bindsales = bindsales.filter(company=request.user.userprofile.company)
+
+    # jsondata = json.dumps(bindsales)
     data = {
         "bindsales": bindsales,
     }
+
+    saleId = ['']
+    saleNick = ['']
+    for sale in bindsales:
+        print(sale.saleId)
+        if sale.binduser_id :
+            # print(sale.binduser_id)
+            saleId.append(sale.saleId)
+            # print(sale.binduser.userprofile.nick)
+            # saleNick.append(sale.binduser.userprofile.nick)
+    # print(saleNick)
+
     # t2 = time.clock()
     # logger.error("wxqq/wxMange cost time: %f"%(t2-t1))
-    return render(request, 'wxqq/wxManage.html', data)
+    return render(request, 'wxqq/wxManage.html', {'data': data},{'saleId':json.dumps(saleId)},{'saleNick':json.dumps(saleNick)})
+    # return render(request, 'wxqq/wxManage.html', data)
 
 @login_required()
 def queryWx(request):
