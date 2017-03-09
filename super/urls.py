@@ -40,5 +40,5 @@ urlpatterns = [
     url(r'^getTransmission$', views.getTransmission, name='getTransmission'),
     url(r'^demo$', views.demo, name='demo'),
 
-    # url(r'^addNotice$', views.addNotice, name='addNotice'),
+     url(r'^newsPush$', views.newsPush, name='newsPush'),
 ]

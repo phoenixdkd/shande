@@ -38,16 +38,17 @@
 {#                            </div>#}
 {#                        </div>#}
                         <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="bindbursar" >绑定财务</label>
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindbursarId" >绑定财务</label>
                             <div class="col-md-5">
-                                <select type="select" class="form-control" id="bindbursar" name="bindbursar">
-                                    <option>无</option>
-                                    {% if bindBursars %}
-                                        {% for bindbursar in bindBursars %}
-                                            <option value="{{ bindbursar.id }}"> {{ bindbursar.bursarId }} {{ bindbursar.binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                                <input type="text" class="form-control" id="bindbursarId" name="bindbursarId" style="font-size: small" placeholder="格式:CW0101,解绑则不填" />
+{#                                <select type="select" class="form-control" id="bindbursar" name="bindbursar">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindBursars %}#}
+{#                                        {% for bindbursar in bindBursars %}#}
+{#                                            <option value="{{ bindbursar.id }}"> {{ bindbursar.bursarId }} {{ bindbursar.binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
                             </div>
                         </div>
 {#                        <div class="form-group">#}
@@ -64,16 +65,17 @@
 {#                            </div>#}
 {#                        </div>#}
                         <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindusername" >绑定用户</label>
                             <div class="col-md-5">
-                                <select type="select" class="form-control" id="binduser" name="binduser">
-                                    <option>无</option>
-                                    {% if bindusers %}
-                                        {% for binduser in bindusers %}
-                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                                <input type="text" class="form-control" id="bindusername" name="bindusername" style="font-size: small" placeholder="格式:guanliyuan，解绑则不填" />
+{#                                <select type="select" class="form-control" id="binduser" name="binduser">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindusers %}#}
+{#                                        {% for binduser in bindusers %}#}
+{#                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
 
                             </div>
                         </div>
@@ -293,8 +295,8 @@
         $('#teacherid').val($(obj).data("teacherid"));
         $('#company').val($(obj).data("company"));
         $('#department').val($(obj).data("department"));
-        $('#binduser').val($(obj).data("binduser"));
-        $('#bindbursar').val($(obj).data("bindbursar"));
+        $('#bindusername').val($(obj).data("bindusername"));
+        $('#bindbursarId').val($(obj).data("bindbursarid"));
         $('#addTeacherModal').modal("show");
     }
     function delTeacher(obj){

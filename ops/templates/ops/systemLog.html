@@ -15,27 +15,13 @@
                 <div class="modal-body">
                     <!---The form is placed inside the body of moadl-->
                     <form id="addFixContentForm" method="post" class="form-horizontal">
-{#                        <div class="form-group">#}
-{#                            <label class="col-md-offset-2 col-md-2 control-lable" for="name">维护员</label>#}
-{#                            <div class="col-md-5">#}
-{#                                <input type="text" class="form-control" id="name" name="name"/>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="form-group">#}
-{#                            <label class="col-md-offset-2 col-md-2 control-lable" for="date">维护时间</label>#}
-{#                            <div class="col-md-5">#}
-{#                                <input type="datetime" class="form-control" id="date" name="date"/>#}
-{#                            </div>#}
-{#                        </div>#}
                         <div class="form-group">
                             <input type="hidden" value="" class="" id="id" name="id"/>
                             <label class="col-md-offset-2 col-md-2 control-lable" for="content">维护内容</label>
                             <div class="col-md-5">
-{#                                <input type="textarea" class="form-control"  id="content" name="content"/>#}
                                 <textarea class="form-control" id="content" name="content"/> </textarea>
                             </div>
                         </div>
-{#                        <hr/>#}
                         <div class="modal-footer">
                             <div class="form-group">
                                 <div class="col-md-5 col-md-offset-3">
@@ -109,24 +95,6 @@
                 validating:'glyphicon glyphicon-refresh'
             },
             fields:{
-{#                name:{#}
-{#                    validators:{#}
-{#                        notEmpty:{#}
-{#                            message:'必须填'#}
-{#                        }#}
-{#                    }#}
-{#                },#}
-{#                date:{#}
-{#                    validators:{#}
-{#                        notEmpty:{#}
-{#                            message:'必须填'#}
-{#                        },#}
-{#                        date:{#}
-{#                            format:'YYYY-MM-DD HH:MM',#}
-{#                            message:'日期格式:YYYY-MM-DD hh:mm'#}
-{#                        }#}
-{#                    }#}
-{#                },#}
                 content:{
                     validators:{
                         notEmpty:{
@@ -190,87 +158,9 @@
         $('#econtent').val($(obj).data("content"));
     }
     </script>
-    
-    <br/>
 
-{#    <form id="searchFixContentLogForm" method="POST" class="form-horizontal">#}
-{#         <div class="form-group">#}
-{#             <label class="col-md-1 control-label">时间范围</label>#}
-{#             <div class="col-md-2">#}
-{#                 <input type="date" class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"#}
-{#                 title="起始时间" />#}
-{#             </div>#}
-{#             <div class="col-md-2">#}
-{#                 <input type="date" class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"#}
-{#                   title="结束时间" />#}
-{#             </div>#}
-{#         </div>#}
-{##}
-{#         <div class="form-group">#}
-{#             <label class="col-md-1 control-label"></label>#}
-{#             <div class="col-md-1">#}
-{#                 <button type="submit" class="btn btn-sm btn-primary">搜索</button>#}
-{#             </div>#}
-{#             <div class="col-md-1">#}
-{#                 <button type="button" class="btn btm-sm btn-success" data-toggle="modal" data-target="#addFixContentModal" >新增日志</button>#}
-{#             </div>#}
-{#         </div>#}
-{#    </form>#}
-{##}
-{##}
-{#    <div id="layout" class="clearfix">#}
-{#      <section id="layout-content">#}
-{##}
-{#      </section>#}
-{#      <h3>维护日志</h3>#}
-{#      {% for log in logPage %}#}
-{#         <pre>#}
-{#             <li>{{ log.create }}  <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editFixContentModal"#}
-{#                                         data-id="{{ log.id }}" data-content="{{ log.fixContent }}" onclick="editFixContent(this)">修改</button></li>#}
-{#         <div style="font-family: 宋体; font-size: 11px">{{ log.fixContent }}</div>#}
-{#         </pre>#}
-{#      {% endfor %}#}
-{##}
-{#    </div>#}
-{#    <table class="table table-bordered">#}
-{#      <thead class="bg-info">#}
-{#        <th width="1%">序号</th>#}
-{#        <th width="1%">维护员</th>#}
-{#        <th width="1%">维护日期</th>#}
-{#        <th width="5%">维护内容</th>#}
-{#      </thead>#}
-{#    <tbody>#}
-{#      {% for log in logPage %}#}
-{#            <td>{{ forloop.counter }}</td>#}
-{#            <td>{{ log.name }}</td>#}
-{#            <td>{{ log.fixTime }}</td>#}
-{#            <td>{{ log.fixContent }}</td>#}
-{#        <tr style="padding:0;"><td colspan="11" style="padding:0;">#}
-{#        </td></tr>#}
-{#        {% empty %}#}
-{#            <tr><td colspan="10">无记录</td></tr>#}
-{#      {% endfor %}#}
-{#    </tbody>#}
-{#    </table>#}
-{##}
-{#<nav class="navbar-right">#}
-{#  <ul class="pagination">#}
-{#    <li>#}
-{#        {% if logPage.has_previous %}#}
-{#            <a href="?page={{ logPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>#}
-{#        {% endif %}#}
-{#    </li>#}
-{#    <li><span class="current">#}
-{#           第{{ logPage.number }}/{{ logPage.paginator.num_pages }}页#}
-{#        </span></li>#}
-{#    <li>#}
-{#        {% if logPage.has_next %}#}
-{#            <a href="?page={{ logPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>#}
-{#           <a href="?page={{ logPage.next_page_number }}><span aria-hidden="true">&raquo; </span></a>#}
-{#        {% endif %}#}
-{#    </li>#}
-{#  </ul>#}
-{#</nav>#}
+
+    <br/>
 
     <div id="logdiv"></div>
 

@@ -149,8 +149,11 @@ def getChargebackBySale( saleid, startDate, endDate ):
         userGradeToday = UserGradeHis.objects.filter(user__sale__id=saleid,
                                                      user__userprofile__title__role_name='sale', day__lte=endDate,
                                                      day__gte=startDate).aggregate(Sum('delta'))
-        chargeback = 100 - float(userGradeToday['delta__sum']) / float(userCommitToday['delta__sum'])  *100
-        return "%s / %s (%.2f"%(userGradeToday['delta__sum'], userCommitToday['commit__sum'], delta__sum)+'%)'
+        if userCommitToday & userGradeToday:
+            chargeback = 100 - float(userGradeToday['delta__sum']) / float(userCommitToday['delta__sum'])  *100
+            return "%s / %s (%.2f"%(userGradeToday['delta__sum'], userCommitToday['commit__sum'], delta__sum)+'%)'
+        else:
+            return '0/0 (0%)'
     except Exception as e:
         print(e.__str__())
         return '0/0 (0%)'

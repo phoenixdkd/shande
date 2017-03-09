@@ -24,6 +24,7 @@
                         <ul class="dropdown-menu">
                             <li class=""><a href="{% url 'super:titleManage' %}" target="_self">职位管理</a></li>
                             <li class=""><a href="{% url 'super:logoManage' %}" target="_self">Logo图片管理</a></li>
+                            <li class=""><a href="{% url 'super:newsPush' %}" target="_self">消息发布</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -39,7 +40,6 @@
                             <li class=""><a href="{% url 'bursar:bursarManage' %}" target="_self">财务部ID</a></li>
                             <li class=""><a href="{% url 'wxqq:wxManage' %}" target="_self">开发部微信管理</a></li>
                             <li class=""><a href="{% url 'wxqq:qqManage' %}" target="_self">开发部QQ管理</a></li>
-                            <li class=""><label type="button" data-toggle="modal" data-target='#addNoticeModal' style="padding: 2px 20px;font-family: 宋体; font-weight: normal"> 管理通知 </label></li>
                         </ul>
                     </li>
                 {% endif %}

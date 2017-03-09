@@ -250,3 +250,10 @@ def getTransmission(request):
 
 def demo(request):
     return render(request, 'super/demo.html', locals())
+
+@login_required()
+def newsPush(request):
+    if (request.user.userprofile.title.role_name == 'admin'):
+        return render(request, 'ops/systemLog.html')
+    else:
+        return HttpResponseRedirect("/")

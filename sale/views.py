@@ -80,8 +80,9 @@ def addSale(request):
 
         if request.POST.get('bindusername'):
             # binduserid = request.POST.get('binduser', '无')
-            user = User.objects.get(username=request.POST.get('bindusername',''))
-            binduserid = str(user.id)
+            if User.objects.get(username=request.POST.get('bindusername','')):
+                user = User.objects.get(username=request.POST.get('bindusername',''))
+                binduserid = str(user.id)
         else:
             binduserid = '无'
 

@@ -78,7 +78,15 @@ def addTeacher(request):
         else:
             newTeacher = Teacher.objects.get(id=request.POST['id'])
             newTeacher.teacherId = request.POST['teacherid']
-        binduserid = request.POST.get('binduser', '无')
+
+        # binduserid = request.POST.get('binduser', '无')
+        if request.POST.get('bindusername', '无'):
+            if User.objects.get(username=request.POST.get('bindusername')):
+                user = User.objects.get(username=request.POST.get('bindusername'))
+                binduserid = str(user.id)
+        else:
+            binduserid = '无'
+
         if binduserid.isdigit():
             try:
                 oldTeacher = Teacher.objects.get(binduser_id=binduserid)
@@ -93,7 +101,13 @@ def addTeacher(request):
             newTeacher.binduser = None
 
 
-        bindbursarid = request.POST.get('bindbursar', '无')
+        # bindbursarid = request.POST.get('bindbursar', '无')
+        if request.POST.get('bindbursarId', '无'):
+            if Bursar.objects.get(bursarId=request.POST.get('bindbursarId')):
+                bursar = Bursar.objects.get(bursarId=request.POST.get('bindbursarId'))
+                bindbursarid = str(bursar.id)
+        else:
+            bindbursarid = '无'
         if bindbursarid.isdigit():
             newTeacher.bindbursar = Bursar.objects.get(id=bindbursarid)
         else:

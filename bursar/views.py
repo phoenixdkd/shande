@@ -240,7 +240,8 @@ def queryPayReport(request):
     t1 = time.clock()
     trades = Trade.objects.filter(paytime__isnull=False, status=30,paytime__gt=startDate).order_by('-paytime')
     t2 = time.clock()
-    # logger.error("bursar/payTypeReport cost time: %f"%(t2-t1))
+
+    logger.error("bursar/payTypeReport cost time: %f" % (t2-t1))
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)

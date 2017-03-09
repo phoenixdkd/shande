@@ -98,9 +98,11 @@ def getChargebackByCompany( company, startDate, endDate  ):
         # userGrade = UserProfile.objects.filter(user__sale__company=company, title__role_name='sale').aggregate(Sum('grade'))
         userGradeToday = UserGradeHis.objects.filter(user__sale__company=company, user__userprofile__title__role_name='sale', day__lte=endDate, day__gte=startDate).aggregate(Sum('delta'))
         # chargeback = 100- float(userGrade['grade__sum']) / float(userCommits['commit__sum'])  *100
-
-        chargeback = 100- float(userGradeToday['delta__sum']) / float(userCommitsToday['delta__sum'])  *100
-        return "%s / %s (%.2f"%(userGradeToday['delta__sum'], userCommitsToday['delta__sum'], chargeback)+'%)'
+        if userCommitsToday['delta__sum'] :
+             chargeback = 100 - float(userGradeToday['delta__sum']) / float(userCommitsToday['delta__sum'])*100
+             return "%s / %s (%.2f" % (userGradeToday['delta__sum'], userCommitsToday['delta__sum'], chargeback)+'%)'
+        else:
+             return '0/0 (0%)'
     except Exception as e:
         print(e.__str__())
         return '0/0 (0%)'
