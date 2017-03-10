@@ -74,7 +74,18 @@ def addBursar(request):
             newBursar = Bursar.objects.create(bursarId=request.POST['bursarid'])
         else:
             newBursar = Bursar.objects.get(id=request.POST['id'])
-        binduserid = request.POST.get('binduser', '无')
+
+
+        # binduserid = request.POST.get('binduser', '无')
+        if request.POST.get('bindusername'):
+            # binduserid = request.POST.get('binduser', '无')
+            if User.objects.get(username=request.POST.get('bindusername','')):
+                user = User.objects.get(username=request.POST.get('bindusername',''))
+                binduserid = str(user.id)
+        else:
+            binduserid = '无'
+
+
         if binduserid.isdigit():
             newBursar.binduser = User.objects.get(id=binduserid)
         else:

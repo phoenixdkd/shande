@@ -21,3 +21,13 @@ def getPayCashTotalByDayAndCompany(company, day):
     except Exception as e:
         print(e.__str__())
         return 0
+
+
+@register.simple_tag
+def getSequenceNumber(number, start_index):
+    try:
+        result = number + start_index - 1
+        return result
+    except Exception as e:
+        print(e.__str__())
+        return 0

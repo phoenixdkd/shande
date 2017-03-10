@@ -75,8 +75,9 @@ def addTrade(request):
             raise Exception("buycountzero")
         customer = Customer.objects.get(id=request.POST.get('customerid'))
         # 判断是否首笔交易
-        existTrade = Trade.objects.filter(customer=customer)
-        if existTrade.__len__() == 0:
+        existTrade = Trade.objects.filter(customer=customer).count()
+        # if existTrade.__len__() == 0:
+        if existTrade == 0:
             firstTrade = True
             if buycash < 20000:
                 raise Exception("buycashlow")

@@ -38,18 +38,20 @@
 {#                            </div>#}
 {#                        </div>#}
                         <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="binduser" >绑定用户</label>
-                            <div class="col-md-5">
-                                <select type="select" class="form-control" id="binduser" name="binduser">
-                                    <option>无</option>
-                                    {% if bindusers %}
-                                        {% for binduser in bindusers %}
-                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                            <label class="col-md-offset-2 col-md-2 control-label" for="bindusername" >绑定用户</label>
 
+                            <div class="col-md-5">
+                                <input type="text" class="form-control" id="bindusername" name="bindusername" />
+{#                                <select type="select" class="form-control" id="binduser" name="binduser">#}
+{#                                    <option>无</option>#}
+{#                                    {% if bindusers %}#}
+{#                                        {% for binduser in bindusers %}#}
+{#                                            <option value="{{ binduser.id }}"> {{ binduser.username }}-{{ binduser.userprofile.nick }}</option>#}
+{#                                        {% endfor %}#}
+{#                                    {% endif %}#}
+{#                                </select>#}
                             </div>
+                            <label class="col-md-offset-4  control-label" style="color: red; font-size: small; text-align: center">(格式：CW0101或guanliyuan，解绑则不填)</label>
                         </div>
                         <div class="modal-footer">
                             <div class="form-group">
@@ -246,7 +248,7 @@
         $('#id').val($(obj).data("id"));
         $('#page').val($(obj).data("page"));
         $('#bursarid').val($(obj).data("bursarid"));
-        $('#binduser').val($(obj).data("binduser"));
+        $('#bindusername').val($(obj).data("bindusername"));
         $('#addBursarModal').modal("show");
     }
     function delBursar(obj){

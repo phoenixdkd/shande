@@ -467,7 +467,7 @@ def dishonestCustomer(request):
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=1)
+        startDate = datetime.date.today() - datetime.timedelta(days=0)
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     customers = Customer.objects.filter(status=98, modify__lte=endDate, modify__gte=startDate).order_by('sales__company')
