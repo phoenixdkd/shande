@@ -56,18 +56,20 @@
                             <label class="col-md-offset-2 col-md-2 control-label" for="share" >佣金</label>
                             <div class="col-md-5">
                                 <select type="select" class="form-control" id="share" name="share">
-                                    <option value="1|9">1|9</option>
-                                    <option value="2|8">2|8</option>
-                                    <option value="3|7">3|7</option>
-                                    <option value="4|6">4|6</option>
-                                    <option value="5|5" selected>5|5</option>
-                                    <option value="6|4">6|4</option>
-                                    <option value="7|3">7|3</option>
-                                    <option value="8|2">8|2</option>
-                                    <option value="9|1">9|1</option>
+{#                                    <option value="5|5" selected>5|5</option>#}
+{#                                    <option value="1|9">1|9</option>#}
+{#                                    <option value="2|8">2|8</option>#}
+{#                                    <option value="3|7">3|7</option>#}
+{#                                    <option value="4|6">4|6</option>#}
+{#                                    <option value="5|5" selected>5|5</option>#}
+{#                                    <option value="6|4">6|4</option>#}
+{#                                    <option value="7|3">7|3</option>#}
+{#                                    <option value="8|2">8|2</option>#}
+{#                                    <option value="9|1">9|1</option>#}
                                 </select>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="file">交割单据</label>
                             <div class="form-inline col-md-4" >
@@ -226,16 +228,17 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="htshare" >佣金</label>
                             <div class="col-md-5">
-                                <select type="select" class="form-control" id="htshare" name="htshare">
-                                    <option value="1|9">1|9</option>
-                                    <option value="2|8">2|8</option>
-                                    <option value="3|7">3|7</option>
-                                    <option value="4|6">4|6</option>
-                                    <option value="5|5" selected>5|5</option>
-                                    <option value="6|4">6|4</option>
-                                    <option value="7|3">7|3</option>
-                                    <option value="8|2">8|2</option>
-                                    <option value="9|1">9|1</option>
+                                <select type="select" class="form-control" id="htshare" name="htshare" >
+{#                                    <option value="5|5" selected>5|5</option>#}
+{#                                    <option value="1|9">1|9</option>#}
+{#                                    <option value="2|8">2|8</option>#}
+{#                                    <option value="3|7">3|7</option>#}
+{#                                    <option value="4|6">4|6</option>#}
+{#                                    <option value="5|5" selected>5|5</option>#}
+{#                                    <option value="6|4">6|4</option>#}
+{#                                    <option value="7|3">7|3</option>#}
+{#                                    <option value="8|2">8|2</option>#}
+{#                                    <option value="9|1">9|1</option>#}
                                 </select>
                             </div>
                         </div>
@@ -265,7 +268,7 @@
                                 if(income > 0){
                                     $('#htstatus').val('20');
                                 }else if(income ==0){
-                                    $('#htstatus').val('11');
+                                    $('#htstatus').val('11 ');
                                 }else{
                                     $('#htstatus').val('10');
                                 }
@@ -295,23 +298,23 @@
                               </select>
                               <select id="payDiv" type="select" name="payDiv" class="form-control">
                                   <option>请选择财务专员</option>
-                                  {% for bursarObj in bursars %}
-                                     <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>
-                                  {% endfor %}
+{#                                  {% for bursarObj in bursars %}#}
+{#                                     <option value={{ bursarObj.bursarId}}>{{ bursarObj.bursarId }} {{ bursarObj.binduser.userprofile.nick }}</option>#}
+{#                                  {% endfor %}#}
                               </select>
-                              <select id="otherDiv" type="select" class="form-control" name="otherDiv"  style="display: none" >
-                                    <option value="0">未出货</option>#}
-                                    <option value="10">非正常盈收 | 下次补亏</option>
-                                    <option value="11">非正常盈收 | 客户自抛</option>
-                                    <option value="12">非正常盈收 | 客户拉黑</option>
-                                    <option value="13">非正常盈收 | 止损做现货</option>
-                                    <option value="14">非正常盈收 | 超出合作周期 </option>
-                                    <option value="15">非正常盈收 | 业务员虚假承诺 </option>
-                                    <option value="16">非正常盈收 | 少量盈利转做现货</option>
-                                    <option value="17">非正常盈收 | 少量盈利下次结算 </option>
-                                    <option value="18">非正常盈收 | 客户亏损不再合作 </option>
-                                    <option value="19">非正常盈收 | 客户急需资金提前出货 </option>
-                                    <option value="09">已补亏</option>
+                              <select id="otherDiv" type="select" class="form-control" name="otherDiv"  style="display: none">
+{#                                    <option value="0">未出货</option>#}
+{#                                    <option value="10">非正常盈收 | 下次补亏</option>#}
+{#                                    <option value="11">非正常盈收 | 客户自抛</option>#}
+{#                                    <option value="12">非正常盈收 | 客户拉黑</option>#}
+{#                                    <option value="13">非正常盈收 | 止损做现货</option>#}
+{#                                    <option value="14">非正常盈收 | 超出合作周期 </option>#}
+{#                                    <option value="15">非正常盈收 | 业务员虚假承诺 </option>#}
+{#                                    <option value="16">非正常盈收 | 少量盈利转做现货</option>#}
+{#                                    <option value="17">非正常盈收 | 少量盈利下次结算 </option>#}
+{#                                    <option value="18">非正常盈收 | 客户亏损不再合作 </option>#}
+{#                                    <option value="19">非正常盈收 | 客户急需资金提前出货 </option>#}
+{#                                    <option value="09">已补亏</option>#}
                               </select>
                           </div>
                         </div>
@@ -370,9 +373,17 @@
     $('#updateFileModal').modal('hide');
     
     $(function () {
+        frag = document.createDocumentFragment();
         formValidator();
         loadTradeDiv();
         loadCustomerDiv();
+        adShareSelect();
+        htShareSelect();
+        otherDivSelect();
+        payDivSelect();
+
+{#        handletradeshareselect();#}
+
         $('#handleTradeModal').on('hidden.bs.modal', function() {
             resetFormValidator();
         });
@@ -680,6 +691,70 @@
         updateFormSelector.data('bootstrapValidator').destroy();
 
         formValidator();
+    }
+    function adShareSelect(obj) {
+        var options = $("#share");
+        for (var i = 1; i < 10; i++) {
+            var option = new Option( i+"|"+(10-i), i+"|" + (10-i));
+            option.innerText = i+"|"+(10-i);
+            if(i==5) {
+                option.selected = true;
+            }
+            frag.appendChild(option);
+        }
+        options.append(frag);
+    }
+    function htShareSelect(obj) {
+        var options = $("#htshare");
+        for (var i = 1; i < 10; i++) {
+            var option = new Option( i+"|"+(10-i), i+"|" + (10-i));
+            option.innerText = i+"|"+(10-i);
+            if(i==5) {
+                option.selected = true;
+            }
+            frag.appendChild(option);
+        }
+        options.append(frag);
+    }
+    function otherDivSelect(obj) {
+        var options = $("#otherDiv");
+        var str1=["未出货","非正常盈收 | 下次补亏","非正常盈收 | 客户自抛","非正常盈收 | 客户拉黑","非正常盈收 | 止损做现货",
+            "非正常盈收 | 超出合作周期","非正常盈收 | 业务员虚假承诺","非正常盈收 | 少量盈利转做现货","非正常盈收 | 少量盈利下次结算",
+        "非正常盈收 | 客户亏损不再合作","非正常盈收 | 客户急需资金提前出货","已补亏"];
+        var str2 = ["0","10","11","12","13","14","15","16","17","18","19","09"]
+
+        for (var i = 0; i <= 11; i++) {
+
+            var option = new Option(str1[i], str2[i]);
+            frag.appendChild(option);
+        }
+        options.append(frag);
+{#        var option = new Option("非正常盈收 | 下次补亏","10")#}
+
+{#            <option value="10">非正常盈收 | 下次补亏</option>#}
+{#            <option value="11">非正常盈收 | 客户自抛</option>#}
+{#            <option value="12">非正常盈收 | 客户拉黑</option>#}
+{#            <option value="13">非正常盈收 | 止损做现货</option>#}
+{#            <option value="14">非正常盈收 | 超出合作周期 </option>#}
+{#            <option value="15">非正常盈收 | 业务员虚假承诺 </option>#}
+{#            <option value="16">非正常盈收 | 少量盈利转做现货</option>#}
+{#            <option value="17">非正常盈收 | 少量盈利下次结算 </option>#}
+{#            <option value="18">非正常盈收 | 客户亏损不再合作 </option>#}
+{#            <option value="19">非正常盈收 | 客户急需资金提前出货 </option>#}
+{#            <option value="09">已补亏</option>#}
+{##}
+{#        options.append(frag);#}
+    }
+    function payDivSelect() {
+
+        var bursarId = ({{ json_bursarId|safe }});
+        var bursarNick = {{ json_bursarNick|safe }};
+        var options = $("#payDiv");
+        for (var i = 0; i <bursarId.length; i++) {
+            var option = new Option(bursarNick[i], bursarId[i]);
+            frag.appendChild(option);
+        }
+        options.append(frag);
     }
 
 </script>

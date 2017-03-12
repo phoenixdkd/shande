@@ -32,12 +32,21 @@ def tradeManage(request):
     customerId = request.GET.get("customerId")
     customer = Customer.objects.get(id=customerId)
     bursars = Bursar.objects.all().order_by("bursarId")
+
+    bursarId = []
+    bursarNick = []
+    for bursar in bursars:
+         bursarId.append(bursar.bursarId)
+         bursarNick.append(bursar.binduser.userprofile.nick)
+
     data = {
         "customer": customer,
         "bursars": bursars,
     }
-    return render(request, 'trade/tradeManage.html', data)
-
+    json_bursarId = json.dumps(bursarId)
+    json_bursarNick = json.dumps(bursarNick)
+    # return render(request, 'trade/tradeManage.html', {data}, {"bursarId": json_bursarId, "bursarNick": bursarNick})
+    return render(request, 'trade/tradeManage.html', locals())
 @login_required()
 def queryTrade(request):
     customerId = request.GET.get("customerid")
@@ -81,8 +90,10 @@ def addTrade(request):
             firstTrade = True
             if buycash < 20000:
                 raise Exception("buycashlow")
-        elif existTrade.__len__() == 1:
+        # elif existTrade.__len__() == 1:
+        elif existTrade == 1:
             secondTrade = True
+
 
         #判断是否存在该产品
         stock = Stock.objects.get(stockid=request.POST.get('stockid'), stockname=request.POST.get('stockname'))
@@ -133,6 +144,7 @@ def addTrade(request):
 
 
         # newTrade.income = request.POST.get('income', 0)
+        a = request.POST.get('share')
         newTrade.share = request.POST.get('share')
         customer.latest = timezone.now()
         # newTrade.sellprice = request.POST.get('sellprice', '0')
