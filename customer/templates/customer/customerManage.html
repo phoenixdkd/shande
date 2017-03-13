@@ -24,18 +24,6 @@
                                 </select>
                             </div>
                         </div>
-{#                        <script type="text/javascript">#}
-{#                            $('#saletool').on('hidden.bs.select', function (e) { //该方法注册到$(function(){})函数中#}
-{#                            var tmpSelected = $('#saletool').val();#}
-{#                            if(tmpSelected != null){#}
-{#                                 $('#sourceid').val(tmpSelected);#}
-{#                             }else {#}
-{#                                 $('#sourceid').val("");#}
-{#                             }#}
-{#                               //由于input为hidden，验证会出现一些bug，此处手动验证隐藏的input组件#}
-{#                            $('#addUserForm').data('bootstrapValidator').updateStatus('sourceid', 'NOT_VALIDATED').validateField('sourceid');#}
-{#                            });#}
-{#                        </script>#}
                         <div id="qqDiv" style="display:none">
                             <div class="form-group" >
                                 <label class="col-md-offset-2 col-md-2 control-label" for="qqid" >QQ号</label>
@@ -84,6 +72,7 @@
                                     <select type="select" class="form-control" id="saleswx" name="saleswx">
                                         <option>请选择微信来源</option>
                                         {% if wxList %}
+                                            <option value="">无</option>
                                             {% for wx in wxList %}
                                                 <option value="{{ wx.id }}">{{ wx.wxid }}</option>
                                             {% endfor %}
@@ -229,6 +218,7 @@
                                     <select type="select" class="form-control" id="esaleswx" name="saleswx">
                                         <option>请选择微信来源</option>
                                         {% if wxList %}
+                                            <option>无</option>
                                             {% for wx in wxList %}
                                                 <option value="{{ wx.id }}">{{ wx.wxid }}</option>
                                             {% endfor %}
@@ -556,6 +546,7 @@
         $('#ename').val($(obj).data("name"));
         $('#ephone').val($(obj).data("phone"));
         $('#estartup').val($(obj).data("startup"));
+
         $('#egem').val($(obj).data("gem"));
         if($(obj).data('wxid') != ''){
             $('#esaletool').val('wx');

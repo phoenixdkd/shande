@@ -156,11 +156,13 @@ def payReport(request):
         endDate = request.GET.get('endDate','')
         company = request.GET.get('company','')
         bursarID = request.GET.get('bursarID','')
+        phone = request.GET.get('phone','')
     else:
         startDate = request.POST.get('startDate')
         endDate = request.POST.get('endDate')
         bursarID = request.POST.get('bursarID')
         company = request.POST.get('company')
+        phone = request.POST.get('phone')
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -226,6 +228,7 @@ def payReport(request):
         "bursarID": bursarID,
         "company": company,
         "bursars": bursars,
+        "phone": phone,
     }
     # t2 = time.clock()
     # logger.error("bursar/payReport cost time: %f"%(t2-t1))
@@ -234,25 +237,18 @@ def payReport(request):
 @login_required()
 def queryPayReport(request):
 
-    t1 = time.clock()
     trades = Trade.objects.filter(paytime__isnull=False,status=30).order_by('-paytime')
-    t2 = time.clock()
-    # logger.error("bursar/payTypeReport cost time: %f"%(t2-t1))
-
     if request.user.userprofile.title.role_name == 'salemanager':
         company = request.user.userprofile.company
         bursarID = ''
     else:
         company = request.GET.get('company', '')
         bursarID = request.GET.get('bursarID', '')
+        phone = request.GET.get('phone', '')
     startDate = request.GET.get('startDate', '')
     endDate = request.GET.get('endDate', '')
 
-    t1 = time.clock()
     trades = Trade.objects.filter(paytime__isnull=False, status=30,paytime__gt=startDate).order_by('-paytime')
-    t2 = time.clock()
-
-    logger.error("bursar/payTypeReport cost time: %f" % (t2-t1))
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -269,6 +265,8 @@ def queryPayReport(request):
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
 
     # #按条件筛选
+    if phone != '':
+        trades = trades.filter(customer__phone=str(phone))
     if bursarID != '':
         trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
     if company != '':

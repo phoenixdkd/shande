@@ -86,6 +86,7 @@
     </li>
   </ul>
 </nav>
+    <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript">
     function showStockDetail(obj){
         $('.stock_detail_row_').slideUp();
@@ -156,16 +157,47 @@
     function currentPrice(obj){
         var stockid = obj.name;
         if(stockid.startWith('0')){
-            var htname = 'sz'+stockid;
+            var linkname = 'http://hq.sinajs.cn/list=s_sz'+stockid;
+            var result = 'hq_str_s_sz'+stockid;
         }
         else if(stockid.startWith("6")){
-            var htname = 'sh'+stockid;
+            var linkname = 'http://hq.sinajs.cn/list=s_sh'+stockid;
+            var result = 'hq_str_s_sh'+stockid;
         }
-        alert(htname);
 
-        $.ajax{
+        $.ajax({
+            url: linkname,
+            dataType:"script",
+            cache:"false",
+            type:"GET",
+            success:function(response){
+                alert("ok");
+{#                var stocks = response.split(";");#}
+{##}
+                var a = result;
+                alert(a);
+                alert(hq_str_s_sz000065);
+            }
+        })
 
-        }
+
+{#        $.ajax({#}
+{#            url:"{% url 'trade:updateFile' %}",#}
+{#            type:'POST',#}
+{#            dataType:'json',#}
+{#            success: function (result) {#}
+{#                showMsgModal(result.msg,result.msgLevel);#}
+{#                if (result.msgLevel == 'info'){#}
+{#                    setTimeout("window.location.reload()",1500);#}
+{#                }#}
+{#            },#}
+{#            data:formData,#}
+{#            cache:false,#}
+{#            contentType:false,#}
+{#            processData:false#}
+{#        });#}
+
+
 {#           if(obj.stockid.startWith '0')#}
         {#            alert(obj.name);#}
 {#            #}

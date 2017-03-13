@@ -23,30 +23,23 @@
         {% endif %}
 
         <label class=" col-md-1 control-label" style="width: 150px">时间范围</label>
-        <div class="col-md-2 ">
+        <div class="col-md-1 ">
              <input type="date"  class="form-control datetime" style="width: 150px" value="{{ startDate }}" name="startDate" id="startDate"
              title="起始时间"/>
         </div>
 {#        <label class="col-md-1 control-label"></label>#}
-        <div class="col-md-2 ">
+        <div class="col-md-1 ">
              <input type="date"  class="form-control datetime" style="width: 150px" value="{{ endDate }}" name="endDate" id="endDate"
              title="结束时间"/>
         </div>
     {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
+        <label class="col-md-1 control-label" for="phone">电话</label>
+        <div class="col-md-1 ">
+           <input type="text" class="form-control" id="phone" name="phone" value="{{ phone }}" />
+        </div>
         <label class="col-md-1 control-label" for="company">公司</label>
         <div class="col-md-1 ">
            <input type="text" class="form-control" id="company" name="company" value="{{ company }}" placeholder="格式：A"/>
-{#           <select type="select" class="form-control" id="company" name="company">#}
-{#               <option></option>#}
-{#                <option value="A" {% if company == 'A' %}selected{%endif%}>A</option>#}
-{#                <option value="B" {% if company == 'B' %}selected{%endif%}>B</option>#}
-{#                <option value="C" {% if company == 'C' %}selected{%endif%}>C</option>#}
-{#                <option value="D" {% if company == 'D' %}selected{%endif%}>D</option>#}
-{#                <option value="E" {% if company == 'E' %}selected{%endif%}>E</option>#}
-{#                <option value="F" {% if company == 'F' %}selected{%endif%}>F</option>#}
-{#                <option value="G" {% if company == 'G' %}selected{%endif%}>G</option>#}
-{#                <option value="H" {% if company == 'H' %}selected{%endif%}>H</option>#}
-{#            </select>#}
         </div>
     {% endif %}
         <label class="col-md-1 control-label"></label>
@@ -67,10 +60,11 @@
         var endDate = $('#endDate').val();
         var company = $('#company').val();
         var bursarID = $('#bursarID').val();
+        var phone = $('#phone').val()
         if(data){
-            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID;
+            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone;
         }else{
-            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID;
+            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone;
         }
         $('#payReportDiv').load("{% url 'bursar:queryPayReport' %}", data);
     }

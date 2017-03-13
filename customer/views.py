@@ -205,7 +205,8 @@ def addCustomer(request):
         if request.POST.get('saletool') == 'wx':
             newCustomer.wxid = request.POST.get('wxid', '')
             newCustomer.wxname = request.POST.get('wxname', '')
-            newCustomer.saleswx = Wx.objects.get(id=int(request.POST.get('saleswx')))
+            if request.POST.get('saleswx'):
+                newCustomer.saleswx = Wx.objects.get(id=int(request.POST.get('saleswx')))
         else:
             newCustomer.qqid = request.POST.get('qqid', '')
             newCustomer.qqname = request.POST.get('qqname', '')
@@ -325,13 +326,14 @@ def checkCustomerPhone(request):
                    valid = False
                    break
                else:                     #诚信客户
-                   nowtime = timezone.now()
-                   latest = customer.latest
-                   if latest:
-                       deltaday = (nowtime - latest).days
-                       if deltaday < 30.0:
-                          valid = False
-                          break
+                   if customer.status == 40:
+                       nowtime = timezone.now()
+                       latest = customer.latest
+                       if latest:
+                           deltaday = (nowtime - latest).days
+                           if deltaday < 30.0:
+                              valid = False
+                              break
     except:
         traceback.print_exc()
 
