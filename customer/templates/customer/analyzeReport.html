@@ -56,7 +56,7 @@
             <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
 {#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
             <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
-            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="sh{{ stock.stockid }}" onclick="currentPrice(this)"
+            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}" onclick="currentPrice(this)"
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} /></td>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
             <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
@@ -154,8 +154,19 @@
     }
 
     function currentPrice(obj){
-        var stockname
-           if(obj.stockid.startWith '0')
+        var stockid = obj.name;
+        if(stockid.startWith('0')){
+            var htname = 'sz'+stockid;
+        }
+        else if(stockid.startWith("6")){
+            var htname = 'sh'+stockid;
+        }
+        alert(htname);
+
+        $.ajax{
+
+        }
+{#           if(obj.stockid.startWith '0')#}
         {#            alert(obj.name);#}
 {#            #}
 {#            var hq_str=eval("hq_str_sz"+obj.name);#}
