@@ -33,20 +33,24 @@ def tradeManage(request):
     customer = Customer.objects.get(id=customerId)
     bursars = Bursar.objects.all().order_by("bursarId")
 
-    bursarId = []
-    bursarNick = []
-    for bursar in bursars:
-         bursarId.append(bursar.bursarId)
-         bursarNick.append(bursar.binduser.userprofile.nick)
+    # bursarId = []
+    # bursarNick = []
+    # for bursar in bursars:
+    #      bursarId.append(bursar.bursarId)
+    #      bursarNick.append(bursar.binduser.userprofile.nick)
+    #
+    # json_bursarId = json.dumps(bursarId)
+    # json_bursarNick = json.dumps(bursarNick)
 
     data = {
         "customer": customer,
         "bursars": bursars,
+        # "json_bursarId": json_bursarId,
+        # "json_bursarNick": json_bursarNick,
     }
-    json_bursarId = json.dumps(bursarId)
-    json_bursarNick = json.dumps(bursarNick)
-    # return render(request, 'trade/tradeManage.html', {data}, {"bursarId": json_bursarId, "bursarNick": bursarNick})
-    return render(request, 'trade/tradeManage.html', locals())
+
+    return render(request, 'trade/tradeManage.html', data)
+
 @login_required()
 def queryTrade(request):
     customerId = request.GET.get("customerid")
@@ -141,10 +145,11 @@ def addTrade(request):
 
         elif secondTrade:
             customer.vip = True
+            if not customer.first_trade:
+                customer.first_trade = timezone.now()
 
 
         # newTrade.income = request.POST.get('income', 0)
-        a = request.POST.get('share')
         newTrade.share = request.POST.get('share')
         customer.latest = timezone.now()
         # newTrade.sellprice = request.POST.get('sellprice', '0')

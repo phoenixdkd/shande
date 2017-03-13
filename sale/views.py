@@ -460,14 +460,16 @@ def dishonestCustomer(request):
     if not request.user.userprofile.title.role_name in ['admin', 'ops', 'saleboss', 'salemanager', 'teacher', 'teachermanager',
                                                         'teacherboss']:
         return HttpResponseRedirect("/")
-    endDate = request.POST.get('endDate', "")
+    startDate = request.GET.get('startDate','')
+    endDate = request.GET.get('endDate','')
+    # endDate = request.POST.get('endDate', "")
     if endDate == '':
-        endDate = datetime.date.today() + datetime.timedelta(days=1)
+        endDate = request.POST.get('endDate',datetime.date.today() + datetime.timedelta(days=1))
     else:
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
-    startDate = request.POST.get('startDate', "")
+    # startDate = request.POST.get('startDate', "")
     if startDate == "":
-        startDate = datetime.date.today() - datetime.timedelta(days=0)
+        startDate = request.POST.get('startDate',datetime.date.today() - datetime.timedelta(days=0))
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     customers = Customer.objects.filter(status=98, modify__lte=endDate, modify__gte=startDate).order_by('sales__company')
@@ -504,7 +506,7 @@ def dishonestCustomer(request):
         "phone": request.POST.get('phone', ''),
         "wxqq": request.POST.get('wxqq', ''),
         "customerPage": customerPage,
-        "requestArgs": getArgsExcludePage(request),
+        # "requestArgs": getArgsExcludePage(request),
     }
     # t2 = time.clock()
     # logger.error("dishonestCustomer cost time: %f" % (t2 - t1))

@@ -47,6 +47,7 @@
     </thead>
     <tbody>
         {% for stock in stockPage %}
+{#        <script type="text/javascript" src="http://hq.sinajs.cn/list=sz399001" charset="gb2312"></script>#}
         <tr data-stock="{{ stock.id }}" id="stock_row_{{ stock.id }}" ondblclick="showStockDetail(this)" class="stock_row">
             <td>{{ forloop.counter }}</td>
             <td>{{ stock.stockid }}</td>
@@ -55,8 +56,8 @@
             <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
 {#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
             <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
-            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price"
-                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}"/></td>
+            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="sh{{ stock.stockid }}" onclick="currentPrice(this)"
+                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} /></td>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
             <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
         </tr>
@@ -142,13 +143,48 @@
         });
     }
 
+    String.prototype.startWith=function(s){
+        if(s==null||s==""||this.length==0||s.length>this.length)
+            return false;
+        if(this.substr(0,s.length)==s)
+            return true;
+        else
+          return false;
+        return true;
+    }
+
+    function currentPrice(obj){
+        var stockname
+           if(obj.stockid.startWith '0')
+        {#            alert(obj.name);#}
+{#            #}
+{#            var hq_str=eval("hq_str_sz"+obj.name);#}
+{##}
+{#            var elements=hq_str.split(",");#}
+{##}
+{#            var data1=(elements[3]*1).toFixed(2);#}
+{#            var data2=(elements[3]-elements[2]).toFixed(2);#}
+{#            var data3=(elements[3]-elements[2])*100/(elements[2]*1);#}
+{#            var colors=["red","green"];#}
+{#            alert(data1);#}
+{#           "$(#(obj.id))." = data1;#}
+{#            alert(data1);#}
+{#            alert(data2);#}
+{#            alert(data3);#}
+{##}
+{#            return processDataArray(data1,data2,data3,colors);#}
+    }
+
     $(function(){
         $('.current_price').change(function(){
             var stockid = $(this).data('stockid');
             var sellPrice = $(this).val();
+{#            var src = "http://hq.sinajs.cn/list=sh601006#}
             loadStockDetailBySellPrice(stockid, sellPrice );
             calcProfitByStockId(stockid, sellPrice);
         });
     });
 </script>
+
+
 {% endblock %}

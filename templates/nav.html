@@ -310,7 +310,7 @@
     };
 
     {% if request.user.is_authenticated %}
-    setTimeout("showTransmission()", 5000);
+{#    setTimeout("showTransmission()", 5000);#}
     {% endif %}
     function showTransmission(){
         $.post(

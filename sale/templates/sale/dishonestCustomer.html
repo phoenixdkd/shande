@@ -131,7 +131,7 @@
     <li>
         {% if customerPage.has_previous %}
             <span aria-hidden="true">
-                <a href="?page={{ customerPage.previous_page_number }}&{{ requestArgs }}">&laquo;</a>
+                <a href="?page={{ customerPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&{{ requestArgs }}">&laquo;</a>
             </span>
         {% endif %}
     </li>
@@ -141,7 +141,7 @@
     <li>
         {% if customerPage.has_next %}
             <span aria-hidden="true">
-                <a href="?page={{ customerPage.next_page_number }}&{{ requestArgs }}">&raquo;</a>
+                <a href="?page={{ customerPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&{{ requestArgs }}">&raquo;</a>
             </span>
         {% endif %}
     </li>
