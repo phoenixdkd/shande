@@ -32,7 +32,7 @@
         </div>
     </div>
 </form>
-<table class="table table-bordered">
+<table id="analyzeReport" class="table table-bordered">
     <thead class="bg-info">
         <th width="2%">序号</th>
         <th width="2%">产品代码</th>
@@ -56,10 +56,11 @@
             <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
 {#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
             <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
+
             <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}" onclick="currentPrice(this)"
-                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} /></td>
-            <td><lable id="earn_count_{{ stock.id }}"></lable></td>
-            <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
+                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}" /></td>
+            <td><lable id="earn_count_{{ stock.id }}">aaa</lable></td>
+            <td><lable id="earn_cash_{{ stock.id }}">aaa</lable></td>
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="stock_detail_row_{{ stock.id }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
@@ -154,68 +155,43 @@
         return true;
     }
 
-    function currentPrice(obj){
-        var stockid = obj.name;
+    function updatePrice(tableid) {
+        var tableObj = document.getElementById(tableid);
+        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
+             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
+                if(j==6){
+                    currentPrice(tableObj.rows[i].cells[j].childNodes[0].name,tableObj.rows[i].cells[j].childNodes[0].id)
+                }
+             }
+        }
+    }
+
+    function currentPrice(name,id){
+        var stockid = name;
+        var priceid = id;
+
         if(stockid.startWith('0')){
-            var linkname = 'http://hq.sinajs.cn/list=s_sz'+stockid;
-            var result = 'hq_str_s_sz'+stockid;
+            var linkname = 'http://hq.sinajs.cn/list=sz'+stockid;
+            var result = 'hq_str_sz'+stockid;
         }
         else if(stockid.startWith("6")){
-            var linkname = 'http://hq.sinajs.cn/list=s_sh'+stockid;
-            var result = 'hq_str_s_sh'+stockid;
+            var linkname = 'http://hq.sinajs.cn/list=sh'+stockid;
+            var result = 'hq_str_sh'+stockid;
         }
-
+{#        alert(linkname);#}
         $.ajax({
             url: linkname,
             dataType:"script",
             cache:"false",
             type:"GET",
-            success:function(response){
-                alert("ok");
-{#                var stocks = response.split(";");#}
-{##}
-                var a = result;
-                alert(a);
-                alert(hq_str_s_sz000065);
+            success:function(price){
+                var tmp = eval(result);
+                var elements = tmp.split(",");
+                var price = elements[3];
+                var aa = document.getElementById(id);
+                aa.value=price;
             }
         })
-
-
-{#        $.ajax({#}
-{#            url:"{% url 'trade:updateFile' %}",#}
-{#            type:'POST',#}
-{#            dataType:'json',#}
-{#            success: function (result) {#}
-{#                showMsgModal(result.msg,result.msgLevel);#}
-{#                if (result.msgLevel == 'info'){#}
-{#                    setTimeout("window.location.reload()",1500);#}
-{#                }#}
-{#            },#}
-{#            data:formData,#}
-{#            cache:false,#}
-{#            contentType:false,#}
-{#            processData:false#}
-{#        });#}
-
-
-{#           if(obj.stockid.startWith '0')#}
-        {#            alert(obj.name);#}
-{#            #}
-{#            var hq_str=eval("hq_str_sz"+obj.name);#}
-{##}
-{#            var elements=hq_str.split(",");#}
-{##}
-{#            var data1=(elements[3]*1).toFixed(2);#}
-{#            var data2=(elements[3]-elements[2]).toFixed(2);#}
-{#            var data3=(elements[3]-elements[2])*100/(elements[2]*1);#}
-{#            var colors=["red","green"];#}
-{#            alert(data1);#}
-{#           "$(#(obj.id))." = data1;#}
-{#            alert(data1);#}
-{#            alert(data2);#}
-{#            alert(data3);#}
-{##}
-{#            return processDataArray(data1,data2,data3,colors);#}
     }
 
     $(function(){
@@ -226,6 +202,8 @@
             loadStockDetailBySellPrice(stockid, sellPrice );
             calcProfitByStockId(stockid, sellPrice);
         });
+
+        updatePrice('analyzeReport');
     });
 </script>
 
