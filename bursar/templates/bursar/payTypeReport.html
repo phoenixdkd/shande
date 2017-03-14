@@ -9,7 +9,17 @@
 </h1>
     <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
     <div class="form-group">
-        <label class="col-md-offset-2 col-md-1 control-label">时间范围</label>
+        <label class="col-md-1 control-label">公司</label>
+        <div class="col-md-1 ">
+             <input type="text"  class="form-control" value="{{ company }}" name="company" id="company"
+             title="公司"/>
+        </div>
+{#        <label class="col-md-1 control-label">财务专员</label>#}
+{#        <div class="col-md-1 ">#}
+{#             <input type="text"  class="form-control" value="{{ bursarID }}" name="bursarID" id="bursarID"#}
+{#             title="财务专员"/>#}
+{#        </div>#}
+        <label class=" col-md-1 control-label">时间范围</label>
         <div class="col-md-2 ">
              <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
              title="起始时间"/>
