@@ -20,7 +20,7 @@
             <td>买入资金</td>
             <td>GEM</td>
             <td>最近买入</td>
-            <td>现货评级</td>
+{#            <td>现货评级</td>#}
             <td>客户管理专员</td>
             <td>跟进状态</td>
 {#            <td>开发ID</td>#}
@@ -95,37 +95,37 @@
                 {% endif %}
             </td>
             <td><label id="showfile" type="button" data-fsid="{% getLatestTradeIDByCustomerId customerObj.id %}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</label></td>
-            <td class="spotTd">
-                <select class="spotSelect"
-                        value="{{ customerObj.spotStatus }}"
-                data-id="{{ customerObj.id }}">
-                    {% if customerObj.spotStatus  == "未开发" %}
-                        <option value="未开发" {% if customerObj.spotStatus == "未开发" %}selected{% endif %}>未开发</option>
-                        <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>
-                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
-                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
-                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
-                    {% endif %}
-                    {% if customerObj.spotStatus  == "A" %}
-                        <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>
-                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
-                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
-                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
-                    {% endif %}
-                    {% if customerObj.spotStatus  == "B" %}
-                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>
-                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
-                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
-                    {% endif %}
-                    {% if customerObj.spotStatus  == "C" %}
-                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>
-                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
-                    {% endif %}
-                    {% if customerObj.spotStatus  == "D" %}
-                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>
-                    {% endif %}
-                </select>
-            </td>
+{#            <td class="spotTd">#}
+{#                <select class="spotSelect"#}
+{#                        value="{{ customerObj.spotStatus }}"#}
+{#                data-id="{{ customerObj.id }}">#}
+{#                    {% if customerObj.spotStatus  == "未开发" %}#}
+{#                        <option value="未开发" {% if customerObj.spotStatus == "未开发" %}selected{% endif %}>未开发</option>#}
+{#                        <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>#}
+{#                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>#}
+{#                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customerObj.spotStatus  == "A" %}#}
+{#                        <option value="A" {% if customerObj.spotStatus  == "A" %}selected{% endif %}>A</option>#}
+{#                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>#}
+{#                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customerObj.spotStatus  == "B" %}#}
+{#                        <option value="B" {% if customerObj.spotStatus  == "B" %}selected{% endif %}>B</option>#}
+{#                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customerObj.spotStatus  == "C" %}#}
+{#                        <option value="C" {% if customerObj.spotStatus  == "C" %}selected{% endif %}>C</option>#}
+{#                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                    {% if customerObj.spotStatus  == "D" %}#}
+{#                        <option value="D" {% if customerObj.spotStatus  == "D" %}selected{% endif %}>D</option>#}
+{#                    {% endif %}#}
+{#                </select>#}
+{#            </td>#}
             <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
             <td>
                 {% if customerObj.status == 0 %}
@@ -206,8 +206,8 @@
                 {% endif %}
                 {% if request.user.userprofile.title.role_name in "teacher teachermanager teacherboss admin ops" %}
                     {% if customerObj.status == 20 or customerObj.status == 40 %}
-                    <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"
-                        data-id="{{ customerObj.id }}">交易管理</button>
+                      <button type="button" class="btn btn-sm btn-primary" onclick="tradeManage(this)"
+                          data-id="{{ customerObj.id }}">交易管理</button>
                     {% endif %}
                 {% endif %}
             </td>

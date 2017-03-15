@@ -10,8 +10,12 @@
     <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
     <div class="form-group">
         {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
+            <label class="col-md-1 control-label" for="company">公司</label>
+            <div class="col-md-1 ">
+               <input type="text" class="form-control" id="company" name="company" value="{{ company }}" placeholder="格式：A"/>
+            </div>
             <label class="col-md-1 control-label" for="bursarID" >财务专员</label>
-            <div class="col-md-1 " style="width: 150px">
+            <div class="col-md-2 " style="width: 150px">
                  <input type="text" class="form-control" id="bursarID" name="bursarID" value="{{ bursarID }}" placeholder="格式：A01101"/>
 {#                <select type="select" class="form-control" id="bursarID" name="bursarID">#}
 {#                  <option></option>#}
@@ -20,30 +24,39 @@
 {#                  {% endfor %}#}
 {#              </select>#}
             </div>
+            <label class="col-md-1 control-label" for="paytype">支付方式</label>
+            <div class="col-md-1 ">
+               <select type="text" class="form-control" id="paytype" name="paytype">
+                   <option value={{ paytype }}>{{ paytype }}</option>
+{#                   <option value="支付宝">支付宝</option>#}
+{#                   <option value="微信">微信</option>#}
+{#                   <option value="中国银行">中国银行</option>#}
+{#                   <option value="农业银行">农业银行</option>#}
+{#                   <option value="交通银行">交通银行</option>#}
+{#                   <option value="建设银行">建设银行</option>#}
+{#                   <option value="工商银行">工商银行</option>#}
+{#                   <option value="招商银行">招商银行</option>#}
+               </select>
+            </div>
+            <label class="col-md-1 control-label" for="phone">客户电话</label>
+            <div class="col-md-1 ">
+               <input type="text" class="form-control" id="phone" name="phone" value="{{ phone }}" />
+            </div>
         {% endif %}
-
-        <label class=" col-md-1 control-label" style="width: 150px">时间范围</label>
+    </div>
+    <div class="form-group">
+        <label class=" col-md-1 control-label" >时间范围</label>
         <div class="col-md-2 ">
              <input type="date"  class="form-control datetime" style="width: 150px" value="{{ startDate }}" name="startDate" id="startDate"
              title="起始时间"/>
         </div>
 {#        <label class="col-md-1 control-label"></label>#}
-        <div class="col-md-1 ">
+        <div class="col-md-2 ">
              <input type="date"  class="form-control datetime" style="width: 150px" value="{{ endDate }}" name="endDate" id="endDate"
              title="结束时间"/>
         </div>
-    {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
-        <label class="col-md-1 control-label" for="phone">电话</label>
-        <div class="col-md-1 ">
-           <input type="text" class="form-control" id="phone" name="phone" value="{{ phone }}" />
-        </div>
-        <label class="col-md-1 control-label" for="company">公司</label>
-        <div class="col-md-1 ">
-           <input type="text" class="form-control" id="company" name="company" value="{{ company }}" placeholder="格式：A"/>
-        </div>
-    {% endif %}
-        <label class="col-md-1 control-label"></label>
-        <div class="col-md-1">
+        <label class="col-md-2 control-label"></label>
+        <div class="col-md-2">
                 <button class="btn btn-sm btn-primary" onclick="loadPayReportDiv()">搜索</button>
         </div>
     </div>
@@ -54,19 +67,34 @@
 <script type="text/javascript">
     $(function () {
         loadPayReportDiv();
+        payTypeSelect();
     });
     function loadPayReportDiv(data){
         var startDate = $('#startDate').val();
         var endDate = $('#endDate').val();
         var company = $('#company').val();
         var bursarID = $('#bursarID').val();
-        var phone = $('#phone').val()
+        var phone = $('#phone').val();
+        var paytype = $('#paytype').val();
         if(data){
-            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone;
+            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone+'&paytype='+paytype;
         }else{
-            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone;
+            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone+'&paytype='+paytype;
         }
         $('#payReportDiv').load("{% url 'bursar:queryPayReport' %}", data);
+    }
+    function payTypeSelect() {
+        var frag = document.createDocumentFragment();
+        var options = $("#paytype");
+        var str1=["支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];
+        var str2 = ["支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];
+
+        for (var i = 0; i <= 7; i++) {
+
+            var option = new Option(str1[i], str2[i]);
+            frag.appendChild(option);
+        }
+        options.append(frag);
     }
 </script>
 {#<table class="table table-bordered">#}
@@ -142,19 +170,21 @@
 {##}
    <script type="text/javascript">
        function backTradeAdmin(obj){
-           alert('撤销交易操作，请慎重')
-           $.ajax({
-               url: "{% url 'trade:backTradeAdmin' %}",
-               type: "POST",
-               data: {"backtradeid": $(obj).data("id")},
-               success: function(result){
-{#                   showMsgModal(result.msg,result.msgLevel);#}
-{#                   if (result.msgLevel == 'info'){#}
-{#                       setTimeout("window.location.reload()",1500);#}
-{#                   }#}
-                   loadPayReportDiv();
+           result=confirm('撤销交易操作，请慎重');
+           if(result){
+             $.ajax({
+                 url: "{% url 'trade:backTradeAdmin' %}",
+                 type: "POST",
+                 data: {"backtradeid": $(obj).data("id")},
+                 success: function(result){
+{#                     showMsgModal(result.msg,result.msgLevel);#}
+{#                     if (result.msgLevel == 'info'){#}
+{#                        setTimeout("window.location.reload()",1500);#}
+{#                     }#}
+                    loadPayReportDiv();
                }
-           })
+             })
+           }
     }
 
    </script>

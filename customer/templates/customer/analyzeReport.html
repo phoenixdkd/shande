@@ -59,8 +59,8 @@
 
             <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}" onclick="currentPrice(this)"
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}" /></td>
-            <td><lable id="earn_count_{{ stock.id }}">aaa</lable></td>
-            <td><lable id="earn_cash_{{ stock.id }}">aaa</lable></td>
+            <td><lable id="earn_count_{{ stock.id }}"></lable></td>
+            <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="stock_detail_row_{{ stock.id }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
@@ -160,25 +160,24 @@
         for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
              for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
                 if(j==6){
-                    currentPrice(tableObj.rows[i].cells[j].childNodes[0].name,tableObj.rows[i].cells[j].childNodes[0].id)
+                    getCurrentPrice(tableObj.rows[i].cells[j].childNodes[0].name,tableObj.rows[i].cells[j].childNodes[0].id)
                 }
              }
         }
     }
 
-    function currentPrice(name,id){
+    function getCurrentPrice(name,id){
         var stockid = name;
         var priceid = id;
 
-        if(stockid.startWith('0')){
+        if(stockid.startWith('0') || stockid.startWith('3')){
             var linkname = 'http://hq.sinajs.cn/list=sz'+stockid;
             var result = 'hq_str_sz'+stockid;
         }
-        else if(stockid.startWith("6")){
+        else if(stockid.startWith("6") ){
             var linkname = 'http://hq.sinajs.cn/list=sh'+stockid;
             var result = 'hq_str_sh'+stockid;
         }
-{#        alert(linkname);#}
         $.ajax({
             url: linkname,
             dataType:"script",
@@ -187,15 +186,17 @@
             success:function(price){
                 var tmp = eval(result);
                 var elements = tmp.split(",");
-                var price = elements[3];
+                var sellPrice = elements[3];
                 var aa = document.getElementById(id);
-                aa.value=price;
+                aa.value=sellPrice;
+                stock_id = $(aa).data("stockid");
+                calcProfitByStockId(stock_id, sellPrice);
             }
         })
     }
 
     $(function(){
-        $('.current_price').change(function(){
+        $('.current_price').mouseover(function(){
             var stockid = $(this).data('stockid');
             var sellPrice = $(this).val();
 {#            var src = "http://hq.sinajs.cn/list=sh601006#}

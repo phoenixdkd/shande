@@ -20,14 +20,14 @@
                         <div class="col-md-5">
                             <select type="select" class="form-control" id="ptpaytype" name="ptpaytype">
                                 <option value="">选择收款方式</option>
-                                <option value="支付宝">支付宝</option>
-                                <option value="微信">微信</option>
-                                <option value="中国银行">中国银行</option>
-                                <option value="农业银行">农业银行</option>
-                                <option value="交通银行">交通银行</option>
-                                <option value="建设银行">建设银行</option>
-                                <option value="工商银行">工商银行</option>
-                                <option value="招商银行">招商银行</option>
+{#                                <option value="支付宝">支付宝</option>#}
+{#                                <option value="微信">微信</option>#}
+{#                                <option value="中国银行">中国银行</option>#}
+{#                                <option value="农业银行">农业银行</option>#}
+{#                                <option value="交通银行">交通银行</option>#}
+{#                                <option value="建设银行">建设银行</option>#}
+{#                                <option value="工商银行">工商银行</option>#}
+{#                                <option value="招商银行">招商银行</option>#}
                             </select>
                         </div>
                     </div>
@@ -86,6 +86,7 @@
     <script type="text/javascript">
     $(function () {
         formValidator();
+        payTypeSelect();
         loadTradePayManageDiv();
         $('#payTradeModal').on('hidden.bs.modal', function() {
             resetFormValidator();
@@ -193,7 +194,21 @@
         $('#payTradeModal').modal("show");
     }
 
-a
+    function payTypeSelect() {
+        var frag = document.createDocumentFragment();
+        var options = $("#ptpaytype");
+        var str1=["支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];
+        var str2 = ["支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];
+
+        for (var i = 0; i <= 7; i++) {
+
+            var option = new Option(str1[i], str2[i]);
+            frag.appendChild(option);
+        }
+        options.append(frag);
+    }
+
+
     </script>
     <br/>
     <br/>

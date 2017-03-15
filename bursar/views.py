@@ -157,12 +157,14 @@ def payReport(request):
         company = request.GET.get('company','')
         bursarID = request.GET.get('bursarID','')
         phone = request.GET.get('phone','')
+        paytype = request.GET.get('paytype')
     else:
         startDate = request.POST.get('startDate')
         endDate = request.POST.get('endDate')
         bursarID = request.POST.get('bursarID')
         company = request.POST.get('company')
         phone = request.POST.get('phone')
+        paytype = request.POST.get('paytype')
 
     if endDate == '':
         endDate = datetime.date.today() + datetime.timedelta(days=1)
@@ -229,6 +231,7 @@ def payReport(request):
         "company": company,
         "bursars": bursars,
         "phone": phone,
+        "paytype": paytype,
     }
     # t2 = time.clock()
     # logger.error("bursar/payReport cost time: %f"%(t2-t1))
@@ -244,9 +247,11 @@ def queryPayReport(request):
     else:
         company = request.GET.get('company', '')
         bursarID = request.GET.get('bursarID', '')
-        phone = request.GET.get('phone', '')
+    phone = request.GET.get('phone', '')
+    paytype = request.GET.get('paytype', '')
     startDate = request.GET.get('startDate', '')
     endDate = request.GET.get('endDate', '')
+
 
     trades = Trade.objects.filter(paytime__isnull=False, status=30,paytime__gt=startDate).order_by('-paytime')
 
@@ -265,12 +270,15 @@ def queryPayReport(request):
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
 
     # #按条件筛选
-    if phone != '':
+    if phone :
         trades = trades.filter(customer__phone=str(phone))
-    if bursarID != '':
+    if bursarID :
         trades = trades.filter(customer__bursar__bursarId__icontains=str(bursarID))
-    if company != '':
+    if company :
         trades = trades.filter(customer__sales__company=str(company))
+    if paytype :
+        trades = trades.filter(paytype=paytype)
+
 
     if request.user.userprofile.title.role_name == 'bursar':
         trades = trades.filter(customer__bursar__binduser=request.user)
@@ -336,7 +344,11 @@ def payTypeReport(request):
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     trades = trades.filter(paytime__lte=endDate, paytime__gte=startDate)
     if request.user.userprofile.title.role_name == 'bursar':
-        trades.filter(customer__bursar__binduser=request.user)
+        trades=trades.filter(customer__bursar__binduser=request.user)
+    company = request.POST.get('company', "")
+    if company != '':
+        trades=trades.filter(realteacheruser__teacher__company=company)
+
     tradePayTypeSum = trades.values('paytype').annotate(dcount=Sum('paycash'))
     total = tradePayTypeSum.aggregate(Sum('dcount'))
     data = {
@@ -344,6 +356,7 @@ def payTypeReport(request):
         "total": total,
         "startDate": str(startDate),
         "endDate": str(endDate),
+        "company": company,
     }
     # t2 = time.clock()
     # logger.error("bursar/payTypeReport cost time: %f"%(t2-t1))

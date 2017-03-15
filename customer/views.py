@@ -375,7 +375,7 @@ def customerHandle(request):
         startDate = datetime.date.today()
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
-    spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
+    # spotTeachers = SpotTeacher.objects.filter(binduser__isnull=False)
 
     if request.user.userprofile.title.role_name == 'teacher':
         teacher = Teacher.objects.get(binduser=request.user)
@@ -390,7 +390,7 @@ def customerHandle(request):
     elif request.user.userprofile.title.role_name in ['admin', 'ops']:
         teachers = teachers.filter(binduser__isnull=False)
     data = {
-        "spotTeachers": spotTeachers,
+        # "spotTeachers": spotTeachers,
         "startDate": str(startDate),
         "endDate": str(endDate),
         "teacher": teacher,
@@ -414,7 +414,13 @@ def queryCustomerHandle(request):
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d")
     # customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
+
     customers = Customer.objects.all()
+    if request.GET.get('customerstatus','') == '10 ':
+        customers = customers.filter(status=~Q(30))
+        customers = customers.filter(status=~Q(40))
+        customers = customers.filter(status=~Q(98))
+
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -917,7 +923,7 @@ def calcProfitByStockId(request):
         trades = trades
 
     earnCount = 0
-    earnCash = 0
+    earnCash = 0.
     try:
         sellprice = request.POST.get('sellprice')
         for trade in trades:
@@ -930,6 +936,7 @@ def calcProfitByStockId(request):
             trade.commission = trade.income * share
     except Exception as e:
         pass
+    earnCash = float('%.2f' % earnCash)
     data = {
         "earnCount": earnCount,
         "earnCash": earnCash,
