@@ -416,11 +416,13 @@ def queryCustomerHandle(request):
     # customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
 
     customers = Customer.objects.all()
-    if request.GET.get('customerstatus','') == '10 ':
-        customers = customers.filter(status=~Q(30))
-        customers = customers.filter(status=~Q(40))
-        customers = customers.filter(status=~Q(98))
-
+    a = request.GET.get('customerstatus','')
+    b = customers.__len__()
+    if request.GET.get('customerstatus','') == '10':
+        customers = customers.filter(~Q(status=30))
+        customers = customers.filter(~Q(status=40))
+        customers = customers.filter(~Q(status=98))
+        customers = customers.filter(~Q(status=99))
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company

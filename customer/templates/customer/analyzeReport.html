@@ -1,3 +1,44 @@
+<script type="text/javascript">
+
+        String.prototype.startWith=function(s){
+           if(s==null||s==""||this.length==0||s.length>this.length)
+            return false;
+           if(this.substr(0,s.length)==s)
+            return true;
+           else
+            return false;
+           return true;
+        }
+
+        function getCurrentPrice(id){
+            var stockcode = id.attr("name");
+            if(stockcode.startWith('0') || stockcode.startWith('3')){
+            var linkname = 'http://hq.sinajs.cn/list=sz'+stockcode;
+            var result = 'hq_str_sz'+stockcode;
+         }
+         else if(stockcode.startWith("6") ){
+            var linkname = 'http://hq.sinajs.cn/list=sh'+stockcode;
+            var result = 'hq_str_sh'+stockcode;
+         }
+         $.ajax({
+            url: linkname,
+            dataType:"script",
+            cache:"false",
+            type:"GET",
+            success:function(price){
+                var tmp = eval(result);
+                var elements = tmp.split(",");
+                var sellPrice = elements[3];
+                id.val(sellPrice);
+{#                var aa = document.getElementById(id);#}
+{#                aa.value=sellPrice;#}
+                var stockid = $(id).data("stockid");
+                calcProfitByStockId(stockid, sellPrice);
+            }
+         })
+     }
+</script>
+
 {% extends 'base_full_noheader.html' %}
 {% load stock_tags %}
 {% block title %}盈亏透视分析表{% endblock %}
@@ -57,8 +98,13 @@
 {#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
             <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
 
-            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}" onclick="currentPrice(this)"
-                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }}" /></td>
+            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}"
+                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
+            <script type="text/javascript">
+                setTimeout(
+                      setInterval(getCurrentPrice($("#current_price_{{ stock.id }}")),5000)
+                    , 1*{{ forloop.counter }}%5*500);
+            </script>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
             <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
         </tr>
@@ -87,7 +133,7 @@
     </li>
   </ul>
 </nav>
-    <script type="text/javascript" src="jquery.js"></script>
+{#    <script type="text/javascript" src="jquery.js"></script>#}
 <script type="text/javascript">
     function showStockDetail(obj){
         $('.stock_detail_row_').slideUp();
@@ -145,56 +191,44 @@
         });
     }
 
-    String.prototype.startWith=function(s){
-        if(s==null||s==""||this.length==0||s.length>this.length)
-            return false;
-        if(this.substr(0,s.length)==s)
-            return true;
-        else
-          return false;
-        return true;
-    }
+{#    function updatePrice(tableid) {#}
+{#        var tableObj = document.getElementById(tableid);#}
+{#        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row#}
+{#             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列#}
+{#                if(j==6){#}
+{#                    getCurrentPrice(tableObj.rows[i].cells[j].childNodes[0].name,tableObj.rows[i].cells[j].childNodes[0].id)#}
+{#                }#}
+{#             }#}
+{#        }#}
+{#    }#}
 
-    function updatePrice(tableid) {
-        var tableObj = document.getElementById(tableid);
-        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
-             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
-                if(j==6){
-                    getCurrentPrice(tableObj.rows[i].cells[j].childNodes[0].name,tableObj.rows[i].cells[j].childNodes[0].id)
-                }
-             }
-        }
-    }
-
-    function getCurrentPrice(name,id){
-        var stockid = name;
-        var priceid = id;
-
-        if(stockid.startWith('0') || stockid.startWith('3')){
-            var linkname = 'http://hq.sinajs.cn/list=sz'+stockid;
-            var result = 'hq_str_sz'+stockid;
-        }
-        else if(stockid.startWith("6") ){
-            var linkname = 'http://hq.sinajs.cn/list=sh'+stockid;
-            var result = 'hq_str_sh'+stockid;
-        }
-        $.ajax({
-            url: linkname,
-            dataType:"script",
-            cache:"false",
-            type:"GET",
-            success:function(price){
-                var tmp = eval(result);
-                var elements = tmp.split(",");
-                var sellPrice = elements[3];
-                var aa = document.getElementById(id);
-                aa.value=sellPrice;
-                stock_id = $(aa).data("stockid");
-                calcProfitByStockId(stock_id, sellPrice);
-            }
-        })
-    }
-
+{#    function getCurrentPrice(name,id){#}
+{#        var stockid = name;#}
+{##}
+{#        if(stockid.startWith('0') || stockid.startWith('3')){#}
+{#            var linkname = 'http://hq.sinajs.cn/list=sz'+stockid;#}
+{#            var result = 'hq_str_sz'+stockid;#}
+{#        }#}
+{#        else if(stockid.startWith("6") ){#}
+{#            var linkname = 'http://hq.sinajs.cn/list=sh'+stockid;#}
+{#            var result = 'hq_str_sh'+stockid;#}
+{#        }#}
+{#        $.ajax({#}
+{#            url: linkname,#}
+{#            dataType:"script",#}
+{#            cache:"false",#}
+{#            type:"GET",#}
+{#            success:function(price){#}
+{#                var tmp = eval(result);#}
+{#                var elements = tmp.split(",");#}
+{#                var sellPrice = elements[3];#}
+{#                var aa = document.getElementById(id);#}
+{#                aa.value=sellPrice;#}
+{#                stock_id = $(aa).data("stockid");#}
+{#                calcProfitByStockId(stock_id, sellPrice);#}
+{#            }#}
+{#        })#}
+{#    }#}
     $(function(){
         $('.current_price').mouseover(function(){
             var stockid = $(this).data('stockid');
@@ -203,8 +237,7 @@
             loadStockDetailBySellPrice(stockid, sellPrice );
             calcProfitByStockId(stockid, sellPrice);
         });
-
-        updatePrice('analyzeReport');
+{#        updatePrice('analyzeReport');#}
     });
 </script>
 
