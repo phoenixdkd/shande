@@ -157,7 +157,7 @@ def payReport(request):
         company = request.GET.get('company','')
         bursarID = request.GET.get('bursarID','')
         phone = request.GET.get('phone','')
-        paytype = request.GET.get('paytype')
+        paytype = request.GET.get('paytype','')
     else:
         startDate = request.POST.get('startDate')
         endDate = request.POST.get('endDate')
@@ -320,7 +320,7 @@ def queryPayReport(request):
 
     data = {
         "tradePage": tradePage,
-         "requestArgs": getArgsExcludePage(request),
+        "requestArgs": getArgsExcludePage(request),
         "payCashTotal": payCashTotal,
     }
     return render(request, 'bursar/queryPayReport.html', data)

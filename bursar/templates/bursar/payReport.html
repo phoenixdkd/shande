@@ -12,11 +12,11 @@
         {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
             <label class="col-md-1 control-label" for="company">公司</label>
             <div class="col-md-1 ">
-               <input type="text" class="form-control" id="company" name="company" value="{{ company }}" placeholder="格式：A"/>
+               <input type="text" class="form-control" id="company" name="company" style="width: 150px" value="{{ company }}" placeholder="格式：A"/>
             </div>
             <label class="col-md-1 control-label" for="bursarID" >财务专员</label>
             <div class="col-md-2 " style="width: 150px">
-                 <input type="text" class="form-control" id="bursarID" name="bursarID" value="{{ bursarID }}" placeholder="格式：A01101"/>
+                 <input type="text" class="form-control" id="bursarID" name="bursarID" value="{{ bursarID }}" style="width: 150px" placeholder="格式：A01101"/>
 {#                <select type="select" class="form-control" id="bursarID" name="bursarID">#}
 {#                  <option></option>#}
 {#                  {% for bursarObj in bursars %}#}
@@ -26,16 +26,17 @@
             </div>
             <label class="col-md-1 control-label" for="paytype">支付方式</label>
             <div class="col-md-1 ">
+{#              <input id="paytype" name="paytype" value="{{ paytype }}"/>#}
                <select type="text" class="form-control" id="paytype" name="paytype">
-                   <option value={{ paytype }}>{{ paytype }}</option>
-{#                   <option value="支付宝">支付宝</option>#}
-{#                   <option value="微信">微信</option>#}
-{#                   <option value="中国银行">中国银行</option>#}
-{#                   <option value="农业银行">农业银行</option>#}
-{#                   <option value="交通银行">交通银行</option>#}
-{#                   <option value="建设银行">建设银行</option>#}
-{#                   <option value="工商银行">工商银行</option>#}
-{#                   <option value="招商银行">招商银行</option>#}
+                   <option value="">全部</option>
+                   <option value="支付宝">支付宝</option>
+                   <option value="微信">微信</option>
+                   <option value="中国银行">中国银行</option>
+                   <option value="农业银行">农业银行</option>
+                   <option value="交通银行">交通银行</option>
+                   <option value="建设银行">建设银行</option>
+                   <option value="工商银行">工商银行</option>
+                   <option value="招商银行">招商银行</option>
                </select>
             </div>
             <label class="col-md-1 control-label" for="phone">客户电话</label>
@@ -57,7 +58,7 @@
         </div>
         <label class="col-md-2 control-label"></label>
         <div class="col-md-2">
-                <button class="btn btn-sm btn-primary" onclick="loadPayReportDiv()">搜索</button>
+                <button type="submit" class="btn btn-sm btn-primary">搜索</button>
         </div>
     </div>
 </form>
@@ -66,9 +67,14 @@
 
 <script type="text/javascript">
     $(function () {
+        formValidator();
         loadPayReportDiv();
-        payTypeSelect();
     });
+    function resetFormValidator(){
+        $('#searchKpiForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+
     function loadPayReportDiv(data){
         var startDate = $('#startDate').val();
         var endDate = $('#endDate').val();
@@ -76,26 +82,51 @@
         var bursarID = $('#bursarID').val();
         var phone = $('#phone').val();
         var paytype = $('#paytype').val();
+
         if(data){
-            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone+'&paytype='+paytype;
+            data = data +'&startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+
+                '&phone='+phone+'&paytype='+paytype;
         }else{
-            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+'&phone='+phone+'&paytype='+paytype;
+            data = 'startDate='+startDate+'&endDate='+endDate+'&company='+company+'&bursarID='+bursarID+
+                '&phone='+phone +'&paytype='+paytype;
         }
         $('#payReportDiv').load("{% url 'bursar:queryPayReport' %}", data);
     }
-    function payTypeSelect() {
-        var frag = document.createDocumentFragment();
-        var options = $("#paytype");
-        var str1=["支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];
-        var str2 = ["支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];
 
-        for (var i = 0; i <= 7; i++) {
-
-            var option = new Option(str1[i], str2[i]);
-            frag.appendChild(option);
-        }
-        options.append(frag);
+    function formValidator(){
+        $('#searchKpiForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadPayReportDiv();
+                resetFormValidator();
+            }
+        });
     }
+{#    $(function () {#}
+{#        loadPayReportDiv();#}
+{#        payTypeSelect();#}
+{#    });#}
+{#    function payTypeSelect() {#}
+{#        var frag = document.createDocumentFragment();#}
+{#        var options = $("#paytype");#}
+{#        var str1=["全部","支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];#}
+{#        var str2 = ["","支付宝","微信","中国银行","农业银行","交通银行","建设银行", "工商银行","招商银行"];#}
+{##}
+{#        for (var i = 0; i <= 7; i++) {#}
+{##}
+{#            var option = new Option(str1[i], str2[i]);#}
+{#            frag.appendChild(option);#}
+{#        }#}
+{#        options.append(frag);#}
+{#    }#}
 </script>
 {#<table class="table table-bordered">#}
 {#    <thead class="bg-info">#}
@@ -188,42 +219,5 @@
     }
 
    </script>
-{##}
-{#        <tr style="color:red">#}
-{#            <td></td>#}
-{#            <td></td>#}
-{#            <td></td>#}
-{#            <td>合计</td>#}
-{#            <td></td>#}
-{#            <td>{{ payCashTotal }}#}
-{#            <td></td>#}
-{#            <td></td>#}
-{#            <td></td>#}
-{#        </tr>#}
-{#    </tbody>#}
-{#</table>#}
 
-
-{#<nav class="navbar-right">#}
-{#  <ul class="pagination">#}
-{#    <li>#}
-{#        {% if tradePage.has_previous %}#}
-{#            <span aria-hidden="true" onclick="loadTradeDiv('page={{ tradePage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>#}
-{#            <span aria-hidden="true">#}
-{#                <a href="?page={{ tradePage.previous_page_number }}&{{ requestArgs }}">&laquo;</a>#}
-{#                <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}">&laquo;</a>#}
-{#            </span>#}
-{#            <a href="?page={{ tradePage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&laquo;</span></a>#}
-{#        {% endif %}#}
-{#    </li>#}
-{#    <li><span class="current">#}
-{#           第{{ tradePage.number }}/{{ tradePage.paginator.num_pages }}页#}
-{#        </span></li>#}
-{#    <li>#}
-{#        {% if tradePage.has_next %}#}
-{#             <a href="?page={{ tradePage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}&bursarID={{ bursarID }}&company={{ company }}"><span aria-hidden="true">&raquo; </span></a>#}
-{#        {% endif %}#}
-{#    </li>#}
-{#  </ul>#}
-{#</nav>#}
 {% endblock %}
