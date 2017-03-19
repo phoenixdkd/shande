@@ -14,7 +14,7 @@ import datetime
 import traceback
 import json
 
-from shande.settings import BASE_DIR
+from shande.settings import BASE_DIR, UPLOAD_ROOT
 from shande.util import *
 from ops.models import *
 from super.models import *
@@ -162,7 +162,8 @@ def addTrade(request):
         #上传交割单据
         tradefile = request.FILES['file']
         filename = str(tradeid)+'.jpg'
-        jpgfile = "trade/static/trade/images/"+filename
+        # jpgfile = "trade/static/trade/images/"+filename
+        jpgfile = os.path.join(UPLOAD_ROOT, "trade/images/")+filename
         #如果存在先删除
         if os.path.isfile(jpgfile):
                os.remove(jpgfile)
@@ -353,7 +354,8 @@ def deleteTrade(request):
                 customer.save()
 
         #删除图片
-        jpgfile = "trade/static/trade/images/"+str(tradeid)+'.jpg'
+        # jpgfile = "trade/static/trade/images/"+str(tradeid)+'.jpg'
+        jpgfile = os.path.join(UPLOAD_ROOT, "trade/images/")+str(tradeid)+'.jpg'
         if os.path.isfile(jpgfile):
                os.remove(jpgfile)
 
@@ -414,7 +416,9 @@ def updateFile(request):
         tradeid=request.POST.get('tradeid')
         tradefile = request.FILES['file']
         filename = str(tradeid)+'.jpg'
-        jpgfile = "trade/static/trade/images/"+filename
+        # jpgfile = "trade/static/trade/images/"+filename
+
+        jpgfile = os.path.join(UPLOAD_ROOT,"trade/images/")+filename
         #如果存在先删除
         if os.path.isfile(jpgfile):
                os.remove(jpgfile)
@@ -437,15 +441,17 @@ def showFile(request):
     data = {}
     try:
         tradeid = request.POST.get('tradeid')
-        dpath = 'trade/static/trade/images/'
+        # dpath = 'trade/static/trade/images/'
         filename = str(tradeid)+'.jpg'
-        existfile = "trade/static/trade/images/"+filename
+        # existfile = "trade/static/trade/images/"+filename
+        existfile = os.path.join(UPLOAD_ROOT, "trade/images/")+filename
+
         if os.path.isfile(existfile):
-            data["filename"] = "/static/trade/images/"+filename
+            data["filename"] = "/upload/trade/images/"+filename
             data["msg"] = " "
             data['msgLevel'] = "info"
         else:
-            data["filename"] = '/static/trade/images/filenotexist.jpg'
+            data["filename"] = '/upload/trade/images/filenotexist.jpg'
             data["msg"] = "文件不存在"
             data['msgLevel'] = "info"
     except:

@@ -7,7 +7,7 @@
         收款汇总明细表
     </div>
 </h1>
-    <form id="searchKpiForm" method="POST" class="form-horizontal " action="#">
+    <form id="searchPayReportForm" method="POST" class="form-horizontal " action="#">
     <div class="form-group">
         {% if user.userprofile.title.role_name in 'admin ops teacher teacherboss teachermanager bursar bursarmanager saleboss' %}
             <label class="col-md-1 control-label" for="company">公司</label>
@@ -71,7 +71,7 @@
         loadPayReportDiv();
     });
     function resetFormValidator(){
-        $('#searchKpiForm').data('bootstrapValidator').destroy();
+        $('#searchPayReprotForm').data('bootstrapValidator').destroy();
         formValidator();
     }
 
@@ -94,7 +94,7 @@
     }
 
     function formValidator(){
-        $('#searchKpiForm').bootstrapValidator({
+        $('#searchPayReportForm').bootstrapValidator({
             excluded: [':disabled'],
             message: 'This value is not valid',
             feedbackIcons: {

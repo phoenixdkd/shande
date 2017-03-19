@@ -41,28 +41,38 @@ def teacherManage(request):
 @login_required()
 def queryTeacher(request):
     # t1 = time.clock()
-    teachers = Teacher.objects.all().order_by('teacherId')
-    teachers = teachers.filter(teacherId__icontains=request.GET.get('teacherid', ''))
-    teachers = teachers.filter(company__icontains=request.GET.get('company', ''))
-    teachers = teachers.filter(department__icontains=request.GET.get('department', ''))
-    teachers = teachers.filter(group__icontains=request.GET.get('group', ''))
+    if(request.GET.get('teacherid') or request.GET.get('company') or request.GET.get('department') or request.GET.get('group') or request.GET.get('binduser')):
+        teachers = Teacher.objects.all().order_by('teacherId')
+        teachers = teachers.filter(teacherId__icontains=request.GET.get('teacherid', ''))
+        teachers = teachers.filter(company__icontains=request.GET.get('company', ''))
+        teachers = teachers.filter(department__icontains=request.GET.get('department', ''))
+        teachers = teachers.filter(group__icontains=request.GET.get('group', ''))
 
-    if 'binduser' in request.GET and request.GET['binduser'] != '':
-        teachers = teachers.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
-    p = Paginator(teachers, 15)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        teacherPage = p.page(page)
-    except (EmptyPage, InvalidPage):
-        teacherPage = p.page(p.num_pages)
+        if 'binduser' in request.GET and request.GET['binduser'] != '':
+          teachers = teachers.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
+        p = Paginator(teachers, 15)
+        try:
+           page = int(request.GET.get('page', '1'))
+        except ValueError:
+           page = 1
+        try:
+           teacherPage = p.page(page)
+        except (EmptyPage, InvalidPage):
+           teacherPage = p.page(p.num_pages)
 
-    data = {
-        "teacherPage": teacherPage,
-        "requestArgs": getArgsExcludePage(request),
-    }
+        showContent = "True"
+        showContent = json.dumps(showContent)
+        data = {
+          "teacherPage": teacherPage,
+           "requestArgs": getArgsExcludePage(request),
+           "showContent": showContent,
+        }
+    else:
+        showContent = "False"
+        showContent = json.dumps(showContent)
+        data = {
+           "showContent": showContent,
+        }
     # t2 = time.clock()
     # logger.error("queryTeacher cost time: %f"%(t2-t1))
     return render(request, 'teacher/queryTeacher.html', data)

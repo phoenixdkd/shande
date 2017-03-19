@@ -1,4 +1,5 @@
-<table class="table table-bordered col-md-12 table-hover">
+<h1 id="userHead" name="teacherHead" style="text-align:center;">请输入搜索条件</h1>
+<table id="userTable" class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
 {#            <td>用户ID</td>#}
@@ -56,7 +57,7 @@
     {% endif %}
     </tbody>
 </table>
-<nav class="navbar-right">
+<nav id="userNav" class="navbar-right">
   <ul class="pagination">
     <li>
     <input type="hidden" id="pagenum"  value="{{ userpage.number }}"/>
@@ -74,3 +75,23 @@
     </li>
   </ul>
 </nav>
+
+<script type="text/javascript">
+    $(function () {
+        contentShow();
+    });
+
+    function contentShow() {
+        var showContent = {{ showContent | safe }};
+        if( showContent == 'True'){
+            $('#userHead').css("display","none");
+            $('#userTable')[0].style.display='';
+            $('#userNav')[0].style.display='';
+        }
+        else{
+            $('#userHead')[0].style.display='display';
+            $('#userTable')[0].style.display='none';
+            $('#userNav')[0].style.display='none';
+        }
+    }
+</script>

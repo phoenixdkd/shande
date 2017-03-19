@@ -1,26 +1,25 @@
 <script type="text/javascript">
-
-        String.prototype.startWith=function(s){
-           if(s==null||s==""||this.length==0||s.length>this.length)
+    String.prototype.startWith=function(s){
+        if(s==null||s==""||this.length==0||s.length>this.length)
             return false;
-           if(this.substr(0,s.length)==s)
+        if(this.substr(0,s.length)==s)
             return true;
-           else
+        else
             return false;
-           return true;
-        }
+        return true;
+    }
 
-        function getCurrentPrice(id){
-            var stockcode = id.attr("name");
-            if(stockcode.startWith('0') || stockcode.startWith('3')){
+    function getCurrentPrice(id){
+        var stockcode = id.attr("name");
+        if(stockcode.startWith('0') || stockcode.startWith('3')){
             var linkname = 'http://hq.sinajs.cn/list=sz'+stockcode;
             var result = 'hq_str_sz'+stockcode;
-         }
-         else if(stockcode.startWith("6") ){
+        }
+        else if(stockcode.startWith("6") ){
             var linkname = 'http://hq.sinajs.cn/list=sh'+stockcode;
             var result = 'hq_str_sh'+stockcode;
-         }
-         $.ajax({
+        }
+        $.ajax({
             url: linkname,
             dataType:"script",
             cache:"false",
@@ -30,8 +29,6 @@
                 var elements = tmp.split(",");
                 var sellPrice = elements[3];
                 id.val(sellPrice);
-{#                var aa = document.getElementById(id);#}
-{#                aa.value=sellPrice;#}
                 var stockid = $(id).data("stockid");
                 calcProfitByStockId(stockid, sellPrice);
             }
@@ -102,7 +99,7 @@
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
             <script type="text/javascript">
                 setTimeout(
-                      setInterval(getCurrentPrice($("#current_price_{{ stock.id }}")),5000)
+                      setInterval(getCurrentPrice($("#current_price_{{ stock.id }}")),60*1000)
                     , 1*{{ forloop.counter }}%5*500);
             </script>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>

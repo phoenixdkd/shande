@@ -35,34 +35,45 @@ def saleManage(request):
 @login_required()
 def querySale(request):
     # t1 = time.clock()
-    sales = Sale.objects.all().order_by('saleId')
-    #不同的用户看到不同的列表
-    if request.user.userprofile.title.role_name == 'saleboss':
-        sales = sales.filter(company=request.user.userprofile.company)
+    if(request.GET.get('saleid') or request.GET.get('department')
+       or request.GET.get('binduser') or request.GET.get('bindteacher')):
+       sales = Sale.objects.all().order_by('saleId')
+       #不同的用户看到不同的列表
+       if request.user.userprofile.title.role_name == 'saleboss':
+           sales = sales.filter(company=request.user.userprofile.company)
 
-    sales = sales.filter(saleId__icontains=request.GET.get('saleid', ''))
-    sales = sales.filter(company__icontains=request.GET.get('company', ''))
-    sales = sales.filter(department__icontains=request.GET.get('department', ''))
-    if 'binduser' in request.GET and request.GET['binduser'] != '':
-        sales = sales.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
-    if 'bindteacher' in request.GET and request.GET['bindteacher'] != '':
-        sales = sales.filter(bindteacher__teacherId__icontains=request.GET.get('bindteacher'))
-    if 'bindbursar' in request.GET and request.GET['bindbursar'] != '':
-        sales = sales.filter(bindteacher__bindbursar__bursarId__icontains=request.GET.get('bindbursar'))
+       sales = sales.filter(saleId__icontains=request.GET.get('saleid', ''))
+       sales = sales.filter(company__icontains=request.GET.get('company', ''))
+       sales = sales.filter(department__icontains=request.GET.get('department', ''))
+       if 'binduser' in request.GET and request.GET['binduser'] != '':
+           sales = sales.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
+       if 'bindteacher' in request.GET and request.GET['bindteacher'] != '':
+           sales = sales.filter(bindteacher__teacherId__icontains=request.GET.get('bindteacher'))
+       if 'bindbursar' in request.GET and request.GET['bindbursar'] != '':
+           sales = sales.filter(bindteacher__bindbursar__bursarId__icontains=request.GET.get('bindbursar'))
 
-    p = Paginator(sales, 25)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        salePage = p.page(page)
-    except (EmptyPage, InvalidPage):
-        salePage = p.page(p.num_pages)
-    data = {
-        "salePage": salePage,
-        "requestArgs": getArgsExcludePage(request),
-    }
+       p = Paginator(sales, 25)
+       try:
+           page = int(request.GET.get('page', '1'))
+       except ValueError:
+           page = 1
+       try:
+           salePage = p.page(page)
+       except (EmptyPage, InvalidPage):
+           salePage = p.page(p.num_pages)
+       showContent = "True"
+       showContent = json.dumps(showContent)
+       data = {
+           "salePage": salePage,
+           "requestArgs": getArgsExcludePage(request),
+           "showContent": showContent,
+       }
+    else:
+        showContent = "False"
+        showContent = json.dumps(showContent)
+        data = {
+            "showContent": showContent,
+        }
     # t2 = time.clock()
     # logger.error("querySale cost time: %f" % (t2 - t1))
     return render(request, 'sale/querySale.html', data)

@@ -1,4 +1,5 @@
-<table class="table table-bordered col-md-12 table-hover">
+<h1 id="bursarHead" name="teacherHead" style="text-align:center;">请输入搜索条件</h1>
+<table id="bursarTable" class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
 {#            <td>ID</td>#}
@@ -45,7 +46,7 @@
     {% endif %}
     </tbody>
 </table>
-<nav class="navbar-right">
+<nav id="bursarNav" class="navbar-right">
   <ul class="pagination">
     <li>
         {% if bursarPage.has_previous %}
@@ -62,3 +63,23 @@
     </li>
   </ul>
 </nav>
+
+<script type="text/javascript">
+    $(function () {
+        contentShow();
+    });
+
+    function contentShow() {
+        var showContent = {{ showContent | safe }};
+        if( showContent == 'True'){
+            $('#bursarHead').css("display","none");
+            $('#bursarTable')[0].style.display='';
+            $('#bursarNav')[0].style.display='';
+        }
+        else{
+            $('#bursarHead')[0].style.display='display';
+            $('#bursarTable')[0].style.display='none';
+            $('#bursarNav')[0].style.display='none';
+        }
+    }
+</script>

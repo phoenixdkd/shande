@@ -25,6 +25,7 @@ from wxqq import urls as wxqqurls
 from trade import urls as tradeurls
 from spot import urls as spoturls
 from stock import urls as stockurls
+from shande.settings import STATIC_ROOT
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
@@ -58,3 +59,10 @@ urlpatterns = [
     # app stock
     url(r'^stock/', include(stockurls, namespace="stock")),
 ]
+#
+from django.conf import settings
+from django.conf.urls.static import static
+if settings.DEBUG is False:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.UPLOAD_ROOT)
+#     urlpatterns.append(url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),)

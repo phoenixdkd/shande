@@ -1,4 +1,5 @@
-<table class="table table-bordered col-md-12 table-hover">
+<h1 id="teacherHead" name="teacherHead" style="text-align:center;">请输入搜索条件</h1>
+<table id="teacherTable" class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
 {#            <td>ID</td>#}
@@ -63,7 +64,7 @@
     {% endif %}
     </tbody>
 </table>
-<nav class="navbar-right">
+<nav id="teacherNav" class="navbar-right" style="display: none">
   <ul class="pagination">
     <li>
         {% if teacherPage.has_previous %}
@@ -80,3 +81,22 @@
     </li>
   </ul>
 </nav>
+<script type="text/javascript">
+    $(function () {
+        contentShow();
+    });
+
+    function contentShow() {
+        var showContent = {{ showContent | safe }};
+        if( showContent == 'True'){
+            $('#teacherHead').css("display","none");
+            $('#teacherTable')[0].style.display='';
+            $('#teacherNav')[0].style.display='';
+        }
+        else{
+            $('#teacherHead')[0].style.display='display';
+            $('#teacherTable')[0].style.display='none';
+            $('#teacherNav')[0].style.display='none';
+        }
+    }
+</script>

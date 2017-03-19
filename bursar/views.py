@@ -43,25 +43,35 @@ def bursarManage(request):
 @login_required()
 def queryBursar(request):
     # t1 = time.clock()
-    bursars = Bursar.objects.all().order_by('bursarId')
-    bursars = bursars.filter(bursarId__icontains=request.GET.get('bursarid', ''))
-    # bursars = bursars.filter(company__icontains=request.GET.get('company', ''))
-    # bursars = bursars.filter(department__icontains=request.GET.get('department', ''))
-    if 'binduser' in request.GET and request.GET['binduser'] != '':
-        bursars = bursars.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
-    p = Paginator(bursars, 20)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        bursarPage = p.page(page)
-    except (EmptyPage, InvalidPage):
-        bursarPage = p.page(p.num_pages)
-    data = {
-        "bursarPage": bursarPage,
-        "requestArgs": getArgsExcludePage(request),
-    }
+    if (request.GET.get('bursarid') or request.GET.get('binduser')):
+        bursars = Bursar.objects.all().order_by('bursarId')
+        bursars = bursars.filter(bursarId__icontains=request.GET.get('bursarid', ''))
+        # bursars = bursars.filter(company__icontains=request.GET.get('company', ''))
+        # bursars = bursars.filter(department__icontains=request.GET.get('department', ''))
+        if 'binduser' in request.GET and request.GET['binduser'] != '':
+            bursars = bursars.filter(binduser__userprofile__nick__icontains=request.GET.get('binduser'))
+        p = Paginator(bursars, 20)
+        try:
+            page = int(request.GET.get('page', '1'))
+        except ValueError:
+            page = 1
+        try:
+            bursarPage = p.page(page)
+        except (EmptyPage, InvalidPage):
+            bursarPage = p.page(p.num_pages)
+        showContent = "True"
+        showContent = json.dumps(showContent)
+        data = {
+            "bursarPage": bursarPage,
+            "requestArgs": getArgsExcludePage(request),
+            "showContent": showContent,
+        }
+    else:
+        showContent = "False"
+        showContent = json.dumps(showContent)
+        data = {
+           "showContent": showContent,
+        }
     # t2 = time.clock()
     # logger.error("queryBursar cost time: %f"%(t2-t1))
     return render(request, 'bursar/queryBursar.html', data)
@@ -244,11 +254,13 @@ def queryPayReport(request):
     if request.user.userprofile.title.role_name == 'salemanager':
         company = request.user.userprofile.company
         bursarID = ''
+        paytype=''
+        phone=''
     else:
         company = request.GET.get('company', '')
         bursarID = request.GET.get('bursarID', '')
-    phone = request.GET.get('phone', '')
-    paytype = request.GET.get('paytype', '')
+        paytype = request.GET.get('paytype', '')
+        phone = request.GET.get('phone', '')
     startDate = request.GET.get('startDate', '')
     endDate = request.GET.get('endDate', '')
 

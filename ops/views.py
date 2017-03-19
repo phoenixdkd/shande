@@ -71,31 +71,43 @@ def addUser(request):
 @login_required()
 def queryUser(request):
     # t1 = time.clock()
-    users = User.objects.all().order_by('-username')
-    users = users.filter(~Q(username='admin'))
-    if request.user.userprofile.title.role_name == 'saleboss':
-        users = users.filter(userprofile__company=request.user.userprofile.company)
-    users = users.filter(userprofile__company__icontains=request.GET.get('company', ''))
-    users = users.filter(userprofile__department__icontains=request.GET.get('department', ''))
-    if 'title' in request.GET:
-        users = users.filter(userprofile__title__role_desc__icontains=request.GET.get('title'))
-    users = users.filter(username__icontains=request.GET.get('username', ''))
-    users = users.filter(userprofile__nick__icontains=request.GET.get('nick', ''))
-    users = users.filter(userprofile__cid__icontains=request.GET.get('cid', ''))
+    if(request.GET.get('title') or request.GET.get('company') or request.GET.get('department')
+       or request.GET.get('username') or request.GET.get('nick') or request.GET.get('cid')):
+        users = User.objects.all().order_by('-username')
+        users = users.filter(~Q(username='admin'))
+        if request.user.userprofile.title.role_name == 'saleboss':
+           users = users.filter(userprofile__company=request.user.userprofile.company)
+        users = users.filter(userprofile__company__icontains=request.GET.get('company', ''))
+        users = users.filter(userprofile__department__icontains=request.GET.get('department', ''))
+        if 'title' in request.GET:
+            users = users.filter(userprofile__title__role_desc__icontains=request.GET.get('title'))
+        users = users.filter(username__icontains=request.GET.get('username', ''))
+        users = users.filter(userprofile__nick__icontains=request.GET.get('nick', ''))
+        users = users.filter(userprofile__cid__icontains=request.GET.get('cid', ''))
 
-    p = Paginator(users, 20)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    try:
-        userpage = p.page(page)
-    except (EmptyPage, InvalidPage):
-        userpage = p.page(p.num_pages)
-    data = {
-        "userpage": userpage,
-        "requestArgs": getArgsExcludePage(request),
-    }
+        p = Paginator(users, 20)
+        try:
+            page = int(request.GET.get('page', '1'))
+        except ValueError:
+            page = 1
+        try:
+            userpage = p.page(page)
+        except (EmptyPage, InvalidPage):
+            userpage = p.page(p.num_pages)
+
+        showContent = "True"
+        showContent = json.dumps(showContent)
+        data = {
+           "userpage": userpage,
+           "requestArgs": getArgsExcludePage(request),
+           "showContent": showContent,
+        }
+    else:
+        showContent = "False"
+        showContent = json.dumps(showContent)
+        data = {
+            "showContent": showContent,
+        }
     # t2 = time.clock()
     # logger.error("queryUser cost time: %f" % (t2 - t1))
     return render(request, 'ops/queryUser.html', data)

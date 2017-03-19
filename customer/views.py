@@ -90,33 +90,33 @@ def queryCustomer(request):
     customers = customers.exclude(status=99)
 
     #按条件查询
-    customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
-    customers = customers.filter(sales__department__icontains=request.GET.get('department', ''))
-    customers = customers.filter(sales__saleId__icontains=request.GET.get('saleid', ''))
-
-    if request.GET.get('saleswx', '') != '':
-        customers = customers.filter(saleswx__wxid__icontains=request.GET.get('saleswx', ''))
-    if request.GET.get('salesqq', '') != '':
-        customers = customers.filter(salesqq__qqid__icontains=request.GET.get('salesqq', ''))
-    if request.GET.get('wxqq', '') != '':
+    # customers = customers.filter(sales__company__icontains=request.GET.get('company', ''))
+    # customers = customers.filter(sales__department__icontains=request.GET.get('department', ''))
+    if request.GET.get('saleid') :
+         customers = customers.filter(sales__saleId__icontains=request.GET.get('saleid'))
+    # if request.GET.get('saleswx', '') != '':
+    #     customers = customers.filter(saleswx__wxid__icontains=request.GET.get('saleswx', ''))
+    # if request.GET.get('salesqq', '') != '':
+    #     customers = customers.filter(salesqq__qqid__icontains=request.GET.get('salesqq', ''))
+    if request.GET.get('wxqq') :
         customers = customers.filter(Q(wxid="", qqid__icontains=request.GET.get('wxqq'))|Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
     customers = customers.filter(phone__icontains=str(request.GET.get('phone', '')).strip())
-    if request.GET.get('wxid', '') != '':
-        customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
-    if request.GET.get('wxname', '') != '':
-        customers = customers.filter(wxname__icontains=request.GET.get('wxname', ''))
-    if request.GET.get('qqid', '') != '':
-        customers = customers.filter(qqid__icontains=request.GET.get('qqid', ''))
-    if request.GET.get('qqname', '') != '':
-        customers = customers.filter(qqname__icontains=request.GET.get('qqname', ''))
-    customers = customers.filter(message__icontains=request.GET.get('message', ''))
-    if request.GET.get('minstartup', '') != '':
-        customers = customers.filter(startup__gte=request.GET.get('minstartup'))
-    if request.GET.get('maxstartup', '') != '':
-        customers = customers.filter(startup__lte=request.GET.get('maxstartup'))
-    if request.GET.get('gem', '') != '':
-        customers = customers.filter(gem=request.GET.get('gem'))
+    # if request.GET.get('wxid', '') != '':
+    #     customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
+    # if request.GET.get('wxname', '') != '':
+    #     customers = customers.filter(wxname__icontains=request.GET.get('wxname', ''))
+    # if request.GET.get('qqid', '') != '':
+    #     customers = customers.filter(qqid__icontains=request.GET.get('qqid', ''))
+    # if request.GET.get('qqname', '') != '':
+    #     customers = customers.filter(qqname__icontains=request.GET.get('qqname', ''))
+    # customers = customers.filter(message__icontains=request.GET.get('message', ''))
+    # if request.GET.get('minstartup', '') != '':
+    #     customers = customers.filter(startup__gte=request.GET.get('minstartup'))
+    # if request.GET.get('maxstartup', '') != '':
+    #     customers = customers.filter(startup__lte=request.GET.get('maxstartup'))
+    # if request.GET.get('gem', '') != '':
+    #     customers = customers.filter(gem=request.GET.get('gem'))
     if request.GET.get('startDate', '') != '':
         customers = customers.filter(create__gte=request.GET.get('startDate'))
     if request.GET.get('endDate', '') != '':

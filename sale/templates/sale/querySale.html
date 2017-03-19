@@ -1,4 +1,5 @@
-<table class="table table-bordered col-md-12 table-hover">
+<h1 id="saleHead" name="saleHead" style="text-align:center;">请输入搜索条件</h1>
+<table id="saleTable" class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
 {#            <td>ID</td>#}
@@ -66,7 +67,7 @@
     {% endif %}
     </tbody>
 </table>
-<nav class="navbar-right">
+<nav id="saleNav" class="navbar-right">
   <ul class="pagination">
     <li>
         {% if salePage.has_previous %}
@@ -83,3 +84,23 @@
     </li>
   </ul>
 </nav>
+
+<script type="text/javascript">
+    $(function () {
+        contentShow();
+    });
+
+    function contentShow() {
+        var showContent = {{ showContent | safe }};
+        if( showContent == 'True'){
+            $('#saleHead').css("display","none");
+            $('#saleTable')[0].style.display='';
+            $('#saleNav')[0].style.display='';
+        }
+        else{
+            $('#saleHead')[0].style.display='display';
+            $('#saleTable')[0].style.display='none';
+            $('#saleNav')[0].style.display='none';
+        }
+    }
+</script>
