@@ -246,7 +246,7 @@ def delSaleManagerPassword(request):
 @login_required()
 def saleKpiReport(request):
     # t1 = time.clock()
-    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'salemanager', 'saleboss']):
+    if (not request.user.userprofile.title.role_name in ['admin', 'ops', 'salemanager', 'saleboss','bursarmanager']):
         return HttpResponseRedirect("/")
     endDate = request.POST.get('endDate', "")
     if endDate == '':

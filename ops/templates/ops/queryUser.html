@@ -1,4 +1,24 @@
-<h1 id="userHead" name="teacherHead" style="text-align:center;">请输入搜索条件</h1>
+{#<script type="text/javascript">#}
+{#    $(function () {#}
+{#        contentShow();#}
+{#    });#}
+{##}
+{#    function contentShow() {#}
+{#        var showInfo = {{ showContent|safe }};#}
+{#        if( showInfo == 'True'){#}
+{#            $('#userHead').css("display","none");#}
+{#            $('#userHead')[0].style.display='none';#}
+{#            $('#userTable')[0].style.display='';#}
+{#            $('#userNav')[0].style.display='';#}
+{#        } else{#}
+{#            $('#userHead')[0].style.display='display';#}
+{#            $('#userTable')[0].style.display='none';#}
+{#            $('#userNav')[0].style.display='none';#}
+{#        }#}
+{#    }#}
+{#</script>#}
+{##}
+{#<h1 id="userHead" name="teacherHead" style="text-align:center;">请输入搜索条件</h1>#}
 <table id="userTable" class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
         <tr>
@@ -75,23 +95,3 @@
     </li>
   </ul>
 </nav>
-
-<script type="text/javascript">
-    $(function () {
-        contentShow();
-    });
-
-    function contentShow() {
-        var showContent = {{ showContent | safe }};
-        if( showContent == 'True'){
-            $('#userHead').css("display","none");
-            $('#userTable')[0].style.display='';
-            $('#userNav')[0].style.display='';
-        }
-        else{
-            $('#userHead')[0].style.display='display';
-            $('#userTable')[0].style.display='none';
-            $('#userNav')[0].style.display='none';
-        }
-    }
-</script>

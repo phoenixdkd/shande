@@ -117,7 +117,8 @@
 
                             <li class=""><a href="{% url 'bursar:payReport' %}" target="_self">已收款汇明细</a></li>
                             {% if user.userprofile.title.role_name in 'admin ops bursarmanager' %}
-                            <li class=""><a href="{% url 'bursar:payTypeReport' %}" target="_self">支付方式汇总</a></li>
+                                <li class=""><a href="{% url 'bursar:payTypeReport' %}" target="_self">支付方式汇总</a></li>
+                                <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
 {#                            <li class=""><a href="{% url 'bursar:payCompanyReport' %}" target="_self">公司盈利归属汇总</a></li>#}
                             {% endif %}
                             {% if user.userprofile.title.role_name in 'admin ops bursarmanager' or user.userprofile.title.role_name == 'teachermanager' %}

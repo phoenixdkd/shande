@@ -19,6 +19,7 @@ import json
 
 from shande.settings import BASE_DIR
 from super.models import *
+from teacher.models import *
 
 
 # Create your views here.
@@ -208,6 +209,46 @@ def deleteTitle(request):
 def logoManage(request):
     if (request.user.userprofile.title.role_name != 'admin'):
         return HttpResponseRedirect("/")
+
+    # # 修改密码
+    # # users = User.objects.all()
+    # # superprofile = UserProfile.objects.all()
+    # # for user in superprofile:
+    # #     if user.company == "T":
+    # #         user.user.set_password("u000000")
+    # #         user.user.save()
+    #
+    # teachers = Teacher.objects.all()
+    # nums = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
+    # for num in nums:
+    #      for teacher in teachers:
+    #         # 1组4部
+    #         if teacher.teacherId == 'Z0104' + num:
+    #             teacher.binduser.set_password('u000000')
+    #             teacher.binduser.save()
+    #             print(teacher.binduser.username)
+    # nums = ['01', '02', '03', '04', '05', '06', '07', '08', '09']
+    # for num in nums:
+    #     for teacher in teachers:
+    #         # 3组3部
+    #         if teacher.teacherId == 'Z0303' + num:
+    #             teacher.binduser.set_password('u000000')
+    #             teacher.binduser.save()
+    #             print(teacher.binduser.username)
+    #         # 3组1部
+    #         if teacher.teacherId == 'Z0301' + num:
+    #             teacher.binduser.set_password('u000000')
+    #             teacher.binduser.save()
+    #             print(teacher.binduser.username)
+    # nums = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11']
+    # for num in nums:
+    #     for teacher in teachers:
+    #         # 2组2部
+    #         if teacher.teacherId == 'Z0202' + num:
+    #             teacher.binduser.set_password('u000000')
+    #             teacher.binduser.save()
+    #             print(teacher.binduser.username)
+
     return render(request, 'super/logoManage.html')
 
 @login_required
