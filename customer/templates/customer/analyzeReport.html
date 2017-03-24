@@ -99,7 +99,7 @@
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
             <script type="text/javascript">
                 setTimeout(
-                      setInterval(getCurrentPrice($("#current_price_{{ stock.id }}")),60*1000)
+                      setInterval(getCurrentPrice,5*1000,$("#current_price_{{ stock.id }}"))
                     , 1*{{ forloop.counter }}%5*500);
             </script>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
