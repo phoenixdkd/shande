@@ -16,6 +16,7 @@
             <td>{{ customer.name }} </td>
             <td>{{ customer.phone }}</td>
             <td>{% getTotalBuycashByCustomerId customer.id %}</td>
+{#            <td>{{ customer.realuser.userprofile.nick }}</td>#}
             <td>{{ customer.realuser.userprofile.nick }}</td>
         </tr>
     {% empty %}

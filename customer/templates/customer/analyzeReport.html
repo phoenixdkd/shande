@@ -78,14 +78,13 @@
         <th width="5%">最低买入价</th>
         <th width="5%">最高买入价</th>
 {#        <th width="5%">总买入资金</th>#}
-        <th width="5%">客户数</th>
+        <th width="5%">交易数</th>
         <th width="5%">现价</th>
         <th width="5%">浮盈个数</th>
         <th width="5%">浮盈金额</th>
     </thead>
     <tbody>
         {% for stock in stockPage %}
-{#        <script type="text/javascript" src="http://hq.sinajs.cn/list=sz399001" charset="gb2312"></script>#}
         <tr data-stock="{{ stock.id }}" id="stock_row_{{ stock.id }}" ondblclick="showStockDetail(this)" class="stock_row">
             <td>{{ forloop.counter }}</td>
             <td>{{ stock.stockid }}</td>
@@ -93,7 +92,8 @@
             <td>{% getLowBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
             <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
 {#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
-            <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>
+{#            <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
+            <td> {% getTradeTotalByStockAndUser stock.id request.user.id startDate endDate %}
 
             <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}"
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>

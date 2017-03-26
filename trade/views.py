@@ -104,6 +104,7 @@ def addTrade(request):
         # stock, created = Stock.objects.get_or_create(stockid=request.POST.get('stockid'), stockname=request.POST.get('stockname'))
         if stock:
             newTrade = Trade.objects.create(customer=customer, stock=stock, create=timezone.now())
+            customer.tradecount += 1
         else:
             raise Exception("stockerror")
         newTrade.status = 0
@@ -323,6 +324,7 @@ def deleteTrade(request):
         trade = Trade.objects.get(id=request.POST.get("id"))
         tradeid = trade.id
         customer = trade.customer
+        customer.tradecount -= 1
         trade.delete()
         trades = Trade.objects.filter(customer=customer)
         #删除交易时，更新客户的最近合作时间

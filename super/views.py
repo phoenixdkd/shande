@@ -19,7 +19,9 @@ import json
 
 from shande.settings import BASE_DIR
 from super.models import *
-from teacher.models import *
+# from teacher.models import *
+# from trade.models import *
+# from customer.models import *
 
 
 # Create your views here.
@@ -209,6 +211,13 @@ def deleteTitle(request):
 def logoManage(request):
     if (request.user.userprofile.title.role_name != 'admin'):
         return HttpResponseRedirect("/")
+
+    # trades = Trade.objects.all()
+    # customers = Customer.objects.all()
+    #
+    # for customer in customers:
+    #     customer.tradecount = trades.filter(customer_id=customer.id).count()
+    #     customer.save()
 
     # # 修改密码
     # # users = User.objects.all()

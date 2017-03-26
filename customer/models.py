@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import unicode_literals
+from django.contrib.auth.models import User
 import traceback
 from django.db import models
 from sale.models import *
@@ -44,7 +45,8 @@ class Customer(models.Model):
     # 0 新客户；10 待跟进 ；20 无交易； 30 退回； 40 有效；98 不诚信删除; 99 删除；
     status = models.IntegerField('状态', default=0)
     sales = models.ForeignKey(Sale, null=True, on_delete=models.SET_NULL)
-    realuser = models.ForeignKey(to=User, null=True, on_delete=models.SET_NULL,related_name='real_user')#真实开发用户
+    # realuser = models.ForeignKey(to=User, null=True, on_delete=models.SET_NULL,related_name='real_user')#真实开发用户
+    realuser = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     saleswx = models.ForeignKey(Wx, null=True, blank=True, on_delete=models.SET_NULL)
     salesqq = models.ForeignKey(Qq, null=True, blank=True, on_delete=models.SET_NULL)
     teacher = models.ForeignKey(Teacher, null=True, blank=True, on_delete=models.SET_NULL)
@@ -55,7 +57,8 @@ class Customer(models.Model):
     create = models.DateTimeField('创建时间')
     modify = models.DateTimeField('更新时间')
     latest = models.DateTimeField('最近合作时间', null=True)
-    # developcompany = models.CharField('开发公司',max_length=2,default="")
+    tradecount = models.IntegerField('盈利总额', default=0)
+    # tradecount = models.IntegerField('交易次数', default=0)
     realteacher = models.ForeignKey(to=User,null=True,on_delete=models.SET_NULL,related_name='teacher_user') #真实管理老师用户
 
     def getLatestTradeDate( self ):

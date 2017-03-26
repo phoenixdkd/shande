@@ -62,6 +62,7 @@ def customerManage(request):
         "startDate": str(startDate),
         "endDate": str(endDate),
     }
+
     # t2 = time.clock()
     # logger.error("customer/customerManage cost time: %f"%(t2-t1))
     return render(request, 'customer/customerManage.html', data)
@@ -416,13 +417,13 @@ def queryCustomerHandle(request):
     # customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
 
     customers = Customer.objects.all()
-    a = request.GET.get('customerstatus','')
-    b = customers.__len__()
     if request.GET.get('customerstatus','') == '10':
         customers = customers.filter(~Q(status=30))
         customers = customers.filter(~Q(status=40))
         customers = customers.filter(~Q(status=98))
         customers = customers.filter(~Q(status=99))
+    # t2 = time.clock()
+    # logger.error("customerhandle/querrycustomerhandle %f" % (t2 - t1))
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -509,7 +510,12 @@ def queryCustomerHandle(request):
                 if customer.getLatestTradeBuycash() == '' or customer.getLatestTradeBuycash() < 100000:
                     tmpCustomers = tmpCustomers.exclude(id=customer.id)
         customers = tmpCustomers
-    customers = customers.order_by("teacher__teacherId","-create")
+    customers = customers.order_by("-tradecount","teacher__teacherId","-create")
+
+    oldcustomer = customers.filter(tradecount__gte=2).count()
+    newcustomer = customers.count() - oldcustomer
+    oldcustomer = json.dumps(oldcustomer)
+    newcustomer = json.dumps(newcustomer)
 
     p = Paginator(customers, 20)
     try:
@@ -523,9 +529,12 @@ def queryCustomerHandle(request):
     data = {
         "customerPage": customerPage,
         "requestArgs": getArgsExcludePage(request),
+        "oldcustomer": oldcustomer,
+        "newcustomer": newcustomer,
     }
     # t2 = time.clock()
-    # logger.error("customer/queryCustomerHande cost time: %f"%(t2-t1))
+    # logger.error("customer/queryCustomerHande cost time: %f" %(t2-t1))
+
     return render(request, 'customer/queryCustomerHandle.html', data)
 
 @login_required()
@@ -850,7 +859,7 @@ def analyzeReport(request):
     startDate = request.GET.get('startDate','')
     endDate = request.GET.get('endDate','')
     if startDate == '':
-        startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=7))
+        startDate = request.POST.get('startDate', datetime.date.today() - datetime.timedelta(days=14))
         endDate = request.POST.get('endDate', datetime.date.today()+ datetime.timedelta(days=1))
     stocks = stocks.filter(stockid__icontains=stockid, trade__create__lte=endDate, trade__create__gte=startDate,
                            trade__status=0).distinct()
@@ -887,10 +896,12 @@ def getStockDetailForAnalyze(request):
     endDate = request.POST.get('endDate')
     trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
     if request.user.userprofile.title.role_name == 'teachermanager':
-        trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
-                                      customer__teacher__department=request.user.userprofile.department)
+        # trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+        #                               customer__teacher__department=request.user.userprofile.department)
+       trades = trades.filter(realteacheruser__teacher__group=request.user.userprofile.group)
     elif request.user.userprofile.title.role_name == 'teacherboss':
-        trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
+        # trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
+        trades = trades.filter(realteacheruser__teacher__company=request.user.userprofile.company)
     else:
         trades = trades
 

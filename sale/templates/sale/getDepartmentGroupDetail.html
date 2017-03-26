@@ -26,11 +26,11 @@
             <td>{% getCrudeCountBySale sale.id startDate endDate %}</td>
             <td>{% getTotalBuyCashBySale sale.id startDate endDate %}</td>
             <td>{% getWxFriendDeltaBySale sale.id startDate endDate %}</td>
-{#            <td>{% getWxFriendTotalBySale sale.id %}</td>#}
+{#---            <td>{% getWxFriendTotalBySale sale.id %}</td>#}
             <td>{% getQqFriendDeltaBySale sale.id startDate endDate %}</td>
-{#            <td>{% getQqFriendTotalBySale sale.id %}</td>#}
+{#---            <td>{% getQqFriendTotalBySale sale.id %}</td>#}
             <td>{% getChargebackBySale sale.id startDate endDate %}</td>
-{#            <td>{% getDishonestBySale sale.id %}</td>#}
+{#---            <td>{% getDishonestBySale sale.id %}</td>#}
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0">
             <div id="sale_detail_row_{{ company }}_{{ department }}_{{ group }}_{{ sale.id }}"

@@ -9,9 +9,11 @@
 {#        <th width="5%">买入数量</th>#}
         <th width="5%">买入资金</th>
         <th width="5%">盈亏</th>
+        <th width="5%">盈亏比例</th>
         <th width="5%">佣金</th>
         <th width="5%">应收</th>
-        <th width="5%">跟进</th>
+        <th width="5%">客户管理ID</th>
+        <th width="5%">客户管理专员</th>
     </thead>
     <tbody>
         {% for trade in trades %}
@@ -20,23 +22,30 @@
                 <td>{{ trade.create }}</td>
                 <td>{{ trade.customer.name }}</td>
                 <td>{{ trade.customer.phone }}</td>
-                <td>{{ trade.buyprice }}</td>
+                <td id="{{ forloop.counter }}_{{trade.buyprice }}">{{ trade.buyprice }}</td>
 {#                <td>{{ trade.buycount }}</td>#}
-                <td>{{ trade.buycash }}</td>
-                <td style="background-color:
+                <td id="buycash">{{ trade.buycash }}</td>
+                <td id="{{ forloop.counter }}_{{trade.buyprice }}" style="color:
                 {% if trade.income > 0 %}
                     red
                 {% elif trade.income < 0 %}
                     green
                 {% endif %}
                 ">{{ trade.income }}</td>
+                <td id="incomeratio"></td>
+                <script type="text/javascript">
+                    var incomeratio = $('#"{{ forloop.counter }}_{{trade.buyprice }}"').html()/$('#buycash').html()*100;
+                    incomeratio = Math.round(incomeratio*100)/100;
+                    $('#incomeratio').html(incomeratio);
+                </script>
                 <td>{{ trade.share }}</td>
-                <td style="background-color:
+                <td style="color:
                 {% if trade.commission > 0 %}
                     red
                 {% endif %}
                 ">{% if trade.commission < 0 %} 0 {% else %}{{ trade.commission }}{% endif %} </td>
-                <td>{{ trade.customer.teacher.teacherId }} {{ trade.customer.teacher.binduser.userprofile.nick }}</td>
+                <td>{{ trade.customer.teacher.teacherId }} </td>
+                <td>{{ trade.realteacheruser.userprofile.nick }}</td>
             </tr>
         {% endfor %}
     </tbody>

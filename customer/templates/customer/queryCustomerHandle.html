@@ -1,18 +1,20 @@
 {% load customer_tags %}
 <div class="modal fade" id="showMsgModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-            <div class="modal-body">
-                <div style="text-align: center; width: 540px; height: 360px"> <img id="imgid" src=" " style="height: auto; width: auto; max-height: 100%; max-width: 100%"/></div>
-            </div>
+        <div class="modal-body">
+            <div style="text-align: center; width: 540px; height: 360px"> <img id="imgid" src=" " style="height: auto; width: auto; max-height: 100%; max-width: 100%"/></div>
+        </div>
     </div>
 </div>
+{#<label class="col-md-1 control-label" style="color: red"> 老客户: {{ oldcustomer }}位</label>#}
+{#<label class="col-md-1 control-label" style="color: red">新客户: {{ newcustomer }}位</label>#}
 <table class="table table-bordered col-md-12 table-hover">
     <thead class="bg-info">
-        <tr>
-{#            <td>ID</td>#}
+        <tr style="text-align: center">
+{#---            <td>ID</td>#}
             <td>序号</td>
             <td>时间</td>
-{#            <td>来源工具</td>#}
+{#---            <td>来源工具</td>#}
             <td>客户姓名</td>
             <td>电话</td>
             <td>沟通方式</td>
@@ -20,38 +22,33 @@
             <td>买入资金</td>
             <td>GEM</td>
             <td>最近买入</td>
-{#            <td>现货评级</td>#}
+            <td>合作次数</td>
+{#---            <td>现货评级</td>#}
             <td>客户管理专员</td>
             <td>跟进状态</td>
-{#            <td>开发ID</td>#}
-{#            <td>来源微信</td>#}
-{#            <td>来源QQ</td>#}
-{##}
-{##}
-{#            <td>微信号</td>#}
-{#            <td>微信昵称</td>#}
-{#            <td>QQ号</td>#}
-{#            <td>QQ昵称</td>#}
-{##}
-{#            #}
-{#            <td>10W+</td>#}
-{#            <td>大客户</td>#}
-{#            <td>最近买入产品</td>#}
-{#            <td>累计回款金额</td>#}
-{#            <td>已合作次数</td>#}
-{#            <td>现货客户评级</td>#}
-{#            <td>待收款交易</td>#}
-{#            #}
-{#            <td>消息</td>#}
-{##}
-{#            <td>修改时间</td>#}
+{#---            <td>开发ID</td>#}
+{#---            <td>来源微信</td>#}
+{#---            <td>来源QQ</td>#}
+{#---            <td>微信号</td>#}
+{#---            <td>微信昵称</td>#}
+{#---            <td>QQ号</td>#}
+{#---            <td>QQ昵称</td>#}
+{#---            <td>10W+</td>#}
+{#---            <td>大客户</td>#}
+{#---            <td>最近买入产品</td>#}
+{#---            <td>累计回款金额</td>#}
+{#---            <td>已合作次数</td>#}
+{#---            <td>现货客户评级</td>#}
+{#---            <td>待收款交易</td>#}
+{#---            <td>消息</td>#}
+{#---            <td>修改时间</td>#}
             <td>操作</td>
         </tr>
     </thead>
     <tbody>
     {% if customerPage %}
     {% for customerObj in customerPage %}
-        <tr>
+        <tr {% if customerObj.tradecount > 1 %} style="color: red; text-align: center" {% else %} style="text-align: center" {% endif %} >
             <td>{{ forloop.counter }}</td>
             <td>
                 提交时间:{{ customerObj.create }}<br>
@@ -95,6 +92,7 @@
                 {% endif %}
             </td>
             <td><label id="showfile" type="button" data-fsid="{% getLatestTradeIDByCustomerId customerObj.id %}" onclick="showFile(this)">{% getLatestStockByCustomerId customerObj.id %}</label></td>
+{#        --------------------------------------------------------------注释---------------------------------------------------------------------------------------#}
 {#            <td class="spotTd">#}
 {#                <select class="spotSelect"#}
 {#                        value="{{ customerObj.spotStatus }}"#}
@@ -126,6 +124,8 @@
 {#                    {% endif %}#}
 {#                </select>#}
 {#            </td>#}
+{#        ---------------------------------------------------------------------------------------------------------------#}
+            <td>{{ customerObj.tradecount }}</td>
             <td>{{ customerObj.teacher.teacherId }} {{ customerObj.teacher.binduser.userprofile.nick }}</td>
             <td>
                 {% if customerObj.status == 0 %}
@@ -184,7 +184,7 @@
 {#            <td>#}
 {#                <span class="badge-info" title="待收款交易数">{% getNoPayTradeCountByCustomerId customerObj.id %}</span>#}
 {#            </td>#}
-{#            #}
+{##}
 {#            <td>{{ customerObj.message }}</td>#}
 {##}
 {#            <td>{{ customerObj.modify }}</td>#}
@@ -219,6 +219,19 @@
     </tbody>
 </table>
 <script type="text/javascript">
+     $(function () {
+         datapass();
+     });
+     function datapass() {
+         var newcustomer = {{ newcustomer|safe }};
+         var oldcustomer = {{ oldcustomer|safe }};
+             $.ajax({
+                 success: function(){
+                     getCustomerNumber(newcustomer,oldcustomer);
+               }
+             })
+     };
+
 {#    var spotTdSelecter  = $('.spotTd');#}
 {#    var spotLableSelecter  = $('.spotLable');#}
     var spotSelectSelecter  = $('.spotSelect');
@@ -299,7 +312,11 @@
             $('body').css("padding",0);
     });
 
+
+
 </script>
+
+
 <nav class="navbar-right">
 
   <ul class="pagination">

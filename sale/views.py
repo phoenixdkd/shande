@@ -7,6 +7,7 @@ from django.db.models import Q, Count
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib.auth.models import User
 import datetime, logging, time
 from sale.models import *
 from customer.models import *
@@ -419,6 +420,7 @@ def getSaleDetail(request):
     endDate = request.POST.get('endDate')
     customers = Customer.objects.filter(sales_id=sale, status=40,
                                         first_trade__lte=endDate, first_trade__gte=startDate).order_by('-first_trade')
+
     data = {
         "customers": customers,
         "sale": sale,

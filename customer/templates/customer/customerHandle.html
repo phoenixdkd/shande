@@ -839,9 +839,9 @@
             <div class="col-md-1 ">
                  <input type="text" class="form-control" value="{{ stockname }}" name="stockname"/>
             </div>
-            <label class="col-md-1 control-label" style="width:50px">10W+</label>
+            <label class="col-md-1 control-label" >10W+</label>
             <div class="col-md-1 ">
-                 <select type="select" class="form-control" id="crude" name="crude">
+                 <select type="select" class="form-control" id="crude" name="crude" style="width: auto">
                      <option value="0">否</option>
                      <option value="1">是</option>
                  </select>
@@ -887,17 +887,19 @@
 {#                 <input type="text" class="form-control" value="{{ wxname }}" name="wxname"/>#}
 {#            </div>#}
             <label class="col-md-1 control-label">合作时间</label>
-            <div class="col-md-2 ">
+            <div class="col-md-2 " style="width: 180px">
                  <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
                  title="起始时间"/>
             </div>
-{#            <label class="col-md-1 control-label"></label>#}
-            <div class="col-md-2 ">
+            <label class="col-md-1 control-label" style="width: 50px"></label>
+            <div class="col-md-2 " style="width: 180px">
                  <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
                  title="结束时间"/>
             </div>
-            <div class="form-group">
-{#            <label class="col-md-1 control-label"></label>#}
+{#            <div class="form-group">#}
+            <label class="col-md-1 control-label" style="color: red"> 老客户: <span id="oldcustomerid">    </span>  位</label>
+            <label class="col-md-1 control-label" style="color: red"> 新客户:  <span id="newcoustomerid">  </span>  位</label>
+            <label class="col-md-1 control-label"></label>
             <div class="col-md-1">
                     <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
             </div>
@@ -971,4 +973,12 @@
     </form>
 
     <div id="customerHandleDiv"></div>
+
+
+<script type="text/javascript">
+    function getCustomerNumber(para1,para2) {
+        $('#newcoustomerid').html(para1);
+        $('#oldcustomerid').html(para2);
+    }
+</script>
 {% endblock %}

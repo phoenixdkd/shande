@@ -25,11 +25,11 @@
             <td>{% getCrudeCountByDepartment  company department.department startDate endDate%}</td>
             <td>{% getTotalBuyCashByDepartment  company department.department startDate endDate %}</td>
             <td>{% getWxFriendDeltaByDepartment  company department.department startDate endDate %}</td>
-{#            <td>{% getWxFriendTotalByDepartment  company department.department %}</td>#}
+{#---            <td>{% getWxFriendTotalByDepartment  company department.department %}</td>#}
             <td>{% getQqFriendDeltaByDepartment  company department.department startDate endDate %}</td>
-{#            <td>{% getQqFriendTotalByDepartment  company department.department %}</td>#}
+{#---            <td>{% getQqFriendTotalByDepartment  company department.department %}</td>#}
             <td>{% getChargebackByDepartment  company department.department startDate endDate %}</td>
-{#            <td>{% getDishonestByDepartment  company department.department %}</td>#}
+{#---            <td>{% getDishonestByDepartment  company department.department %}</td>#}
         </tr>
         <tr style="padding:0;"><td colspan="11" style="padding:0;">
             <div id="department_detail_row_{{ company }}_{{ department.department }}" class="department_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
