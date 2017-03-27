@@ -97,3 +97,5 @@ def getTradeTotalByStockAndUser(stockid, userid, startDate, endDate):
     except Exception as e:
         print(e.__str__())
         return 0
+
+

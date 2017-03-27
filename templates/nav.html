@@ -51,7 +51,9 @@
                             <li class=""><a href="{% url 'customer:customerManage' %}" target="_self">客户管理</a></li>
                             {% if user.userprofile.title.role_name == 'admin' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'saleboss' or user.userprofile.title.role_name == 'salemanager' %}
                                 <li class=""><a href="{% url 'sale:dishonestCustomer' %}" target="_self">不诚信客户</a></li>
-                                <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
+                                {% if user.userprofile.title.role_name != 'salemanager' %}
+                                   <li class=""><a href="{% url 'sale:dishonestCustomerReport' %}" target="_self">不诚信客户汇总</a></li>
+                                {% endif %}
                                 <li class=""><a href="{% url 'sale:saleKpiReport' %}" target="_self">开发绩效汇总</a></li>
                                 <li class=""><a href="{% url 'sale:saleManagerPasswordManage' %}" target="_self">开发部门密钥管理</a></li>
                             {% endif %}
@@ -105,7 +107,7 @@
 {#                        </ul>#}
 {#                    </li>#}
 {#                {% endif %}#}
-                {% if user.userprofile.title.role_name in 'admin ops bursar bursarmanager saleboss' %}
+                {% if user.userprofile.title.role_name == 'admin' or user.userprofile.title.role_name == 'ops' or user.userprofile.title.role_name == 'bursar' or user.userprofile.title.role_name == 'bursarmanager' or user.userprofile.title.role_name == 'saleboss' %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">财务菜单 <span class="caret"></span></a>

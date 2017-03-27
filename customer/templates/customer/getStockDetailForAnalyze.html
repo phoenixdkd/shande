@@ -1,8 +1,9 @@
 {% load teacher_tags %}
+{#{% load stock_tags %}#}
 <table id="StockDetailTableId" class="table table-bordered">
     <thead class="bg-info">
         <th width="2%">序号</th>
-        <th width="5%">交易时间</th>
+        <th width="6%">交易时间</th>
         <th width="3%">客户姓名</th>
         <th width="2%">电话</th>
         <th width="5%">买入价格</th>
@@ -10,14 +11,16 @@
         <th width="5%">买入资金</th>
         <th width="5%">盈亏</th>
         <th width="5%">盈亏比例</th>
-        <th width="5%">佣金</th>
-        <th width="5%">应收</th>
+        <th width="3%">佣金</th>
+        <th width="3%">应收</th>
         <th width="5%">客户管理ID</th>
         <th width="5%">客户管理专员</th>
     </thead>
     <tbody>
         {% for trade in trades %}
-            <tr>
+            <tr {% if trade.income > 0 %}
+               style="color: red; font-weight: bold"
+            {% endif %}>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ trade.create }}</td>
                 <td>{{ trade.customer.name }}</td>
@@ -32,7 +35,7 @@
                     green
                 {% endif %}
                 ">{{ trade.income }}</td>
-                <td id="incomeratio"></td>
+                <td id="incomeratio"> {{ trade.profitratio }}%</td>
 {#                <script type="text/javascript">#}
 {#                    var incomeratio = $('#"{{ forloop.counter }}_{{trade.buyprice }}"').html()/$('#buycash').html()*100;#}
 {#                    incomeratio = Math.round(incomeratio*100)/100;#}
@@ -51,35 +54,35 @@
     </tbody>
 </table>
 
-<script type="text/javascript">
-    $(function(){
-        getIncomeRatio('StockDetailTableId');
-    });
-
-    function getIncomeRatio(tableid) {
-        var tableObj = document.getElementById(tableid);
-
-        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
-             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
-                 if(i==1 && j==6){
-                     alert(tableObj.rows[i].cells[j].childNodes[0].);
-                 }
+{#<script type="text/javascript">#}
+{#    $(function(){#}
+{#        getIncomeRatio('StockDetailTableId');#}
+{#    });#}
+{##}
+{#    function getIncomeRatio(tableid) {#}
+{#        var tableObj = document.getElementById(tableid);#}
+{##}
+{#        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row#}
+{#             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列#}
+{#                 if(i==1 && j==6){#}
+{#                     alert(tableObj.rows[i].cells[j].childNodes[0].);#}
+{#                 }#}
 {#                if(j==6){#}
 {#                    calculateIncomeRatio(tableObj.rows[i].cells[4].childNodes[0].html,tableObj.rows[i].cells[5].childNodes[0].html,#}
 {#                        tableObj.rows[i].cells[j].childNodes[0].id)#}
 {#                }#}
-             }
-        }
+{#             }#}
+{#        }#}
+{##}
+{#    }#}
+{##}
+{#    function calculateIncomRatio(para1,para2,id){#}
+{#        var buycash = para1;#}
+{#        var income = para2;#}
+{#        alert(para1);#}
+{#        var incomeratio = Math.round(income/buycash*100)/100;#}
+{#        id.val(incomeratio);#}
+{#        alert(para2);#}
+{#    }#}
 
-    }
-
-    function calculateIncomRatio(para1,para2,id){
-        var buycash = para1;
-        var income = para2;
-        alert(para1);
-        var incomeratio = Math.round(income/buycash*100)/100;
-        id.val(incomeratio);
-        alert(para2);
-    }
-
-</script>
+{#</script>#}

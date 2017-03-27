@@ -924,6 +924,9 @@ def getStockDetailForAnalyze(request):
             trade.sellprice = sellprice
             trade.income = (float(sellprice) - float(trade.buyprice)) * trade.buycount
             share = float(trade.share.split('|')[0]) / 10
+            # trade.profitratio = (float(sellprice) - float(trade.buyprice))/float(trade.buyprice)*100
+            trade.profitratio = trade.income / float(trade.buycash) * 100
+            trade.profitratio = round(trade.profitratio, 2)
             trade.commission = trade.income * share
     except Exception as e:
         pass

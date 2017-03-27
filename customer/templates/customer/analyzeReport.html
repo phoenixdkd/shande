@@ -19,6 +19,7 @@
             var linkname = 'http://hq.sinajs.cn/list=sh'+stockcode;
             var result = 'hq_str_sh'+stockcode;
         }
+
         $.ajax({
             url: linkname,
             dataType:"script",
@@ -30,6 +31,7 @@
                 var sellPrice = elements[3];
                 id.val(sellPrice);
                 var stockid = $(id).data("stockid");
+{#                loadStockDetailBySellPrice(stockid, sellPrice );#}
                 calcProfitByStockId(stockid, sellPrice);
             }
          })
@@ -99,7 +101,7 @@
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
             <script type="text/javascript">
                 setTimeout(
-                      setInterval(getCurrentPrice,5*1000,$("#current_price_{{ stock.id }}"))
+                      setInterval(getCurrentPrice,2*1000,$("#current_price_{{ stock.id }}"))
                     , 1*{{ forloop.counter }}%5*500);
             </script>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
@@ -135,10 +137,14 @@
     function showStockDetail(obj){
         $('.stock_detail_row_').slideUp();
         stock = $(obj).data('stock');
+        var sellprice = $('#current_price_'+stock).val();
+
+
         stockDetailRowSelector = $('#stock_detail_row_'+stock);
         if(stockDetailRowSelector.is(':hidden')){
             stockDetailRowSelector.slideDown();
-            loadStockDetail(stock);
+            loadStockDetailBySellPrice(stock, sellprice);
+{#            loadStockDetail(stock);#}
         }else{
             stockDetailRowSelector.slideUp();
         }
@@ -190,10 +196,11 @@
 
 {#    function updatePrice(tableid) {#}
 {#        var tableObj = document.getElementById(tableid);#}
+{#        alert(tableObj.rows.length);#}
 {#        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row#}
 {#             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列#}
 {#                if(j==6){#}
-{#                    getCurrentPrice(tableObj.rows[i].cells[j].childNodes[0].name,tableObj.rows[i].cells[j].childNodes[0].id)#}
+{#                    getCurrentPrice(tableObj.rows[i].cells[j].childNodes[0].id)#}
 {#                }#}
 {#             }#}
 {#        }#}
@@ -226,16 +233,18 @@
 {#            }#}
 {#        })#}
 {#    }#}
-    $(function(){
-        $('.current_price').mouseover(function(){
-            var stockid = $(this).data('stockid');
-            var sellPrice = $(this).val();
-{#            var src = "http://hq.sinajs.cn/list=sh601006#}
-            loadStockDetailBySellPrice(stockid, sellPrice );
-            calcProfitByStockId(stockid, sellPrice);
-        });
+{#    $(function(){#}
+{#        $('.current_price').change(function(){#}
+{#            var stockid = $(this).data('stockid');#}
+{#            var sellPrice = $(this).val();#}
+{#---            var src = "http://hq.sinajs.cn/list=sh601006#}
+{#            loadStockDetailBySellPrice(stockid, sellPrice);#}
+{#            calcProfitByStockId(stockid, sellPrice);#}
+{#        });#}
 {#        updatePrice('analyzeReport');#}
-    });
+{#        updatePrice('analyzeReport');#}
+{##}
+{#    });#}
 </script>
 
 
