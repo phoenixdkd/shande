@@ -21,6 +21,7 @@ urlpatterns = [
 
     url(r'^dishonestCustomerReport$', views.dishonestCustomerReport, name='dishonestCustomerReport'),
     url(r'^dishonestCustomer$', views.dishonestCustomer, name='dishonestCustomer'),
+    url(r'^queryDishonestCustomer$', views.queryDishonestCustomer, name='queryDishonestCustomer'),
     url(r'^saleKpiReportSerial$', views.saleKpiReportSerial, name='saleKpiReportSerial'),
     url(r'^saleKpiReportForManager$', views.saleKpiReportForManager, name='saleKpiReportForManager'),
 

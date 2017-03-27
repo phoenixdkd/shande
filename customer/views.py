@@ -417,13 +417,19 @@ def queryCustomerHandle(request):
     # customers = Customer.objects.all().order_by( 'status', '-create', 'teacher__teacherId')
 
     customers = Customer.objects.all()
-    if request.GET.get('customerstatus','') == '10':
+    #客户状态条件筛选
+    customer_status = request.GET.get('customerstatus','')
+    if customer_status == '10':
         customers = customers.filter(~Q(status=30))
         customers = customers.filter(~Q(status=40))
         customers = customers.filter(~Q(status=98))
         customers = customers.filter(~Q(status=99))
-    # t2 = time.clock()
-    # logger.error("customerhandle/querrycustomerhandle %f" % (t2 - t1))
+    elif customer_status == '40':
+        customers = customers.filter(status=40)
+    else:
+        customers = customers
+
+
     # 不同角色看到不同的列表
     if request.user.userprofile.title.role_name in ['teachermanager']:
         company = request.user.userprofile.company
@@ -442,7 +448,7 @@ def queryCustomerHandle(request):
         customers = customers.filter(~Q(status=99))
     else:
         customers = customers
-
+    # logger.error("queryCustomerHandle/customer status: %s" % (customer_status))
     # 去掉退回状态的客户
     customers = customers.exclude(status=10)
     customers = customers.exclude(status=30)
@@ -462,7 +468,10 @@ def queryCustomerHandle(request):
         customers = customers.filter(
             Q(wxid="", qqid__icontains=request.GET.get('wxqq')) | Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
+    phone = request.GET.get('phone')
+
     customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
+
     if request.GET.get('phone'):
         customers = Customer.objects.all().order_by('status', '-create', 'teacher__teacherId')
         customers = customers.filter(~Q(status=99))
@@ -472,7 +481,7 @@ def queryCustomerHandle(request):
         customers = customers.exclude(status=98)
         # 通过电话号码获取客户信息
         customers = customers.filter(phone__icontains=request.GET.get('phone'))
-
+    b = customers.count()
     if request.GET.get('wxid', '') != '':
         customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
     if request.GET.get('wxname', '') != '':
@@ -493,8 +502,9 @@ def queryCustomerHandle(request):
     if request.GET.get('spot', '') != '':
         customers = customers.filter(spotStatus=request.GET.get('spot'))
 
-    customers = customers.filter(create__gte=startDate)
-    customers = customers.filter(create__lte=endDate)
+    customers = customers.filter(latest__gte=startDate)
+    customers = customers.filter(latest__lte=endDate)
+
     if request.GET.get('status', '') != '':
         customers = customers.filter(status=request.GET.get('status'))
     if (request.GET.get('stockid', '') != ''):
@@ -528,9 +538,9 @@ def queryCustomerHandle(request):
         customerPage = p.page(p.num_pages)
     data = {
         "customerPage": customerPage,
-        "requestArgs": getArgsExcludePage(request),
         "oldcustomer": oldcustomer,
         "newcustomer": newcustomer,
+        "requestArgs": getArgsExcludePage(request),
     }
     # t2 = time.clock()
     # logger.error("customer/queryCustomerHande cost time: %f" %(t2-t1))
@@ -894,14 +904,17 @@ def getStockDetailForAnalyze(request):
     stockid = request.POST.get('stock')
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
+    user = request.user
     trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
-    if request.user.userprofile.title.role_name == 'teachermanager':
-        # trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
-        #                               customer__teacher__department=request.user.userprofile.department)
-       trades = trades.filter(realteacheruser__teacher__group=request.user.userprofile.group)
-    elif request.user.userprofile.title.role_name == 'teacherboss':
-        # trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
-        trades = trades.filter(realteacheruser__teacher__company=request.user.userprofile.company)
+
+    if user.userprofile.title.role_name == 'teachermanager':
+        trades = trades.filter(customer__teacher__group=user.userprofile.group,
+                               customer__teacher__department=user.userprofile.department)
+       # trades = trades.filter(realteacheruser__teacher__group=request.user.userprofile.group,
+       #                        realteacheruser__teacher__company=request.user.username.company)
+    elif user.userprofile.title.role_name == 'teacherboss':
+        trades = trades.filter(customer__teacher__company=user.userprofile.company)
+        # trades = trades.filter(realteacheruser__teacher__company=request.user.userprofile.company)
     else:
         trades = trades
 

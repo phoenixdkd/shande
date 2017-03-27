@@ -91,6 +91,8 @@ def getTradeTotalByStockAndUser(stockid, userid, startDate, endDate):
         #按用户权限筛选
         if user.userprofile.title.role_name == 'teachermanager':
             trades = trades.filter(realteacheruser__teacher__group=user.userprofile.group)
+        if user.userprofile.title.role_name == 'teacherboss':
+            trades = trades.filter(realteacheruser__teacher__company=user.userprofile.company)
         return trades.count()
     except Exception as e:
         print(e.__str__())

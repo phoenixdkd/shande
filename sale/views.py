@@ -475,16 +475,37 @@ def dishonestCustomer(request):
         return HttpResponseRedirect("/")
     startDate = request.GET.get('startDate','')
     endDate = request.GET.get('endDate','')
-    # endDate = request.POST.get('endDate', "")
     if endDate == '':
         endDate = request.POST.get('endDate',datetime.date.today() + datetime.timedelta(days=1))
     else:
         endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
-    # startDate = request.POST.get('startDate', "")
     if startDate == "":
         startDate = request.POST.get('startDate',datetime.date.today() - datetime.timedelta(days=0))
     else:
         startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+
+    data = {
+        "startDate": str(startDate),
+        "endDate": str(endDate),
+    }
+
+    # t2 = time.clock()
+    # logger.error("dishonestCustomer cost time: %f" % (t2 - t1))
+    return render(request, 'sale/dishonestCustomer.html', data)
+
+@login_required()
+def queryDishonestCustomer(request):
+    endDate = request.GET.get('endDate', "")
+    if endDate == '':
+        endDate = datetime.datetime.today() + datetime.timedelta(days=1)
+    else:
+        endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d")
+    startDate = request.GET.get('startDate', "")
+    if startDate == "":
+        startDate = datetime.datetime.today()
+    else:
+        startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d")
+
     customers = Customer.objects.filter(status=98, modify__lte=endDate, modify__gte=startDate).order_by('sales__company')
     if request.user.userprofile.title.role_name == 'saleboss':
         customers = customers.filter(sales__company=request.user.userprofile.company)
@@ -498,12 +519,13 @@ def dishonestCustomer(request):
                                      teacher__group=request.user.userprofile.group)
     if request.user.userprofile.title.role_name == 'teacherboss':
         customers = customers.filter(teacher__company=request.user.userprofile.company)
-
-    if request.POST.get('phone', '') != '':
-        customers = customers.filter(phone__icontains=request.POST.get('phone'))
-    if request.POST.get('wxqq', '') != '':
-        customers = customers.filter( Q(wxid__icontains=request.POST.get('wxqq'))|
-                                                       Q(qqid__icontains=request.POST.get('wxqq')))
+    phone =  request.GET.get('phone', '')
+    if phone :
+        customers = customers.filter(phone__icontains=phone)
+    wxqq = request.GET.get('wxqq', '')
+    if wxqq:
+        customers = customers.filter( Q(wxid__icontains=wxqq)|
+                                                       Q(qqid__icontains=wxqq))
     p = Paginator(customers, 20)
     try:
         page = int(request.GET.get('page', '1'))
@@ -514,16 +536,14 @@ def dishonestCustomer(request):
     except (EmptyPage, InvalidPage):
         customerPage = p.page(p.num_pages)
     data = {
-        "startDate": str(startDate),
-        "endDate": str(endDate),
-        "phone": request.POST.get('phone', ''),
-        "wxqq": request.POST.get('wxqq', ''),
+        # "startDate": str(startDate),
+        # "endDate": str(endDate),
+        # "phone": request.POST.get('phone', ''),
+        # "wxqq": request.POST.get('wxqq', ''),
         "customerPage": customerPage,
-        # "requestArgs": getArgsExcludePage(request),
+        "requestArgs": getArgsExcludePage(request),
     }
-    # t2 = time.clock()
-    # logger.error("dishonestCustomer cost time: %f" % (t2 - t1))
-    return render(request, 'sale/dishonestCustomer.html', data)
+    return render(request, 'sale/queryDishonestCustomer.html', data)
 
 @login_required()
 def saleKpiReportSerial(request):

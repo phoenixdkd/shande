@@ -1,12 +1,12 @@
 {% load teacher_tags %}
-<table class="table table-bordered">
+<table id="StockDetailTableId" class="table table-bordered">
     <thead class="bg-info">
         <th width="2%">序号</th>
         <th width="5%">交易时间</th>
         <th width="3%">客户姓名</th>
         <th width="2%">电话</th>
         <th width="5%">买入价格</th>
-{#        <th width="5%">买入数量</th>#}
+{#---        <th width="5%">买入数量</th>#}
         <th width="5%">买入资金</th>
         <th width="5%">盈亏</th>
         <th width="5%">盈亏比例</th>
@@ -22,10 +22,10 @@
                 <td>{{ trade.create }}</td>
                 <td>{{ trade.customer.name }}</td>
                 <td>{{ trade.customer.phone }}</td>
-                <td id="{{ forloop.counter }}_{{trade.buyprice }}">{{ trade.buyprice }}</td>
+                <td id="buyprice_{{trade.buyprice }}">{{ trade.buyprice }}</td>
 {#                <td>{{ trade.buycount }}</td>#}
-                <td id="buycash">{{ trade.buycash }}</td>
-                <td id="{{ forloop.counter }}_{{trade.buyprice }}" style="color:
+                <td id="buycash_{{ trade.buycash }}">{{ trade.buycash }}</td>
+                <td id="income_{{trade.income }}"  style="color:
                 {% if trade.income > 0 %}
                     red
                 {% elif trade.income < 0 %}
@@ -33,11 +33,11 @@
                 {% endif %}
                 ">{{ trade.income }}</td>
                 <td id="incomeratio"></td>
-                <script type="text/javascript">
-                    var incomeratio = $('#"{{ forloop.counter }}_{{trade.buyprice }}"').html()/$('#buycash').html()*100;
-                    incomeratio = Math.round(incomeratio*100)/100;
-                    $('#incomeratio').html(incomeratio);
-                </script>
+{#                <script type="text/javascript">#}
+{#                    var incomeratio = $('#"{{ forloop.counter }}_{{trade.buyprice }}"').html()/$('#buycash').html()*100;#}
+{#                    incomeratio = Math.round(incomeratio*100)/100;#}
+{#                    $('#incomeratio').html(incomeratio);#}
+{#                </script>#}
                 <td>{{ trade.share }}</td>
                 <td style="color:
                 {% if trade.commission > 0 %}
@@ -51,3 +51,35 @@
     </tbody>
 </table>
 
+<script type="text/javascript">
+    $(function(){
+        getIncomeRatio('StockDetailTableId');
+    });
+
+    function getIncomeRatio(tableid) {
+        var tableObj = document.getElementById(tableid);
+
+        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
+             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
+                 if(i==1 && j==6){
+                     alert(tableObj.rows[i].cells[j].childNodes[0].);
+                 }
+{#                if(j==6){#}
+{#                    calculateIncomeRatio(tableObj.rows[i].cells[4].childNodes[0].html,tableObj.rows[i].cells[5].childNodes[0].html,#}
+{#                        tableObj.rows[i].cells[j].childNodes[0].id)#}
+{#                }#}
+             }
+        }
+
+    }
+
+    function calculateIncomRatio(para1,para2,id){
+        var buycash = para1;
+        var income = para2;
+        alert(para1);
+        var incomeratio = Math.round(income/buycash*100)/100;
+        id.val(incomeratio);
+        alert(para2);
+    }
+
+</script>
