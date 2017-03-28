@@ -264,7 +264,7 @@ def handleTrade(request):
         #记录操作该交易的提交者
         newTrade.realteacheruser = request.user
         #记录操作该交易提交者所属公司
-        newTrade.dealcompany = request.user.userprofile.company
+        # newTrade.dealcompany = request.user.userprofile.company
         newTrade.save()
         customer.save()
 
