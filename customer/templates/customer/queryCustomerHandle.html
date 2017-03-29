@@ -48,17 +48,17 @@
     <tbody>
     {% if customerPage %}
     {% for customerObj in customerPage %}
-        <tr {% if customerObj.tradecount > 1 %} style="color: red; text-align: center" {% else %} style="text-align: center" {% endif %} >
+        <tr style="text-align: center" >
             <td>{{ forloop.counter }}</td>
             <td style="text-align: left">
                 提交时间:{{ customerObj.create }}<br>
                 首次合作:{{ customerObj.first_trade }}<br>
                 最近合作:{{ customerObj.getLatestTradeDate }}
             </td>
-            <td>
+            <td {% if customerObj.tradecount > 1 %} style="color: red; font-weight: bold"{% endif %}>
                 {{ customerObj.name }}
             </td>
-            <td>
+            <td {% if customerObj.tradecount > 1 %} style="color: red; font-weight: bold"{% endif %}>
                 {% if customerObj.status == 40 %}
                     {{ customerObj.phone  }}
                 {% else %}

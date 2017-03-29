@@ -31,7 +31,7 @@
                 var sellPrice = elements[3];
                 id.val(sellPrice);
                 var stockid = $(id).data("stockid");
-{#                loadStockDetailBySellPrice(stockid, sellPrice );#}
+                loadStockDetailBySellPrice(stockid, sellPrice );
                 calcProfitByStockId(stockid, sellPrice);
             }
          })
@@ -101,7 +101,7 @@
                        data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
             <script type="text/javascript">
                 setTimeout(
-                      setInterval(getCurrentPrice,2*1000,$("#current_price_{{ stock.id }}"))
+                      setInterval(getCurrentPrice,30*1000,$("#current_price_{{ stock.id }}"))
                     , 1*{{ forloop.counter }}%5*500);
             </script>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
@@ -194,17 +194,16 @@
         });
     }
 
-{#    function updatePrice(tableid) {#}
-{#        var tableObj = document.getElementById(tableid);#}
-{#        alert(tableObj.rows.length);#}
-{#        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row#}
-{#             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列#}
-{#                if(j==6){#}
-{#                    getCurrentPrice(tableObj.rows[i].cells[j].childNodes[0].id)#}
-{#                }#}
-{#             }#}
-{#        }#}
-{#    }#}
+    function updatePrice(tableid) {
+        var tableObj = document.getElementById(tableid);
+        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
+             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
+                if(j==6){
+                    getCurrentPrice($('#'+tableObj.rows[i].cells[j].childNodes[0].id))
+                }
+             }
+        }
+    }
 
 {#    function getCurrentPrice(name,id){#}
 {#        var stockid = name;#}
@@ -233,7 +232,7 @@
 {#            }#}
 {#        })#}
 {#    }#}
-{#    $(function(){#}
+    $(function(){
 {#        $('.current_price').change(function(){#}
 {#            var stockid = $(this).data('stockid');#}
 {#            var sellPrice = $(this).val();#}
@@ -242,9 +241,9 @@
 {#            calcProfitByStockId(stockid, sellPrice);#}
 {#        });#}
 {#        updatePrice('analyzeReport');#}
-{#        updatePrice('analyzeReport');#}
-{##}
-{#    });#}
+        updatePrice('analyzeReport');
+
+    });
 </script>
 
 

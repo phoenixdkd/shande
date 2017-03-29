@@ -18,13 +18,11 @@
     </thead>
     <tbody>
         {% for trade in trades %}
-            <tr {% if trade.income > 0 %}
-               style="color: red; font-weight: bold"
-            {% endif %}>
+            <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ trade.create }}</td>
-                <td>{{ trade.customer.name }}</td>
-                <td>{{ trade.customer.phone }}</td>
+                <td {% if trade.income > 0 %} style="color: red; font-weight: bold" {% endif %}>{{ trade.customer.name }}</td>
+                <td {% if trade.income > 0 %} style="color: red; font-weight: bold" {% endif %}>{{ trade.customer.phone }}</td>
                 <td id="buyprice_{{trade.buyprice }}">{{ trade.buyprice }}</td>
 {#                <td>{{ trade.buycount }}</td>#}
                 <td id="buycash_{{ trade.buycash }}">{{ trade.buycash }}</td>

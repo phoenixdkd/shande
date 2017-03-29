@@ -468,10 +468,10 @@ def queryCustomerHandle(request):
         customers = customers.filter(
             Q(wxid="", qqid__icontains=request.GET.get('wxqq')) | Q(qqid="", wxid__icontains=request.GET.get('wxqq')))
     customers = customers.filter(name__icontains=request.GET.get('name', ''))
+    # customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
+
+    #放开权限
     phone = request.GET.get('phone')
-
-    customers = customers.filter(phone__icontains=request.GET.get('phone', ''))
-
     if request.GET.get('phone'):
         customers = Customer.objects.all().order_by('status', '-create', 'teacher__teacherId')
         customers = customers.filter(~Q(status=99))
@@ -481,7 +481,7 @@ def queryCustomerHandle(request):
         customers = customers.exclude(status=98)
         # 通过电话号码获取客户信息
         customers = customers.filter(phone__icontains=request.GET.get('phone'))
-    b = customers.count()
+
     if request.GET.get('wxid', '') != '':
         customers = customers.filter(wxid__icontains=request.GET.get('wxid', ''))
     if request.GET.get('wxname', '') != '':
@@ -502,8 +502,11 @@ def queryCustomerHandle(request):
     if request.GET.get('spot', '') != '':
         customers = customers.filter(spotStatus=request.GET.get('spot'))
 
-    customers = customers.filter(latest__gte=startDate)
-    customers = customers.filter(latest__lte=endDate)
+    customers = customers.filter(modify__gte=startDate, modify__lte=endDate)
+    # 排除掉交易时间不在所选时间范围内的有修改记录的客户
+    customers = customers.filter(~Q(status=40,latest__lte=startDate))
+    customers = customers.filter(~Q(status=40, latest__gte=endDate))
+
 
     if request.GET.get('status', '') != '':
         customers = customers.filter(status=request.GET.get('status'))
@@ -902,10 +905,17 @@ def analyzeReport(request):
 @login_required()
 def getStockDetailForAnalyze(request):
     stockid = request.POST.get('stock')
+    sellprice = request.POST.get('sellprice')
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
     user = request.user
     trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
+
+    # # #存储实价
+    # stock = Stock.objects.get(id=stockid)
+    # print(stock.stockid)
+    # stock.stockprice = sellprice
+    # stock.save()
 
     if user.userprofile.title.role_name == 'teachermanager':
         trades = trades.filter(customer__teacher__group=user.userprofile.group,
@@ -919,7 +929,6 @@ def getStockDetailForAnalyze(request):
         trades = trades
 
     try:
-        sellprice = request.POST.get('sellprice')
         for trade in trades:
             trade.sellprice = sellprice
             trade.income = (float(sellprice) - float(trade.buyprice)) * trade.buycount
@@ -1102,3 +1111,28 @@ def addTeacherCustomer(request):
     # t2 = time.clock()
     # logger.error("customer/addTeacherCustomer cost time: %f"%(t2-t1))
     return HttpResponse(json.dumps(data))
+
+# @login_required()
+# def stockProfitAnalyze(request):
+#
+#      stocks = Stock.objects.all()
+#      startDate = datetime.date.today() - datetime.timedelta(days=14)
+#      endDate = datetime.date.today()+ datetime.timedelta(days=1)
+#      stocks = stocks.filter(trade__create__lte=endDate, trade__create__gte=startDate,
+#                            trade__status=0).distinct()
+#
+#      for stock in stocks:
+#          trades = Trade.objects.filter(stock_id=stock.id, status=0, create__gte=startDate, create__lte=endDate)
+#          try:
+#              sellprice = request.POST.get('sellprice')
+#              for trade in trades:
+#                  trade.sellprice = sellprice
+#                  trade.income = (float(sellprice) - float(trade.buyprice)) * trade.buycount
+#                  share = float(trade.share.split('|')[0]) / 10
+#                  # trade.profitratio = (float(sellprice) - float(trade.buyprice))/float(trade.buyprice)*100
+#                  trade.profitratio = trade.income / float(trade.buycash) * 100
+#                  trade.profitratio = round(trade.profitratio, 2)
+#                  trade.commission = trade.income * share
+#          except Exception as e:
+#              pass
+
