@@ -643,6 +643,7 @@
                     function(result) {
                         showMsgModal(result.msg, result.msgLevel);
                         loadCustomerHandleDiv();
+                        resetFormValidator();
                     },
                     'json'
                 );
