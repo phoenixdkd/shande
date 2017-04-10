@@ -65,7 +65,7 @@
                 <td align="center">{{ tradeObj.customer.sales.saleId }} </td>
                 <td align="center">{{ tradeObj.customer.realuser.userprofile.nick }}</td>
           {% endif %}
-          {% if request.user.userprofile.title.role_name in 'admin ops' %}
+          {% if request.user.userprofile.title.role_name in 'admin' %}
            <td><button type="button" class="btn btn-sm btn-primary" onclick="backTradeAdmin(this)"
                         data-id="{{ tradeObj.id }}"
                     >变更</button></td>
