@@ -194,6 +194,12 @@
         $('#payTradeModal').modal("show");
     }
 
+    function backTrade(obj){
+        $('#btid').val($(obj).data("id"));
+        $('#backTradeModal').modal("show");
+    }
+
+
     function payTypeSelect() {
         var frag = document.createDocumentFragment();
         var options = $("#ptpaytype");
