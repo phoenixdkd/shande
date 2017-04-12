@@ -885,20 +885,19 @@ def analyzeReport(request):
     elif request.user.userprofile.title.role_name == 'teacher':
         stocks = stocks.filter(trade__customer__teacher__binduser=request.user).distinct()
 
-    url = 'http://hq.sinajs.cn/list='
-    count = 0
-    for stock in stocks:
-        count += 1
-        if stock.stockid[0] == '0' or stock.stockid[0] == '3':
-            stockname = 'sz'+stock.stockid.encode('ascii')
-        elif stock.stockid[0] == '6':
-            stockname = 'sh' + stock.stockid.encode('ascii')
-
-        print(count)
-        r = urllib2.Request(url+stockname)
-        r2 = urllib2.urlopen(r)
-        contents = r2.read()
-        stock.stockprice = float(contents.split(",")[3])
+    # url = 'http://hq.sinajs.cn/list='
+    # count = 0
+    # for stock in stocks:
+    #     count += 1
+    #     if stock.stockid[0] == '0' or stock.stockid[0] == '3':
+    #         stockname = 'sz'+stock.stockid.encode('ascii')
+    #     elif stock.stockid[0] == '6':
+    #         stockname = 'sh' + stock.stockid.encode('ascii')
+    #
+    #     r = urllib2.Request(url+stockname)
+    #     r2 = urllib2.urlopen(r)
+    #     contents = r2.read()
+    #     stock.stockprice = float(contents.split(",")[3])
 
     p = Paginator(stocks, 20)
     try:
@@ -926,7 +925,7 @@ def getStockDetailForAnalyze(request):
     startDate = request.POST.get('startDate')
     endDate = request.POST.get('endDate')
     user = request.user
-    trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
+    trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate,customer__honest=1)
 
     if user.userprofile.title.role_name == 'teachermanager':
         trades = trades.filter(customer__teacher__group=user.userprofile.group,

@@ -86,13 +86,16 @@ def getCustomerCountByStockAndUser(stockid, userid, startDate, endDate):
 def getTradeTotalByStockAndUser(stockid, userid, startDate, endDate):
     try:
         user = User.objects.get(id=userid)
-        trades = Trade.objects.filter(stock_id=stockid,status=0,create__gte=startDate,create__lte=endDate)
+        trades = Trade.objects.filter(stock_id=stockid,status=0,create__gte=startDate,create__lte=endDate,customer__honest=1)
 
         #按用户权限筛选
         if user.userprofile.title.role_name == 'teachermanager':
-            trades = trades.filter(realteacheruser__teacher__group=user.userprofile.group)
+            trades = trades.filter(customer__teacher__group=user.userprofile.group,
+                                   customer__teacher__department=user.userprofile.department)
+            # trades = trades.filter(realteacheruser__teacher__group=user.userprofile.group)
         if user.userprofile.title.role_name == 'teacherboss':
-            trades = trades.filter(realteacheruser__teacher__company=user.userprofile.company)
+            trades = trades.filter(customer__teacher__company=user.userprofile.company)
+            # trades = trades.filter(realteacheruser__teacher__company=user.userprofile.company)
         return trades.count()
     except Exception as e:
         print(e.__str__())

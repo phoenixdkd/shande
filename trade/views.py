@@ -332,15 +332,16 @@ def deleteTrade(request):
         # if trades.__len__() == 0:  #如果是唯一一笔交易
         if customer.tradecount == 0: #如果是唯一一笔交易
             customer.latest = None
-            #历史有效客户数-1
-            firstTradeDate = customer.first_trade
-            userGradeHis = customer.sales.binduser.usergradehis_set.get(user=customer.sales.binduser,
+            if customer.sales.binduser:
+                #历史有效客户数-1
+                firstTradeDate = customer.first_trade
+                userGradeHis = customer.sales.binduser.usergradehis_set.get(user=customer.sales.binduser,
                                                                                            day=firstTradeDate)
-            userGradeHis.delta -= 1
-            userGradeHis.save()
-            #有效客户总数-1
-            customer.sales.binduser.userprofile.grade -= 1
-            customer.sales.binduser.userprofile.save()
+                userGradeHis.delta -= 1
+                userGradeHis.save()
+                #有效客户总数-1
+                customer.sales.binduser.userprofile.grade -= 1
+                customer.sales.binduser.userprofile.save()
             #客户状态改变
             customer.status = 20
             customer.crude = 0

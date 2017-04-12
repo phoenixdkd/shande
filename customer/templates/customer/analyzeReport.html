@@ -98,12 +98,12 @@
             <td> {% getTradeTotalByStockAndUser stock.id request.user.id startDate endDate %}
 
             <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}"
-                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " />{{ stock.stockprice }}</td>
-{#            <script type="text/javascript">#}
-{#                setTimeout(#}
-{#                      setInterval(getCurrentPrice,30*1000,$("#current_price_{{ stock.id }}"))#}
-{#                    , 1*{{ forloop.counter }}%5*500);#}
-{#            </script>#}
+                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
+            <script type="text/javascript">
+                setTimeout(
+                      setInterval(getCurrentPrice,30*1000,$("#current_price_{{ stock.id }}"))
+                    , 1*{{ forloop.counter }}%5*500);
+            </script>
             <td><lable id="earn_count_{{ stock.id }}"></lable></td>
             <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
         </tr>
@@ -240,7 +240,7 @@
 {#            loadStockDetailBySellPrice(stockid, sellPrice);#}
 {#            calcProfitByStockId(stockid, sellPrice);#}
 {#        });#}
-{#        updatePrice('analyzeReport');#}
+        updatePrice('analyzeReport');
 
     });
 </script>
