@@ -156,7 +156,9 @@ def queryCustomer(request):
 def addCustomer(request):
     # t1 = time.clock()
     data = {}
+
     try:
+        newAdd = True
         sale = Sale.objects.get(binduser=request.user)
         if not sale.bindteacher.binduser:
            raise Exception("teacher no bind bursar")
@@ -173,6 +175,7 @@ def addCustomer(request):
             newCustomer.create = timezone.now()
             newCustomer.status = 0
         else:  #修改客户
+            newAdd = False
             newCustomer = Customer.objects.get(id=int(request.POST['id']))
             newCustomer.create = timezone.now()
             newCustomer.modify = timezone.now()
@@ -214,6 +217,8 @@ def addCustomer(request):
             newCustomer.qqname = request.POST.get('qqname', '')
             newCustomer.salesqq = Qq.objects.get(id=int(request.POST.get('salesqq')))
         newCustomer.save()
+        #添加客户操作完成
+        newAdd = False
 
         #开发绩效管理
         # 提交数加1
@@ -228,18 +233,20 @@ def addCustomer(request):
         userGradeHis, created = request.user.usergradehis_set.get_or_create(user=request.user, day=datetime.date.today())
         userGradeHis.total = request.user.userprofile.grade
         userGradeHis.save()
-
-        #提交时刷新对应老师的消息
-        teacherUser = newCustomer.teacher.binduser
-        if teacherUser:
-            transmission, created = Transmission.objects.get_or_create(user=teacherUser)
-            transmission.transmission = "客户信息有更新，请刷新页面查看。"
-            transmission.checked = False
-            transmission.save()
+        #
+        # #提交时刷新对应老师的消息
+        # teacherUser = newCustomer.teacher.binduser
+        # if teacherUser:
+        #     transmission, created = Transmission.objects.get_or_create(user=teacherUser)
+        #     transmission.transmission = "客户信息有更新，请刷新页面查看。"
+        #     transmission.checked = False
+        #     transmission.save()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
+        if newAdd:
+            newCustomer.delete()
         print(e.__str__())
         if str(e.__str__()).__contains__('saleId'):
             data['msg'] = "操作失败,开发ID已存在"
@@ -963,7 +970,7 @@ def calcProfitByStockId(request):
     endDate = request.POST.get('endDate')
     trades = Trade.objects.filter(stock_id=stockid, status=0, create__gte=startDate, create__lte=endDate)
     if request.user.userprofile.title.role_name == 'teachermanager':
-        trades = trades.filter(customer__teacher__company=request.user.userprofile.company,
+        trades = trades.filter(customer__teacher__group=request.user.userprofile.group,
                                customer__teacher__department=request.user.userprofile.department)
     elif request.user.userprofile.title.role_name == 'teacherboss':
         trades = trades.filter(customer__teacher__company=request.user.userprofile.company)
@@ -1068,6 +1075,7 @@ def addTeacherCustomer(request):
     # t1 = time.clock()
     data = {}
     try:
+        addNew = True
         newCustomer = Customer.objects.create(create=timezone.now(), modify=timezone.now())
         teacher = Teacher.objects.get(id=request.POST.get('teacher'))
         newCustomer.teacher = teacher
@@ -1092,18 +1100,22 @@ def addTeacherCustomer(request):
             newCustomer.qqname = request.POST.get('qqname', '')
         newCustomer.save()
 
+        #添加完成
+
 
         # 提交时刷新对应老师的消息
-        teacherUser = newCustomer.teacher.binduser
-        if teacherUser:
-            transmission, created = Transmission.objects.get_or_create(user=teacherUser)
-            transmission.transmission = "客户信息有更新，请刷新页面查看。"
-            transmission.checked = False
-            transmission.save()
+        # teacherUser = newCustomer.teacher.binduser
+        # if teacherUser:
+        #     transmission, created = Transmission.objects.get_or_create(user=teacherUser)
+        #     transmission.transmission = "客户信息有更新，请刷新页面查看。"
+        #     transmission.checked = False
+        #     transmission.save()
 
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
     except Exception as e:
+        if addNew:
+            newCustomer.delete()
         traceback.print_exc()
         if str(e.__str__()).__contains__('saleId'):
             data['msg'] = "操作失败,开发ID已存在"

@@ -157,8 +157,7 @@ def addTrade(request):
         # newTrade.commission = request.get('commission', 0)
         tradeid = newTrade.id
         newTrade.realteacheruser = request.user
-        newTrade.save()
-        customer.save()
+
 
         #上传交割单据
         tradefile = request.FILES['file']
@@ -175,10 +174,14 @@ def addTrade(request):
             file.write(chunk)
         file.close()
 
+        newTrade.save()
+        customer.save()
+
         data['msg'] = "操作成功"
         data['msgLevel'] = "info"
         # logger.error("%s add a trade for customer %s success,customer.status change to %s" % (request.user.username,customer.id,customer.status))
     except Exception as e:
+        newTrade.delete()
         traceback.print_exc()
         print(e.__str__())
         if e.__str__() == 'stockerror':
