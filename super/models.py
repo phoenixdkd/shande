@@ -36,6 +36,7 @@ class UserProfile (models.Model):
     # "11","ops","管理员"
     # "12","spotteacher","现货老师"
     # "13","spotmanager","现货经理"
+    # "14","analyst","技术分析师"
     failcount = models.IntegerField('失败次数', default=-1)
     faillocktime = models.DateTimeField('失败锁定时间', null=True)
 

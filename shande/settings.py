@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'trade',
     'spot',
     'stock',
+    'analyst',
 ]
 
 MIDDLEWARE_CLASSES = [

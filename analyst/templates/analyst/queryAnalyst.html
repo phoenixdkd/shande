@@ -1,0 +1,84 @@
+<h1 id="analystHead" name="teacherHead" style="text-align:center;">请输入搜索条件</h1>
+<table id="analystTable" class="table table-bordered col-md-12 table-hover">
+    <thead class="bg-info">
+        <tr>
+{#            <td>ID</td>#}
+            <td>技术分析师ID</td>
+            <td>隶属公司</td>
+{#            <td>隶属部门</td>#}
+            <td>绑定用户</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+    {% if analystPage %}
+    {% for analystObj in analystPage %}
+        <tr>
+{#            <td>{{ analystObj.id }}</td>#}
+            <td>{{ analystObj.analystId }}</td>
+            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ analystObj.binduser.username }}">{{ analystObj.binduser.userprofile.nick }}</span></td>
+            <script type="text/javascript">
+                $('.tooltips').tooltip();
+            </script>
+            <td >
+{#                <table>#}
+{#                    {% for teacher in analystObj.getTeacherList %}#}
+{#                        <tr><td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</td></tr>#}
+{#                    {% endfor %}#}
+{#                </table>#}
+            </td>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editAnalyst(this)"
+                    data-id="{{ analystObj.id }}"
+                    data-page="{{ analystPage.number }}"
+                    data-analystid="{{ analystObj.analystId }}"
+                    data-bindusername="{{ analystObj.binduser.username }}"
+                >编辑</button>
+
+                <button type="button" class="btn btn-sm btn-danger" onclick="delAnalyst(this)"
+                    data-id="{{ analystObj.id }}">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+    {% else %}
+         <tr><td colspan="6">无财务人员信息</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+<nav id="analystNav" class="navbar-right">
+  <ul class="pagination">
+    <li>
+        {% if analystPage.has_previous %}
+            <span aria-hidden="true" onclick="loadAnalystDiv('page={{ analystPage.previous_page_number }}&{{ requestArgs }}')">&laquo;</span>
+        {% endif %}
+    </li>
+    <li><span class="current">
+           第{{ analystPage.number }}/{{ analystPage.paginator.num_pages }}页
+        </span></li>
+    <li>
+        {% if analystPage.has_next %}
+            <span aria-hidden="true" onclick="loadAnalystDiv('page={{ analystPage.next_page_number }}&{{ requestArgs }}')">&raquo;</span>
+        {% endif %}
+    </li>
+  </ul>
+</nav>
+
+<script type="text/javascript">
+    $(function () {
+        contentShow();
+    });
+
+    function contentShow() {
+        var showContent = {{ showContent | safe }};
+        if( showContent == 'True'){
+            $('#analystHead').css("display","none");
+            $('#analystTable')[0].style.display='';
+            $('#analystNav')[0].style.display='';
+        }
+        else{
+            $('#analystHead')[0].style.display='display';
+            $('#analystTable')[0].style.display='none';
+            $('#analystNav')[0].style.display='none';
+        }
+    }
+</script>

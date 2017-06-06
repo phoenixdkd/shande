@@ -25,6 +25,7 @@ from wxqq import urls as wxqqurls
 from trade import urls as tradeurls
 from spot import urls as spoturls
 from stock import urls as stockurls
+from analyst import urls as analysturls
 from shande.settings import STATIC_ROOT
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -58,6 +59,9 @@ urlpatterns = [
 
     # app stock
     url(r'^stock/', include(stockurls, namespace="stock")),
+
+    # app analyst
+    url(r'^analyst/', include(analysturls, namespace="analyst")),
 ]
 #
 from django.conf import settings
