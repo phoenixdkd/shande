@@ -17,7 +17,7 @@ import datetime
 import traceback
 import json
 
-from shande.settings import BASE_DIR
+from shande.settings import BASE_DIR, UPLOAD_ROOT
 from super.models import *
 # from teacher.models import *
 # from trade.models import *
@@ -265,7 +265,11 @@ def logoUpload(request):
     data = {}
     try:
         logofile = request.FILES['file']
-        file = open("super/static/super/images/header.jpg", "wb+")
+        # file = open("super/static/super/images/header.jpg", "wb+")
+        jpgfile = os.path.join(UPLOAD_ROOT, "super/images/header.jpg")
+        #
+        file = open(jpgfile, "wb+")
+
         for chunk in logofile.chunks():
             file.write(chunk)
         file.close()
@@ -273,7 +277,7 @@ def logoUpload(request):
         data['msgLevel'] = "info"
     except Exception as e:
         print(e.__str__)
-        data['msg'] = "删除职位失败"
+        data['msg'] = "修改失败"
         data['msgLevel'] = "error"
     return HttpResponse(json.dumps(data))
 
