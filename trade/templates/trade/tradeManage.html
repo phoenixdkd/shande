@@ -41,6 +41,18 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-md-offset-2 col-md-2 control-label" for="analystid" >分析师</label>
+                            <div class="col-md-5">
+                                <select type="select" class="form-control" id="analystid" name="analystid">
+                                  <option>请选择技术分析师</option>
+                                  {% for analystObj in analysts %}
+                                     <option value={{ analystObj.analystId}}>{{ analystObj.analystId }} {{ analystObj.binduser.userprofile.nick }}</option>
+                                  {% endfor %}
+                                </select>
+{#                                <input type="text" class="form-control" id="analystname" name="analystkname"/>#}
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="buyprice" >买入价格</label>
                             <div class="col-md-5">
                                 <input type="text" class="form-control" id="buyprice" name="buyprice"/>

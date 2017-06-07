@@ -21,6 +21,7 @@ from super.models import *
 from sale.models import *
 from customer.models import *
 from trade.models import *
+from analyst.models import *
 import logging
 logger = logging.getLogger("django")
 
@@ -32,7 +33,8 @@ def tradeManage(request):
     customerId = request.GET.get("customerId")
     customer = Customer.objects.get(id=customerId)
     bursars = Bursar.objects.all().order_by("bursarId")
-
+    analysts = Analyst.objects.filter(company=request.user.userprofile.company)
+    # analysts = Analyst.objects.all()
     # bursarId = []
     # bursarNick = []
     # for bursar in bursars:
@@ -45,6 +47,7 @@ def tradeManage(request):
     data = {
         "customer": customer,
         "bursars": bursars,
+        "analysts": analysts,
         # "json_bursarId": json_bursarId,
         # "json_bursarNick": json_bursarNick,
     }
@@ -83,6 +86,8 @@ def addTrade(request):
     buyprice = float(request.POST.get('buyprice'))
     buycount = int(request.POST.get('buycount'))
     buycash = buyprice * buycount
+    analystId = request.POST.get('analystid')
+
     try:
         if float(request.POST.get('buycount')) == 0:
             raise Exception("buycountzero")
@@ -157,6 +162,8 @@ def addTrade(request):
         # newTrade.commission = request.get('commission', 0)
         tradeid = newTrade.id
         newTrade.realteacheruser = request.user
+        newTrade.analyst = Analyst.objects.get(analystId=analystId)
+
 
 
         #上传交割单据

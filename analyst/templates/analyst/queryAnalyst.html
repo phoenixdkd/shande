@@ -16,17 +16,20 @@
         <tr>
 {#            <td>{{ analystObj.id }}</td>#}
             <td>{{ analystObj.analystId }}</td>
-            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ analystObj.binduser.username }}">{{ analystObj.binduser.userprofile.nick }}</span></td>
-            <script type="text/javascript">
-                $('.tooltips').tooltip();
-            </script>
+{#            <td ><span class="tooltips" data-toggle="tooltip" title="用户ID:{{ analystObj.binduser.username }}">{{ analystObj.binduser.userprofile.nick }}</span></td>#}
+{#            <script type="text/javascript">#}
+{#                $('.tooltips').tooltip();#}
+{#            </script>#}
             <td >
+                {{ analystObj.company }}
 {#                <table>#}
 {#                    {% for teacher in analystObj.getTeacherList %}#}
 {#                        <tr><td>{{ teacher.teacherId }} {{ teacher.binduser.userprofile.nick }}</td></tr>#}
 {#                    {% endfor %}#}
 {#                </table>#}
             </td>
+            <td>{{ analystObj.binduser.userprofile.nick }}</td>
+
             <td>
                 <button type="button" class="btn btn-sm btn-primary" onclick="editAnalyst(this)"
                     data-id="{{ analystObj.id }}"
@@ -41,7 +44,7 @@
         </tr>
     {% endfor %}
     {% else %}
-         <tr><td colspan="6">无财务人员信息</td></tr>
+         <tr><td colspan="6">无技术分析师信息</td></tr>
     {% endif %}
     </tbody>
 </table>

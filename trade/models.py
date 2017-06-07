@@ -5,10 +5,12 @@ from django.db import models
 from customer.models import *
 from django.utils import timezone
 from stock.models import *
+from analyst.models import *
 
 # Create your models here.
 class Trade(models.Model):
     customer = models.ForeignKey(Customer)
+    analyst = models.ForeignKey(Analyst)
     # 0 未出货(新录入); 1 退回; 10 下次补亏; 09 已补亏;  20 盈利 提交财务收款; 30 已收款;
     # 11 非正常盈收｜客户自抛
     # 12 非正常盈收｜客户拉黑
@@ -41,5 +43,6 @@ class Trade(models.Model):
 
     realteacheruser = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 真实提交交易老师
     profitratio = models.DecimalField('盈亏比例',max_digits=10, decimal_places=2, default=0)
+
 
 

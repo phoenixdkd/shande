@@ -18,9 +18,9 @@
                         <div class="form-group">
                             <input type="hidden" value="" class="" id="id" name="id"/>
                             <input type="hidden" value="" class="" id="page" name="page"/>
-                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="analystid">分析师ID</label>
+                            <label class="col-md-offset-2 col-lg-2 col-md-2 control-label" for="analystid" >分析师ID</label>
                             <div class="col-lg-5 col-md-5">
-                                <input type="text" class="form-control" id="analystid" name="analystid"
+                                <input type="text" class="form-control" id="analystid" name="analystid" placeholder="格式：FXSA01"
                                 data-bv-notempty="true"
                                 data-bv-notempty-message="不允许为空"/>
                             </div>
@@ -28,15 +28,15 @@
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="company" >公司</label>
                             <div class="col-md-5">
-                                <input type="text" class="form-control" id="company" name="company"/>
+                                <input type="text" class="form-control" id="company" name="company" placeholder="格式：A"/>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>
-                            <div class="col-md-5">
-                                <input type="text" class="form-control" id="department" name="department"/>
-                            </div>
-                        </div>
+{#                        <div class="form-group">#}
+{#                            <label class="col-md-offset-2 col-md-2 control-label" for="department" >部门</label>#}
+{#                            <div class="col-md-5">#}
+{#                                <input type="text" class="form-control" id="department" name="department"/>#}
+{#                            </div>#}
+{#                        </div>#}
                         <div class="form-group">
                             <label class="col-md-offset-2 col-md-2 control-label" for="bindusername" >绑定用户</label>
 
@@ -51,7 +51,7 @@
 {#                                    {% endif %}#}
 {#                                </select>#}
                             </div>
-                            <label class="col-md-offset-4  control-label" style="color: red; font-size: small; text-align: center">(格式：FX0101或guanliyuan，解绑则不填)</label>
+                            <label class="col-md-offset-4  control-label" style="color: red; font-size: small; text-align: center">(格式：guanliyuan，解绑则不填)</label>
                         </div>
                         <div class="modal-footer">
                             <div class="form-group">
@@ -161,13 +161,13 @@
                         }
                     }
                 },
-                department: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入部门',
-                        },
-                    }
-                },
+{#                department: {#}
+{#                    validators: {#}
+{#                        notEmpty: {#}
+{#                            message: '请输入部门',#}
+{#                        },#}
+{#                    }#}
+{#                },#}
             },
             submitHandler: function (validator, form, submitButton) {
                 $('#addAnalystModal').modal('hide');

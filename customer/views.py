@@ -328,7 +328,6 @@ def checkCustomerPhone(request):
 
     try:
         customers = Customer.objects.filter(phone=customerPhone,phone__isnull=False)
-        a = customers.__len__()
         if customers.__len__() != 0:   #手机号码重复
             for customer in customers:
                if customer.status == 98: #不诚信客户
