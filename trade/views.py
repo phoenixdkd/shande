@@ -86,7 +86,7 @@ def addTrade(request):
     buyprice = float(request.POST.get('buyprice'))
     buycount = int(request.POST.get('buycount'))
     buycash = buyprice * buycount
-    analystId = request.POST.get('analystid')
+    # analystId = request.POST.get('analystid')
 
     try:
         if float(request.POST.get('buycount')) == 0:
@@ -162,7 +162,7 @@ def addTrade(request):
         # newTrade.commission = request.get('commission', 0)
         tradeid = newTrade.id
         newTrade.realteacheruser = request.user
-        newTrade.analyst = Analyst.objects.get(analystId=analystId)
+        # newTrade.analyst = Analyst.objects.get(analystId=analystId)
 
 
 

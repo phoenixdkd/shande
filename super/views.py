@@ -20,7 +20,7 @@ import json
 from shande.settings import BASE_DIR, UPLOAD_ROOT
 from super.models import *
 # from teacher.models import *
-# from trade.models import *
+from trade.models import *
 # from customer.models import *
 
 
@@ -303,7 +303,13 @@ def getTransmission(request):
     return HttpResponse(json.dumps(data))
 
 def demo(request):
+    trades = Trade.objects.all()
+    for trade in trades:
+        if trade.status == 0:
+            newTrade = Trade_memory.objects.create(trade=trade, stockid=trade.stockid)
     return render(request, 'super/demo.html', locals())
+
+    # return render(request, 'super/demo.html', locals())
 
 @login_required()
 def newsPush(request):

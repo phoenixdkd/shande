@@ -44,5 +44,9 @@ class Trade(models.Model):
     realteacheruser = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # 真实提交交易老师
     profitratio = models.DecimalField('盈亏比例',max_digits=10, decimal_places=2, default=0)
 
+class Trade_memory(models.Model):
+    trade = models.ForeignKey(Trade,null=True)
+    stockid = models.CharField('产品ID',max_length=30,null=True)
+    income = models.DecimalField('预期盈利',max_digits=10,decimal_places=2,default=0.)
 
 

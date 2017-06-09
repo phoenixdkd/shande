@@ -1,42 +1,42 @@
-<script type="text/javascript">
-    String.prototype.startWith=function(s){
-        if(s==null||s==""||this.length==0||s.length>this.length)
-            return false;
-        if(this.substr(0,s.length)==s)
-            return true;
-        else
-            return false;
-        return true;
-    }
-
-    function getCurrentPrice(id){
-        var stockcode = id.attr("name");
-        if(stockcode.startWith('0') || stockcode.startWith('3')){
-            var linkname = 'http://hq.sinajs.cn/list=sz'+stockcode;
-            var result = 'hq_str_sz'+stockcode;
-        }
-        else if(stockcode.startWith("6") ){
-            var linkname = 'http://hq.sinajs.cn/list=sh'+stockcode;
-            var result = 'hq_str_sh'+stockcode;
-        }
-
-        $.ajax({
-            url: linkname,
-            dataType:"script",
-            cache:"false",
-            type:"GET",
-            success:function(price){
-                var tmp = eval(result);
-                var elements = tmp.split(",");
-                var sellPrice = elements[3];
-                id.val(sellPrice);
-                var stockid = $(id).data("stockid");
-                loadStockDetailBySellPrice(stockid, sellPrice );
-                calcProfitByStockId(stockid, sellPrice);
-            }
-         })
-     }
-</script>
+{#<script type="text/javascript">#}
+{#    String.prototype.startWith=function(s){#}
+{#        if(s==null||s==""||this.length==0||s.length>this.length)#}
+{#            return false;#}
+{#        if(this.substr(0,s.length)==s)#}
+{#            return true;#}
+{#        else#}
+{#            return false;#}
+{#        return true;#}
+{#    }#}
+{##}
+{#    function getCurrentPrice(id){#}
+{#        var stockcode = id.attr("name");#}
+{#        if(stockcode.startWith('0') || stockcode.startWith('3')){#}
+{#            var linkname = 'http://hq.sinajs.cn/list=sz'+stockcode;#}
+{#            var result = 'hq_str_sz'+stockcode;#}
+{#        }#}
+{#        else if(stockcode.startWith("6") ){#}
+{#            var linkname = 'http://hq.sinajs.cn/list=sh'+stockcode;#}
+{#            var result = 'hq_str_sh'+stockcode;#}
+{#        }#}
+{##}
+{#        $.ajax({#}
+{#            url: linkname,#}
+{#            dataType:"script",#}
+{#            cache:"false",#}
+{#            type:"GET",#}
+{#            success:function(price){#}
+{#                var tmp = eval(result);#}
+{#                var elements = tmp.split(",");#}
+{#                var sellPrice = elements[3];#}
+{#                id.val(sellPrice);#}
+{#                var stockid = $(id).data("stockid");#}
+{#                loadStockDetailBySellPrice(stockid, sellPrice );#}
+{#                calcProfitByStockId(stockid, sellPrice);#}
+{#            }#}
+{#         })#}
+{#     }#}
+{#</script>#}
 
 {% extends 'base_full_noheader.html' %}
 {% load stock_tags %}
@@ -49,201 +49,260 @@
         </div>
     </h1>
     <hr/>
+
+<script type="text/javascript">
+    $(function () {
+        formValidator();
+        loadAnalyzeReportDiv();
+    });
+
+    function resetFormValidator(){
+        $('#searchAnalyzeForm').data('bootstrapValidator').destroy();
+        formValidator();
+    }
+
+
+    function loadAnalyzeReportDiv(data) {
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
+        var stockid = $('#stockid').val();
+        var sort = $('#sort').val();
+
+        if(data){
+            data = data +'&startDate='+startDate+'&endDate='+endDate+'&stockid='+stockid+'&sort='+sort;
+        }else{
+            data = 'startDate='+startDate+'&endDate='+endDate+'&stockid='+stockid+'&sort='+sort;
+        }
+        $('#analyzeReportDiv').load("{% url 'customer:queryAnalyzeReport' %}", data);
+    }
+
+    function formValidator(){
+        $('#searchAnalyzeForm').bootstrapValidator({
+            excluded: [':disabled'],
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            },
+            submitHandler: function (validator, form, submitButton) {
+                loadAnalyzeReportDiv(form.serialize());
+                resetFormValidator();
+            }
+        });
+    }
+
+    function sortAnalyzeReport(obj) {
+        $('#sort').val($(obj).data("sort"));
+        searchData = $('#searchAnalyzeForm').serialize();
+        data = searchData;
+        $('#analyzeReportDiv').load("{% url 'customer:sortAnalyzeReport' %}",data)
+        alert('ok');
+    }
+
+</script>
+
 <form id="searchAnalyzeForm" method="POST" class="form-horizontal ">
     <div class="form-group">
         <label class="col-md-1 control-label">产品代码</label>
         <div class="col-md-2 ">
-             <input type="text"  class="form-control" value="{{ stockid }}" name="stockid"
+             <input type="text"  class="form-control" value="{{ stockid }}" name="stockid" id="stockid"
              title="起始时间"/>
         </div>
         <label class="col-md-1 control-label">时间范围</label>
         <div class="col-md-2 ">
-             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate"
+             <input type="date"  class="form-control datetime" value="{{ startDate }}" name="startDate" id="startDate"
              title="起始时间"/>
         </div>
         <label class="col-md-1 control-label"></label>
         <div class="col-md-2 ">
-             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate"
+             <input type="date"  class="form-control datetime" value="{{ endDate }}" name="endDate" id="endDate"
              title="结束时间"/>
         </div>
         <label class="col-md-1 control-label"></label>
         <div class="col-md-2">
                 <button type="submit" class="btn btn-sm btn-primary" >搜索</button>
         </div>
+        <input type="hidden" id="sort" name="sort">
     </div>
 </form>
-<table id="analyzeReport" class="table table-bordered">
-    <thead class="bg-info">
-        <th width="2%">序号</th>
-        <th width="2%">产品代码</th>
-        <th width="5%">产品名称</th>
-        <th width="5%">最低买入价</th>
-        <th width="5%">最高买入价</th>
-{#        <th width="5%">总买入资金</th>#}
-        <th width="5%">交易数</th>
-        <th width="5%">现价</th>
-        <th width="5%">浮盈个数</th>
-        <th width="5%">浮盈金额</th>
-    </thead>
-    <tbody>
-        {% for stock in stockPage %}
-        <tr data-stock="{{ stock.id }}" id="stock_row_{{ stock.id }}" ondblclick="showStockDetail(this)" class="stock_row">
-            <td>{{ forloop.counter }}</td>
-            <td>{{ stock.stockid }}</td>
-            <td>{{ stock.stockname }}</td>
-            <td>{% getLowBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
-            <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>
-{#            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
-{#            <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
-            <td> {% getTradeTotalByStockAndUser stock.id request.user.id startDate endDate %}
 
-            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}"
-                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>
-            <script type="text/javascript">
-                setTimeout(
-                      setInterval(getCurrentPrice,30*1000,$("#current_price_{{ stock.id }}"))
-                    , 1*{{ forloop.counter }}%5*500);
-            </script>
-            <td><lable id="earn_count_{{ stock.id }}"></lable></td>
-            <td><lable id="earn_cash_{{ stock.id }}"></lable></td>
-        </tr>
-        <tr style="padding:0;"><td colspan="11" style="padding:0;">
-            <div id="stock_detail_row_{{ stock.id }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>
-        </td></tr>
-        {% empty %}
-            <tr><td colspan="10">无盈利产品</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
-<nav class="navbar-right">
-  <ul class="pagination">
-    <li>
-        {% if stockPage.has_previous %}
-            <a href="?page={{ stockPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>
-        {% endif %}
-    </li>
-    <li><span class="current">
-           第{{ stockPage.number }}/{{ stockPage.paginator.num_pages }}页
-        </span></li>
-    <li>
-        {% if stockPage.has_next %}
-            <a href="?page={{ stockPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>
-        {% endif %}
-    </li>
-  </ul>
-</nav>
-{#    <script type="text/javascript" src="jquery.js"></script>#}
-<script type="text/javascript">
-    function showStockDetail(obj){
-        $('.stock_detail_row_').slideUp();
-        stock = $(obj).data('stock');
-        var sellprice = $('#current_price_'+stock).val();
+<div id="analyzeReportDiv"></div>
 
-
-        stockDetailRowSelector = $('#stock_detail_row_'+stock);
-        if(stockDetailRowSelector.is(':hidden')){
-            stockDetailRowSelector.slideDown();
-            loadStockDetailBySellPrice(stock, sellprice);
-{#            loadStockDetail(stock);#}
-        }else{
-            stockDetailRowSelector.slideUp();
-        }
-    }
-    function loadStockDetail(stock){
-        var stockDetailRowSelector = $('#stock_detail_row_'+stock);
-        $.ajax({
-            url: "{% url 'customer:getStockDetailForAnalyze' %}",
-            type: 'POST',
-            async: true,
-            data: { "stock": stock, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },
-            beforeSend:  function(){
-                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
-            },
-            success: function (data) {
-                stockDetailRowSelector.html(data);
-            }
-        });
-    }
-    function loadStockDetailBySellPrice(stock, sellprice){
-        var stockDetailRowSelector = $('#stock_detail_row_'+stock);
-        $.ajax({
-            url: "{% url 'customer:getStockDetailForAnalyze' %}",
-            type: 'POST',
-            async: true,
-            data: { "stock": stock , "sellprice": sellprice, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },
-            beforeSend:  function(){
-                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')
-            },
-            success: function (data) {
-                stockDetailRowSelector.html(data);
-            }
-        });
-    }
-    function calcProfitByStockId(stockid, sellprice){
-        $.ajax({
-            url: "{% url 'customer:calcProfitByStockId' %}",
-            type: 'POST',
-            dataType: 'json',
-            async: true,
-            data: { "stockid": stockid , "sellprice": sellprice, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },
-            success: function (data) {
-                console.log(data.earnCash);
-                $('#earn_count_'+stockid).text(data.earnCount);
-                $('#earn_cash_'+stockid).text(data.earnCash);
-            }
-        });
-    }
-
-    function updatePrice(tableid) {
-        var tableObj = document.getElementById(tableid);
-        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row
-             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列
-                if(j==6){
-                    getCurrentPrice($('#'+tableObj.rows[i].cells[j].childNodes[0].id))
-                }
-             }
-        }
-    }
-
-{#    function getCurrentPrice(name,id){#}
-{#        var stockid = name;#}
+{#<table id="analyzeReport" class="table table-bordered">#}
+{#    <thead class="bg-info">#}
+{#        <th width="2%">序号</th>#}
+{#        <th width="2%">产品代码</th>#}
+{#        <th width="5%">产品名称</th>#}
+{#        <th width="5%">最低买入价</th>#}
+{#        <th width="5%">最高买入价</th>#}
+{# ---       <th width="5%">总买入资金</th>#}
+{#        <th width="5%">交易数</th>#}
+{#        <th width="5%">现价</th>#}
+{#        <th width="5%">浮盈个数</th>#}
+{#        <th width="5%">浮盈金额</th>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#        {% for stock in stockPage %}#}
+{#        <tr data-stock="{{ stock.id }}" id="stock_row_{{ stock.id }}" ondblclick="showStockDetail(this)" class="stock_row">#}
+{#            <td>{{ forloop.counter }}</td>#}
+{#            <td>{{ stock.stockid }}</td>#}
+{#            <td>{{ stock.stockname }}</td>#}
+{#            <td>{% getLowBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
+{#            <td>{% getHighBuypriceByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
+{#---            <td>{% getBuyCashTotalByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
+{#---            <td>{% getCustomerCountByStockAndUser stock.id request.user.id startDate endDate %}</td>#}
+{#            <td> {% getTradeTotalByStockAndUser stock.id request.user.id startDate endDate %}#}
 {##}
-{#        if(stockid.startWith('0') || stockid.startWith('3')){#}
-{#            var linkname = 'http://hq.sinajs.cn/list=sz'+stockid;#}
-{#            var result = 'hq_str_sz'+stockid;#}
+{#            <td><input type="text" id="current_price_{{ stock.id }}" class="current_price" name="{{ stock.stockid }}"#}
+{#                       data-stockid="{{ stock.id }}" data-userid="{{ request.user.id }} " /></td>#}
+{#            <script type="text/javascript">#}
+{#                setTimeout(#}
+{#                      setInterval(getCurrentPrice,30*1000,$("#current_price_{{ stock.id }}"))#}
+{#                    , 1*{{ forloop.counter }}%5*500);#}
+{#            </script>#}
+{#            <td><lable id="earn_count_{{ stock.id }}"></lable></td>#}
+{#            <td><lable id="earn_cash_{{ stock.id }}"></lable></td>#}
+{#        </tr>#}
+{#        <tr style="padding:0;"><td colspan="11" style="padding:0;">#}
+{#            <div id="stock_detail_row_{{ stock.id }}" class="stock_detail_row" style="margin-left:50px;margin-top:5px;display:none;"></div>#}
+{#        </td></tr>#}
+{#        {% empty %}#}
+{#            <tr><td colspan="10">无盈利产品</td></tr>#}
+{#        {% endfor %}#}
+{#    </tbody>#}
+{#</table>#}
+{#<nav class="navbar-right">#}
+{#  <ul class="pagination">#}
+{#    <li>#}
+{#        {% if stockPage.has_previous %}#}
+{#            <a href="?page={{ stockPage.previous_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"> <span aria-hidden="true">&laquo;</span></a>#}
+{#        {% endif %}#}
+{#    </li>#}
+{#    <li><span class="current">#}
+{#           第{{ stockPage.number }}/{{ stockPage.paginator.num_pages }}页#}
+{#        </span></li>#}
+{#    <li>#}
+{#        {% if stockPage.has_next %}#}
+{#            <a href="?page={{ stockPage.next_page_number }}&startDate={{ startDate }}&endDate={{ endDate }}"><span aria-hidden="true">&raquo; </span></a>#}
+{#        {% endif %}#}
+{#    </li>#}
+{#  </ul>#}
+{#</nav>#}
+{#---    <script type="text/javascript" src="jquery.js"></script>#}
+{#<script type="text/javascript">#}
+{#    function showStockDetail(obj){#}
+{#        $('.stock_detail_row_').slideUp();#}
+{#        stock = $(obj).data('stock');#}
+{#        var sellprice = $('#current_price_'+stock).val();#}
+{##}
+{##}
+{#        stockDetailRowSelector = $('#stock_detail_row_'+stock);#}
+{#        if(stockDetailRowSelector.is(':hidden')){#}
+{#            stockDetailRowSelector.slideDown();#}
+{#            loadStockDetailBySellPrice(stock, sellprice);#}
+{#---           loadStockDetail(stock);#}
+{#        }else{#}
+{#            stockDetailRowSelector.slideUp();#}
 {#        }#}
-{#        else if(stockid.startWith("6") ){#}
-{#            var linkname = 'http://hq.sinajs.cn/list=sh'+stockid;#}
-{#            var result = 'hq_str_sh'+stockid;#}
-{#        }#}
-{#        $.ajax({#}
-{#            url: linkname,#}
-{#            dataType:"script",#}
-{#            cache:"false",#}
-{#            type:"GET",#}
-{#            success:function(price){#}
-{#                var tmp = eval(result);#}
-{#                var elements = tmp.split(",");#}
-{#                var sellPrice = elements[3];#}
-{#                var aa = document.getElementById(id);#}
-{#                aa.value=sellPrice;#}
-{#                stock_id = $(aa).data("stockid");#}
-{#                calcProfitByStockId(stock_id, sellPrice);#}
-{#            }#}
-{#        })#}
 {#    }#}
-    $(function(){
-{#        $('.current_price').change(function(){#}
-{#            var stockid = $(this).data('stockid');#}
-{#            var sellPrice = $(this).val();#}
-{#---            var src = "http://hq.sinajs.cn/list=sh601006#}
-{#            loadStockDetailBySellPrice(stockid, sellPrice);#}
-{#            calcProfitByStockId(stockid, sellPrice);#}
+{#    function loadStockDetail(stock){#}
+{#        var stockDetailRowSelector = $('#stock_detail_row_'+stock);#}
+{#        $.ajax({#}
+{#            url: "{% url 'customer:getStockDetailForAnalyze' %}",#}
+{#            type: 'POST',#}
+{#            async: true,#}
+{#            data: { "stock": stock, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },#}
+{#            beforeSend:  function(){#}
+{#                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')#}
+{#            },#}
+{#            success: function (data) {#}
+{#                stockDetailRowSelector.html(data);#}
+{#            }#}
 {#        });#}
-        updatePrice('analyzeReport');
-
-    });
-</script>
+{#    }#}
+{#    function loadStockDetailBySellPrice(stock, sellprice){#}
+{#        var stockDetailRowSelector = $('#stock_detail_row_'+stock);#}
+{#        $.ajax({#}
+{#            url: "{% url 'customer:getStockDetailForAnalyze' %}",#}
+{#            type: 'POST',#}
+{#            async: true,#}
+{#            data: { "stock": stock , "sellprice": sellprice, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },#}
+{#            beforeSend:  function(){#}
+{#                stockDetailRowSelector.html('<img src="/static/assets/img/loading.gif">')#}
+{#            },#}
+{#            success: function (data) {#}
+{#                stockDetailRowSelector.html(data);#}
+{#            }#}
+{#        });#}
+{#    }#}
+{#    function calcProfitByStockId(stockid, sellprice){#}
+{#        $.ajax({#}
+{#            url: "{% url 'customer:calcProfitByStockId' %}",#}
+{#            type: 'POST',#}
+{#            dataType: 'json',#}
+{#            async: true,#}
+{#            data: { "stockid": stockid , "sellprice": sellprice, "startDate": "{{ startDate }}", "endDate": "{{ endDate }}" },#}
+{#            success: function (data) {#}
+{#                console.log(data.earnCash);#}
+{#                $('#earn_count_'+stockid).text(data.earnCount);#}
+{#                $('#earn_cash_'+stockid).text(data.earnCash);#}
+{#            }#}
+{#        });#}
+{#    }#}
+{##}
+{#    function updatePrice(tableid) {#}
+{#        var tableObj = document.getElementById(tableid);#}
+{#        for (var i = 1; i < tableObj.rows.length; i++) {  //遍历Table的所有Row#}
+{#             for (var j = 0; j < tableObj.rows[i].cells.length; j++) {   //遍历Row中的每一列#}
+{#                if(j==6){#}
+{#                    getCurrentPrice($('#'+tableObj.rows[i].cells[j].childNodes[0].id))#}
+{#                }#}
+{#             }#}
+{#        }#}
+{#    }#}
+{##}
+{#--    function getCurrentPrice(name,id){#}
+{#--        var stockid = name;#}
+{#--#}
+{#--        if(stockid.startWith('0') || stockid.startWith('3')){#}
+{#--           var linkname = 'http://hq.sinajs.cn/list=sz'+stockid;#}
+{#--            var result = 'hq_str_sz'+stockid;#}
+{#--        }#}
+{#--        else if(stockid.startWith("6") ){#}
+{#--            var linkname = 'http://hq.sinajs.cn/list=sh'+stockid;#}
+{#--            var result = 'hq_str_sh'+stockid;#}
+{#--        }#}
+{#--        $.ajax({#}
+{#--            url: linkname,#}
+{#--            dataType:"script",#}
+{#--            cache:"false",#}
+{#--            type:"GET",#}
+{#--            success:function(price){#}
+{#--                var tmp = eval(result);#}
+{#--               var elements = tmp.split(",");#}
+{#--                var sellPrice = elements[3];#}
+{#--                var aa = document.getElementById(id);#}
+{#--                aa.value=sellPrice;#}
+{#--                stock_id = $(aa).data("stockid");#}
+{#--                calcProfitByStockId(stock_id, sellPrice);#}
+{#--            }#}
+{#--        })#}
+{#--    }#}
+{#    $(function(){#}
+{#--        $('.current_price').change(function(){#}
+{#--            var stockid = $(this).data('stockid');#}
+{#--            var sellPrice = $(this).val();#}
+{#---            var src = "http://hq.sinajs.cn/list=sh601006#}
+{#--            loadStockDetailBySellPrice(stockid, sellPrice);#}
+{#--            calcProfitByStockId(stockid, sellPrice);#}
+{#--        });#}
+{#        updatePrice('analyzeReport');#}
+{##}
+{#    });#}
+{#</script>#}
 
 
 {% endblock %}
